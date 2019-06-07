@@ -1,0 +1,28 @@
+{
+  "name": "vse-feedstore",
+  "version": "0.0.1",
+  "description": "An app that keeps track of client data to use with automatic proof creations through the company used CEP extension panel",
+  "productName": "VSE Feed Store",
+  "cordovaId": "org.cordova.quasar.app",
+  "author": "vse-monty <49755895+vse-monty@users.noreply.github.com>",
+  "private": true,
+  "scripts": {
+    "test": "echo \"No test specified\" && exit 0"
+  },
+  "dependencies": {
+    "@quasar/extras": "^1.0.0",
+    "axios": "^0.19.0",
+    "quasar": "^1.0.0-beta.0"
+  },
+  "devDependencies": {
+    "@quasar/app": "^1.0.0-beta.0"
+  },
+  "engines": {
+    "node": ">= 8.9.0",
+    "npm": ">= 5.6.0",
+    "yarn": ">= 1.6.0"
+  },
+  "browserslist": [
+    "last 1 version, not dead, ie >= 11"
+  ]
+}
