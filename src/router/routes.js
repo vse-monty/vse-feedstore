@@ -13,8 +13,12 @@ const routes = [
         component: () => import('pages/Settings.vue')
       },
       {
-        path: '/addfood',
-        component: () => import('pages/AddFood.vue')
+        path: '/addorder',
+        component: () => import('pages/AddOrder.vue')
+      },
+      {
+        path: '/addbuilder',
+        component: () => import('pages/AddBuilder.vue')
       },
     ]
   }

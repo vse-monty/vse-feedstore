@@ -26,7 +26,7 @@
           v-for="nav in navs"
           :key=nav.label
           :to=nav.to
-          active-class="my-menu-link"
+          active-class="menu-highlight"
           exact
           clickable
           >
@@ -63,9 +63,14 @@ export default {
           icon: 'send',
         },
         {
-          to: '/addfood',
+          to: '/addorder',
           label: 'add order',
           icon: 'add_circle',
+        },
+        {
+          to: '/addbuilder',
+          label: 'add client',
+          icon: 'add_circle_outline',
         },
         {
           to: '/settings',
@@ -82,7 +87,7 @@ export default {
 </script>
 
 <style lang="stylus">
-.my-menu-link
+.menu-highlight
   color white
   background $info
 </style>
