@@ -1,5 +1,5 @@
 <template>
-  <div id="q-app">
+  <div id="q-app" class="bg-grey-9 text-grey-5">
     <router-view />
   </div>
 </template>

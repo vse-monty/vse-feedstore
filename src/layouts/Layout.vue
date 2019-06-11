@@ -1,18 +1,9 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
+  <q-layout view="hHh LpR fFf">
     <q-header elevated>
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          @click="leftDrawerOpen = !leftDrawerOpen"
-          aria-label="Menu"
-        >
-          <q-icon name="menu" />
-        </q-btn>
 
-        <q-toolbar-title>
+        <q-toolbar-title absolute-center>
          VSE Feed Store
         </q-toolbar-title>
 
@@ -21,52 +12,29 @@
 
     <q-drawer
       v-model="leftDrawerOpen"
-      bordered
-      content-class="bg-grey-2"
-    >
-      <q-list>
-        <q-item-label header>Navigation</q-item-label>
+      :width=175
+      content-class="bg-secondary" >
 
-        <!--The link to the main 'list' page-->
+      <img class="absolute-top" src="~assets/vse-logo.svg" style="width: 175px">
+      
+      <q-list style="margin-top: 110px">
+      
+        <!-- <q-item-label header>Navigation</q-item-label> -->
+
+        <!--Loops through the navs array-->
         <q-item
-          to="/"
+          v-for="nav in navs"
+          :key=nav.label
+          :to=nav.to
+          active-class="my-menu-link"
           exact
           clickable
           >
           <q-item-section avatar>
-            <q-icon name="cloud_upload" />
+            <q-icon :name=nav.icon />
           </q-item-section>
           <q-item-section>
-            <q-item-label>feed</q-item-label>
-            <q-item-label caption>send illustrator job(s)</q-item-label>
-          </q-item-section>
-        </q-item>
-
-        <!--The link to the form order builder page-->
-        <q-item
-          to="/addfood"
-          exact
-          clickable>
-          <q-item-section avatar>
-            <q-icon name="add_circle_outline" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>add item</q-item-label>
-            <q-item-label caption>compose new job item</q-item-label>
-          </q-item-section>
-        </q-item>
-
-        <!--The link to the settings page-->
-        <q-item
-          to="/settings"
-          exact
-          clickable>
-          <q-item-section avatar>
-            <q-icon name="settings" />
-          </q-item-section>
-          <q-item-section>
-            <q-item-label>settings</q-item-label>
-            <!-- <q-item-label caption>settings for this app</q-item-label> -->
+            <q-item-label>{{ nav.label }}</q-item-label>
           </q-item-section>
         </q-item>
 
@@ -87,7 +55,24 @@ export default {
   name: 'MyLayout',
   data () {
     return {
-      leftDrawerOpen: this.$q.platform.is.desktop
+      leftDrawerOpen: this.$q.platform.is.desktop,
+      navs: [
+        {
+          to: '/',
+          label: 'feed',
+          icon: 'send',
+        },
+        {
+          to: '/addfood',
+          label: 'add order',
+          icon: 'add_circle',
+        },
+        {
+          to: '/settings',
+          label: 'settings',
+          icon: 'settings',
+        },
+      ]
     }
   },
   methods: {
@@ -96,5 +81,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang="stylus">
+.my-menu-link
+  color white
+  background $info
 </style>
