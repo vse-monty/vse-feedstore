@@ -29,6 +29,7 @@ import { mapGetters } from 'vuex'
       'order' : require('components/Order.vue').default
     }
    }
+
 </script>
 
 <style>

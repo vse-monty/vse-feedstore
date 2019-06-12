@@ -5,7 +5,8 @@ module.exports = function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     boot: [
-      'axios'
+      'axios',
+      'notify-defaults'
     ],
 
     css: [
@@ -41,6 +42,7 @@ module.exports = function (ctx) {
 
         'QInput',
         'QForm',
+        'QDialog',
 
       ],
 
@@ -53,7 +55,7 @@ module.exports = function (ctx) {
       // Quasar plugins
       plugins: [
         'Notify',
-        'Dialog'
+        'Dialog',
       ]
 
       // iconSet: 'ionicons-v4'

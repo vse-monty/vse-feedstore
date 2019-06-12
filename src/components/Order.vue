@@ -25,18 +25,21 @@
       <div class="text-grey-8 q-gutter-xs">
         <!-- TODO: ADD click events to the buttons to send and delete orders-->
         <q-btn
-        @click="promptToDelete(id)"
+        @click.stop="confirmDelete(id)"
         class="gt-xs text-negative"
         size="11px"
         flat
+        exact
         dense
         round
         icon="delete" />
         
         <q-btn
+        @click.stop="sendOrder(id)"
         class="gt-xs text-positive"
         size="11px"
         flat
+        exact
         dense
         round
         icon="send" />
@@ -48,6 +51,7 @@
 </template>
 
 <script>
+import { Dialog } from 'quasar'
 import { mapActions } from 'vuex';
 
 export default {
@@ -55,23 +59,40 @@ export default {
     props: ['order', 'id'],
 
     methods: {
-      ...mapActions('orders', ['updateOrder']),
+      ...mapActions('orders', ['updateOrder',
+                               'deleteOrder',
+                               ]),
 
-      promptToDelete(id){
-        if(confirm()){
-          console.log(id + ' deleted');
-        }
+
+      confirmDelete(id) {
+        this.$q.dialog({
+          title: 'delete this order?',
+          message: '',
+          position: 'standard',
+          ok: {
+            push: true,
+            color: 'negative',
+            flat: true,
+          },
+          cancel: {
+            push: true,
+            color: 'white',
+            flat: true,
+          },
+          dark: true,
+          persistent: true,
+        }).onOk(() => {
+          this.removeOrder(id)
+        })
+      },
+      
+      removeOrder (id) {
+        this.deleteOrder(id)
+        this.$q.notify('order effectively yeet\'d')
       },
 
-      confirm () {
-        this.$q.dialog({
-          title: 'confirm',
-          message: 'delete?',
-          cancel: true,
-          persistent: true
-        }).onOk(() => {
-          console.log('>>>> OK')
-        })
+      sendOrder(id) {
+        this.$q.notify('order sent to illustrator panel')
       },
     }
 }

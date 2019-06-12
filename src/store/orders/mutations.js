@@ -1,5 +1,15 @@
+import Vue from 'vue'
 
-export function updateOrder (state, payload) {
+function updateOrder (state, payload) {
     
     Object.assign(state.orders[payload.id], payload.updates);
+}
+
+function deleteOrder (state, id) {
+    Vue.delete(state.orders, id)
+}
+
+export{
+    updateOrder,
+    deleteOrder,
 }
