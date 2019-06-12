@@ -26,7 +26,7 @@
         <!-- TODO: ADD click events to the buttons to send and delete orders-->
         <q-btn
         @click.stop="confirmDelete(id)"
-        class="gt-xs text-negative"
+        class="gt-xs text-white"
         size="11px"
         flat
         exact
@@ -36,7 +36,7 @@
         
         <q-btn
         @click.stop="sendOrder(id)"
-        class="gt-xs text-positive"
+        class="gt-xs text-white"
         size="11px"
         flat
         exact

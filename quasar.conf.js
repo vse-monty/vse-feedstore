@@ -43,6 +43,10 @@ module.exports = function (ctx) {
         'QInput',
         'QForm',
         'QDialog',
+        'QFab',
+        'QFabAction',
+        'QPageSticky',
+        'QSelect',
 
       ],
 

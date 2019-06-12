@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh LpR fFf">
-    <q-header elevated>
+    <q-header>
       <q-toolbar>
 
         <q-toolbar-title absolute-center>
@@ -12,8 +12,9 @@
 
     <q-drawer
       v-model="leftDrawerOpen"
+      :breakpoint=10
       :width=175
-      content-class="bg-secondary" >
+      content-class="bg-secondary">
 
       <img class="absolute-top" src="~assets/vse-logo.svg" style="width: 175px">
       
@@ -55,7 +56,8 @@ export default {
   name: 'MyLayout',
   data () {
     return {
-      leftDrawerOpen: this.$q.platform.is.desktop,
+      leftDrawerOpen: true,
+      
       navs: [
         {
           to: '/',
