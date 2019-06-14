@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import orders from './orders'
+import orders from './store-orders.js'
 
 Vue.use(Vuex)
 
