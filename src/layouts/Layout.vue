@@ -65,14 +65,9 @@ export default {
           icon: 'send',
         },
         {
-          to: '/addorder',
-          label: 'add order',
-          icon: 'add_circle',
-        },
-        {
           to: '/addbuilder',
           label: 'add client',
-          icon: 'add_circle_outline',
+          icon: 'add_circle',
         },
         {
           to: '/settings',

@@ -13,10 +13,6 @@ const routes = [
         component: () => import('pages/Settings.vue')
       },
       {
-        path: '/addorder',
-        component: () => import('pages/AddOrder.vue')
-      },
-      {
         path: '/addbuilder',
         component: () => import('pages/AddBuilder.vue')
       },

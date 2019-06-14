@@ -47,12 +47,15 @@ module.exports = function (ctx) {
         'QFabAction',
         'QPageSticky',
         'QSelect',
+        'QCard',
+        'QCardSection',
+        'QCardActions',
+        'QSpace',
 
       ],
 
       directives: [
         'Ripple',
-
         'ClosePopup',
       ],
 
