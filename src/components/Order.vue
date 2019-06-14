@@ -59,9 +59,11 @@ export default {
     props: ['order', 'id'],
 
     methods: {
-      ...mapActions('orders', ['updateOrder',
-                               'deleteOrder',
-                               ]),
+      ...mapActions('orders',
+                      ['updateOrder',
+                       'deleteOrder',
+                       ]
+                  ),
 
 
       confirmDelete(id) {
