@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { uid } from 'quasar' 
 
 const state = {
 
@@ -42,6 +43,10 @@ const mutations = {
         Vue.delete(state.orders, id);
     },
 
+    addOrder (state, payload) {
+      Vue.set(state.orders, payload.id, payload.order);
+    }
+
 }
 
 const actions = {
@@ -56,6 +61,15 @@ const actions = {
 
         commit('updateOrder', payload);
     
+    },
+
+    addOrder ({ commit }, order) {
+      let id = uid();
+      let payload = {
+        id: id,
+        order: order
+      }
+      commit('addOrder', payload)
     },
 }
 

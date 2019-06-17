@@ -15,7 +15,7 @@
 
     </q-list>
     
-    <q-page-sticky
+    <!-- <q-page-sticky
       position='bottom-right'
       :offset="[36,36]">
       
@@ -25,7 +25,7 @@
         icon='add'
         color='secondary'/>
     
-    </q-page-sticky>
+    </q-page-sticky> -->
 
     <q-dialog v-model="showAddOrder">
       <add-order/>
@@ -42,7 +42,7 @@ import { mapGetters } from 'vuex'
   export default {
     data() {
       return{
-        showAddOrder: true
+        showAddOrder: false
       }
     },
     computed: {

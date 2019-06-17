@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh LpR fFf">
+  <q-layout view="hHr lpR fFr">
     <q-header>
       <q-toolbar>
 
@@ -19,8 +19,6 @@
       <img class="absolute-top" src="~assets/vse-logo.svg" style="width: 175px">
       
       <q-list style="margin-top: 110px">
-      
-        <!-- <q-item-label header>Navigation</q-item-label> -->
 
         <!--Loops through the navs array-->
         <q-item
@@ -43,6 +41,16 @@
 
     </q-drawer>
 
+    <q-drawer
+      v-model="orderDrawerOpen"
+      :breakpoint=10
+      :width=400
+      side="right"
+      elevated
+      content-class="bg-grey-9">
+      <add-order/>
+    </q-drawer>
+
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -57,6 +65,8 @@ export default {
   data () {
     return {
       leftDrawerOpen: true,
+      orderDrawerOpen: true,
+      builderDrawerOpen: false,
       
       navs: [
         {
@@ -79,7 +89,10 @@ export default {
   },
   methods: {
     openURL
-  }
+  },
+  components: {
+    'add-order' : require('components/Drawers/AddOrder.vue').default
+  },
 }
 </script>
 
