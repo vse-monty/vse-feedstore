@@ -2,13 +2,14 @@
     <q-form
         @submit="onSubmit"
         @reset="onReset"
-        autofocus
         class="q-gutter-xs"
+        ref="addForm"
         >
         
         <q-input
             v-model="orderToReturn.orderNumber"
             ref="orderNumber"
+            autofocus
             filled
             dense
             dark
@@ -16,6 +17,7 @@
             label="order number"
             standout="bg-secondary text-white"
             input-class="text-grey-4"
+            lazy-rules
             hide-bottom-space
             :rules="[ val => !!val && val.length == 6]"
             />
@@ -31,6 +33,7 @@
             standout="bg-secondary text-white"
             input-class="text-grey-4"
             v-model="orderToReturn.customer"
+            v-if="orderToReturn.orderNumber"
             :options="builderOptions"
             ref="customer"
             hide-bottom-space
@@ -53,6 +56,7 @@
             fill-input
             input-class="text-grey-4"
             v-model="orderToReturn.subdivision"
+            v-if="orderToReturn.customer"
             :options="subdivisionOptions"
             ref="subdivision"
             hide-bottom-space
@@ -75,6 +79,7 @@
             fill-input
             input-class="text-grey-4"
             v-model="orderToReturn.type"
+            v-if="orderToReturn.subdivision"
             :options="signTypeOptions"
             ref="type"
             hide-bottom-space
@@ -87,6 +92,7 @@
 
         <q-input
             v-model="orderToReturn.qty"
+            v-if="orderToReturn.type"
             ref="qty"
             filled
             dense
@@ -106,7 +112,8 @@
         
         <q-btn
         type="submit"
-        label="submit"/>
+        label="submit"
+        v-if="orderToReturn.qty"/>
         
     </q-form>
 </template>
@@ -164,9 +171,33 @@ export default {
         },
        
         onSubmit () {
-            console.log('form submitted.')
-
-            this.addOrder(this.orderToReturn)
+            
+            this.$refs.addForm.validate().then(success => {
+            if (success) {
+                // yay, models are correct
+                
+                this.addOrder(this.orderToReturn);
+                this.$refs.addForm.resetValidation();
+                this.$emit('closeDrawer');
+            }
+            else {
+                // oh no, user has filled in
+                // at least one invalid value
+                this.$q.dialog({
+                    title: 'oh no!',
+                    message: 'fix your form!',
+                    position: 'standard',
+                    ok: {
+                        push: true,
+                        color: 'negative',
+                        flat: true,
+                    },
+                    dark: true,
+                    persistent: true,
+                    })
+            }
+            })
+            
         },
 
         onReset () {

@@ -48,11 +48,13 @@
       side="right"
       elevated
       content-class="bg-grey-9">
-      <add-order/>
+      <add-order
+       @closeDrawer="orderDrawerOpen = !orderDrawerOpen"/>
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <router-view 
+        @closeDrawer="orderDrawerOpen = !orderDrawerOpen"/>
     </q-page-container>
   </q-layout>
 </template>

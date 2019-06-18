@@ -15,21 +15,21 @@
 
     </q-list>
     
-    <!-- <q-page-sticky
+    <q-page-sticky
       position='bottom-right'
       :offset="[36,36]">
       
       <q-btn
-        @click="showAddOrder = true"
+        @click="showAdd"
         fab
         icon='add'
         color='secondary'/>
     
-    </q-page-sticky> -->
+    </q-page-sticky>
 
-    <q-dialog v-model="showAddOrder">
+    <!-- <q-dialog v-model="showAddOrder">
       <add-order/>
-    </q-dialog>
+    </q-dialog> -->
 
   </q-page>
 </template>
@@ -45,12 +45,17 @@ import { mapGetters } from 'vuex'
         showAddOrder: false
       }
     },
+    methods: {
+      showAdd(){
+        this.$emit('closeDrawer')
+      },
+    },
     computed: {
       ...mapGetters('orders', ['orders'])
     },
     components: {
       'order' : require('components/Order.vue').default,
-      'add-order' : require('components/Modals/AddOrder.vue').default
+      //'add-order' : require('components/Modals/AddOrder.vue').default
     }
    }
 
