@@ -45,7 +45,12 @@ const mutations = {
 
     addOrder (state, payload) {
       Vue.set(state.orders, payload.id, payload.order);
-    }
+    },
+
+    sendOrder (state, id){
+      Vue.$socket.emit('order', JSON.stringify(state.orders[id]));
+      Vue.delete(that.orders, id);
+    },
 
 }
 
@@ -72,6 +77,11 @@ const actions = {
       }
       commit('addOrder', payload)
     },
+
+    sendOrder ({ commit }, id) {
+
+      commit('sendOrder', id);
+    }
 }
 
 const getters = {

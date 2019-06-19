@@ -4,8 +4,8 @@ const state = {
 
     builders: {
 
-      'Home Builder' : {
-        
+      'Home Builder Homes' : {
+
         locations: {
 
           'Corporate': {
@@ -22,18 +22,21 @@ const state = {
         fileLocations: '~Templates/Builders/HomeBuilderHomes/',
 
         signTypes: {
+
           'AVAILABLE': {
+
             var: {
+
               phonenumber: '',
               frame: '',
-              numberOfFaces: '',
               subdivision: '',
-              hagl: '',
               size_h: '',
               size_w: '',
+              doubleFaced: false,
             }
           }, 
         },
+
       },
     }
 
@@ -71,8 +74,15 @@ const getters = {
 
     builders: (state) => {
         return state.builders
-    }
+    },
 
+    locations: (state, key) => {
+      return state.builders[key].locations;
+    },
+    
+    types: (state, key) => {
+      return state.builders[key].signTypes;
+    },
 }
 
 export default {

@@ -11,7 +11,9 @@
         :key="key"
         :order="order"
         :id="key"
-        class="q-ma-xs" />
+        class="q-ma-xs" 
+        @sendOrder="sendOrder({key: key, data: order})"
+        />
 
     </q-list>
     
@@ -49,13 +51,17 @@ import { mapGetters } from 'vuex'
       showAdd(){
         this.$emit('closeDrawer')
       },
+      sendOrder(id){
+        console.log(id);
+
+        this.$socket.emit('order', JSON.stringify(id));
+      },
     },
     computed: {
       ...mapGetters('orders', ['orders'])
     },
     components: {
       'order' : require('components/Order.vue').default,
-      //'add-order' : require('components/Modals/AddOrder.vue').default
     }
    }
 

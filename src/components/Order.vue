@@ -62,6 +62,7 @@ export default {
       ...mapActions('orders',
                       ['updateOrder',
                        'deleteOrder',
+                       'sendOrder'
                        ]
                   ),
 
@@ -94,6 +95,8 @@ export default {
       },
 
       sendOrder(id) {
+
+        this.$emit('sendOrder')
         this.$q.notify('order sent to illustrator panel')
       },
     }

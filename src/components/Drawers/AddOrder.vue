@@ -2,10 +2,29 @@
     <q-form
         @submit="onSubmit"
         @reset="onReset"
+        no-error-focus
         class="q-gutter-xs"
         ref="addForm"
         >
         
+         <q-input
+            v-model="orderToReturn.file"
+            ref="file"
+            filled
+            dense
+            dark
+            clearable
+            label="file"
+            standout="bg-secondary text-white"
+            input-class="text-grey-4"
+            hide-bottom-space>
+
+            <template v-slot:append>
+                <q-btn round dense flat icon="add" @click.stop="getFile" />
+            </template>
+
+         </q-input>
+
         <q-input
             v-model="orderToReturn.orderNumber"
             ref="orderNumber"
@@ -34,7 +53,7 @@
             input-class="text-grey-4"
             v-model="orderToReturn.customer"
             v-if="orderToReturn.orderNumber"
-            :options="builderOptions"
+            :options="Object.keys(builders)"
             ref="customer"
             hide-bottom-space
             :rules="[ val => !!val]"
@@ -57,7 +76,7 @@
             input-class="text-grey-4"
             v-model="orderToReturn.subdivision"
             v-if="orderToReturn.customer"
-            :options="subdivisionOptions"
+            :options="Object.keys(builders[orderToReturn.customer].locations)"
             ref="subdivision"
             hide-bottom-space
             :rules="[ val => !!val]"
@@ -80,7 +99,7 @@
             input-class="text-grey-4"
             v-model="orderToReturn.type"
             v-if="orderToReturn.subdivision"
-            :options="signTypeOptions"
+            :options="Object.keys(builders[orderToReturn.customer].signTypes)"
             ref="type"
             hide-bottom-space
             :rules="[ val => !!val]"
@@ -119,26 +138,26 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import { mapActions } from 'vuex';
 
-const bOptions = [
-                'Beazer',
-                'DR Horton',
-                'Highland',
-                'Meritage',
-                'MI']
+// const bOptions = [
+//                 'Beazer',
+//                 'DR Horton',
+//                 'Highland',
+//                 'Meritage',
+//                 'MI']
 
-const sOptions = [
-                'Corporate',
-                'The Valley']
+// const sOptions = [
+//                 'Corporate',
+//                 'The Valley']
 
-const tOptions = [
-                'available',
-                'sold',
-                '8x4',
-                '8x12',
-                'Main ID']
-
+// const tOptions = [
+//                 'available',
+//                 'sold',
+//                 '8x4',
+//                 '8x12',
+//                 'Main ID']
 
 
 export default {
@@ -151,11 +170,11 @@ export default {
                 subdivision: null,
                 type:        null,
                 qty:         null,
+                file:        null,
             },
 
-            builderOptions: bOptions,
-            subdivisionOptions: sOptions,
-            signTypeOptions: tOptions,
+            // subdivisionOptions: sOptions,
+            // signTypeOptions: tOptions,
         }
     },
     methods: {
@@ -178,6 +197,7 @@ export default {
                 
                 this.addOrder(this.orderToReturn);
                 this.$refs.addForm.resetValidation();
+                this.clearFields();
                 this.$emit('closeDrawer');
             }
             else {
@@ -202,7 +222,36 @@ export default {
 
         onReset () {
             this.clearFields();
+        },
+
+        getSubOptions () {
+            return Object.keys(this.locations(this.orderToReturn));
+        },
+
+        getFile () {
+            let options = {
+                title: 'select art file',
+                buttonLabel: 'use',
+                filters: [
+                    {
+                        name: 'Illustrator Files',
+                        extensions: [ 'ai', 'png', 'pdf' ],
+                    },
+                ],
+                properties: [ 'openFile' ],
+            }
+
+            let fileString = this.$q.electron.remote.dialog.showOpenDialog(null, options)
+            
+            if(fileString){
+                this.orderToReturn.file = encodeURI(fileString);
+            }
         }
+    },
+
+    computed: {
+        ...mapGetters('builders', ['builders']),
+
     },
 }
 </script>

@@ -32,6 +32,7 @@
           <q-item-section avatar>
             <q-icon :name=nav.icon />
           </q-item-section>
+
           <q-item-section>
             <q-item-label>{{ nav.label }}</q-item-label>
           </q-item-section>
@@ -49,12 +50,12 @@
       elevated
       content-class="bg-grey-9">
       <add-order
-       @closeDrawer="orderDrawerOpen = !orderDrawerOpen"/>
+       @closeDrawer="orderDrawerOpen = false"/>
     </q-drawer>
 
     <q-page-container>
       <router-view 
-        @closeDrawer="orderDrawerOpen = !orderDrawerOpen"/>
+        @closeDrawer="orderDrawerOpen = true"/>
     </q-page-container>
   </q-layout>
 </template>
