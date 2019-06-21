@@ -141,25 +141,6 @@
 import { mapGetters } from 'vuex';
 import { mapActions } from 'vuex';
 
-// const bOptions = [
-//                 'Beazer',
-//                 'DR Horton',
-//                 'Highland',
-//                 'Meritage',
-//                 'MI']
-
-// const sOptions = [
-//                 'Corporate',
-//                 'The Valley']
-
-// const tOptions = [
-//                 'available',
-//                 'sold',
-//                 '8x4',
-//                 '8x12',
-//                 'Main ID']
-
-
 export default {
     data () {
         return {
@@ -173,8 +154,8 @@ export default {
                 file:        null,
             },
 
-            // subdivisionOptions: sOptions,
-            // signTypeOptions: tOptions,
+            variables: [],
+
         }
     },
     methods: {
@@ -245,6 +226,7 @@ export default {
             
             if(fileString){
                 this.orderToReturn.file = encodeURI(fileString);
+                this.$socket.emit('to.panel', {type: "get.variables", data: fileString});
             }
         }
     },
