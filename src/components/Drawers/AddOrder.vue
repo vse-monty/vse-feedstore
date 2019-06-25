@@ -6,7 +6,6 @@
         class="q-gutter-xs"
         ref="addForm"
         >
-        
         <!-- Art and Order Dates -->
         <div class="row q-pt-sm">
             <div class="col q-pr-xs">
@@ -55,6 +54,13 @@
             :options="Object.keys(builders[orderToReturn.customer].locations)"
             :rules="[ val => !!val ]"
             @add-option="addOption"/>
+
+        <!-- Art File Filepicker-->
+        <vse-file-picker 
+            v-model="orderToReturn.file_art"
+            :file.sync="orderToReturn.file_art"
+            :load="true"
+            label="art file" />
         
         <!-- Signage Type Dropdown -->
         <!-- <vse-select
@@ -65,7 +71,7 @@
             :rules="[ val => !!val ]"
             @add-option="addOption"/> -->
 
-        <!-- Quantity Dropdown -->
+        <!-- Quantity Input -->
         <q-input
             v-model="orderToReturn.qty"
             v-if="orderToReturn.type"
@@ -103,6 +109,7 @@
 
         <!-- shows the 'orderToReturn' Object at the bottom of the form-->
         <pre v-if="debugMenu">{{ orderToReturn }}</pre>
+        <pre>{{variables}}</pre>
         
     </q-form>
 </template>
@@ -128,6 +135,7 @@ export default {
             },
 
             variables: [],
+            
             debugMenu: false,
 
         }
@@ -146,6 +154,7 @@ export default {
             this.orderToReturn.orderDate =  this.orderToReturn.artDate;
             this.orderToReturn.file_art = null;
             this.orderToReturn.file_proof = null;
+            this.variables = [];
         },
        
         onSubmit () {
@@ -196,7 +205,18 @@ export default {
         'vse-select' : require('components/Form/VSESelect.vue').default,
         'vse-date' : require('components/Form/VSEDate.vue').default,
         'vse-file-picker' : require('components/Form/VSEFilePicker.vue').default,
-    }
+    },
+
+    mounted () {
+        this.$socket.on('give.variables', (data) => {
+            console.log('received ->')
+            let payload = JSON.parse(data);
+            console.log(payload.type);
+            console.log(payload.data);
+
+            this.variables = payload.data;
+        });
+    },
 }
 </script>
 
