@@ -25,21 +25,14 @@ const state = {
 
           'AVAILABLE': {
 
-            var: {
-
               phonenumber: '',
               frame: '',
-              subdivision: '',
-              size_h: '',
-              size_w: '',
               doubleFaced: false,
-            }
           }, 
         },
 
       },
-    }
-
+    },
   }
  
 const mutations = {

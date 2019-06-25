@@ -7,27 +7,26 @@
         ref="addForm"
         >
         
-         <q-input
-            v-model="orderToReturn.file"
-            ref="file"
-            filled
-            dense
-            dark
-            clearable
-            label="file"
-            standout="bg-secondary text-white"
-            input-class="text-grey-4"
-            hide-bottom-space>
+        <!-- Art and Order Dates -->
+        <div class="row q-pt-sm">
+            <div class="col q-pr-xs">
+                <vse-date
+                    v-model="orderToReturn.orderDate"
+                    :date.sync="orderToReturn.orderDate"
+                    label="order date" />
+            </div>
+            <div class="col q-pl-auto">
+                <vse-date
+                    v-model="orderToReturn.artDate"
+                    :date.sync="orderToReturn.artDate"
+                    label="art date"
+                    disable/>
+            </div>
+        </div>
 
-            <template v-slot:append>
-                <q-btn round dense flat icon="add" @click.stop="getFile" />
-            </template>
-
-         </q-input>
-
+        <!-- Order Number -->
         <q-input
             v-model="orderToReturn.orderNumber"
-            ref="orderNumber"
             autofocus
             filled
             dense
@@ -36,103 +35,74 @@
             label="order number"
             standout="bg-secondary text-white"
             input-class="text-grey-4"
-            lazy-rules
             hide-bottom-space
             :rules="[ val => !!val && val.length == 6]"
             />
 
-        <q-select
-            filled
-            dense
-            dark
-            clearable
-            options-dense
-            options-dark
+        <!-- Customer Dropdown -->
+        <vse-select 
+            :value.sync="orderToReturn.customer"
             label="customer"
-            standout="bg-secondary text-white"
-            input-class="text-grey-4"
-            v-model="orderToReturn.customer"
-            v-if="orderToReturn.orderNumber"
             :options="Object.keys(builders)"
-            ref="customer"
-            hide-bottom-space
-            :rules="[ val => !!val]"
-            >
-                <template v-slot:append>
-                    <q-btn round dense flat icon="add" @click.stop />
-                </template>
-        </q-select>
-
-        <q-select
-            filled
-            dense
-            dark
-            clearable
-            options-dense
-            options-dark
+            :rules="[ val => !!val ]"
+            @add-option="addOption"/>
+        
+        <!-- Subdivision Dropdown -->
+        <vse-select
+            v-if="orderToReturn.customer !== null"
+            :value.sync="orderToReturn.subdivision"
             label="subdivision"
-            standout="bg-secondary text-white"
-            fill-input
-            input-class="text-grey-4"
-            v-model="orderToReturn.subdivision"
-            v-if="orderToReturn.customer"
             :options="Object.keys(builders[orderToReturn.customer].locations)"
-            ref="subdivision"
-            hide-bottom-space
-            :rules="[ val => !!val]"
-            >
-                <template v-slot:append>
-                    <q-btn round dense flat icon="add" @click.stop />
-                </template>
-        </q-select>
-
-        <q-select
-            filled
-            dense
-            dark
-            clearable
-            options-dense
-            options-dark
-            label="signage type"
-            standout="bg-secondary text-white"
-            fill-input
-            input-class="text-grey-4"
-            v-model="orderToReturn.type"
-            v-if="orderToReturn.subdivision"
+            :rules="[ val => !!val ]"
+            @add-option="addOption"/>
+        
+        <!-- Signage Type Dropdown -->
+        <!-- <vse-select
+            v-if="orderToReturn.customer !== null"
+            :value.sync="orderToReturn.type"
+            label="type"
             :options="Object.keys(builders[orderToReturn.customer].signTypes)"
-            ref="type"
-            hide-bottom-space
-            :rules="[ val => !!val]"
-            >
-                <template v-slot:append>
-                    <q-btn round dense flat icon="add" @click.stop />
-                </template>
-        </q-select>
+            :rules="[ val => !!val ]"
+            @add-option="addOption"/> -->
 
+        <!-- Quantity Dropdown -->
         <q-input
             v-model="orderToReturn.qty"
             v-if="orderToReturn.type"
-            ref="qty"
+            label="quantity"
             filled
             dense
             dark
             clearable
-            label="quantity"
             standout="bg-secondary text-white"
             input-class="text-grey-4"
             hide-bottom-space
-            :rules="[ val => !!val]"
+            :rules="[ val => !!val ]"
             />
 
-        <!-- Submit button for the form Add Order Form -->
-        <q-btn
-        type="reset"
-        label="reset"/>
-        
-        <q-btn
-        type="submit"
-        label="submit"
-        v-if="orderToReturn.qty"/>
+        <!-- Submit & Reset buttons for the 'Add Order' Form -->
+            <div class="row q-pl-sm q-pt-md">
+                <div class="col q-pr-xs">
+                    <q-btn
+                    style="width: 180px; height 10px"
+                    type="reset"
+                    color="grey-8"
+                    label="reset"/>
+                </div>
+
+                <div class="col q-pl-xs">
+                    <q-btn
+                    style="width: 180px; height 10px"
+                    type="submit"
+                    color="secondary"
+                    label="submit"/>
+                </div>
+            </div>
+        <!-- Submit & Reset buttons for the 'Add Order' Form -->
+
+
+        <!-- shows the 'orderToReturn' Object at the bottom of the form-->
+        <pre v-if="debugMenu">{{ orderToReturn }}</pre>
         
     </q-form>
 </template>
@@ -146,15 +116,19 @@ export default {
         return {
 
             orderToReturn: {
-                orderNumber: null,
+                artDate:     null,
                 customer:    null,
+                file_art:    null,
+                file_proof:  null,
+                orderDate:   null,
+                orderNumber: null,
+                qty:         null,
                 subdivision: null,
                 type:        null,
-                qty:         null,
-                file:        null,
             },
 
             variables: [],
+            debugMenu: false,
 
         }
     },
@@ -163,42 +137,41 @@ export default {
         ...mapActions('orders', ['addOrder']),
 
         clearFields () {
+
             this.orderToReturn.orderNumber = null;
             this.orderToReturn.customer = null;
             this.orderToReturn.subdivision = null;
             this.orderToReturn.type = null;
             this.orderToReturn.qty = null;
+            this.orderToReturn.orderDate =  this.orderToReturn.artDate;
+            this.orderToReturn.file_art = null;
+            this.orderToReturn.file_proof = null;
         },
        
         onSubmit () {
-            
-            this.$refs.addForm.validate().then(success => {
-            if (success) {
-                // yay, models are correct
-                
-                this.addOrder(this.orderToReturn);
-                this.$refs.addForm.resetValidation();
-                this.clearFields();
-                this.$emit('closeDrawer');
-            }
-            else {
-                // oh no, user has filled in
-                // at least one invalid value
-                this.$q.dialog({
-                    title: 'oh no!',
-                    message: 'fix your form!',
-                    position: 'standard',
-                    ok: {
-                        push: true,
-                        color: 'negative',
-                        flat: true,
-                    },
-                    dark: true,
-                    persistent: true,
-                    })
-            }
-            })
-            
+
+            this.$refs.addForm.validate()
+            .then(success => {
+                if (success) {
+                    this.addOrder(this.orderToReturn);
+                    this.$refs.addForm.resetValidation();
+                    this.clearFields();
+                    this.$emit('closeDrawer');
+                }
+                else {
+                    this.$q.dialog({
+                        title: 'oh no!',
+                        message: 'fix your form!',
+                        position: 'standard',
+                        ok: {
+                            push: true,
+                            color: 'negative',
+                            flat: true,
+                        },
+                        dark: true,
+                        persistent: true,
+                        })
+                }})
         },
 
         onReset () {
@@ -208,33 +181,22 @@ export default {
         getSubOptions () {
             return Object.keys(this.locations(this.orderToReturn));
         },
-
-        getFile () {
-            let options = {
-                title: 'select art file',
-                buttonLabel: 'use',
-                filters: [
-                    {
-                        name: 'Illustrator Files',
-                        extensions: [ 'ai', 'png', 'pdf' ],
-                    },
-                ],
-                properties: [ 'openFile' ],
-            }
-
-            let fileString = this.$q.electron.remote.dialog.showOpenDialog(null, options)
-            
-            if(fileString){
-                this.orderToReturn.file = encodeURI(fileString);
-                this.$socket.emit('to.panel', {type: "get.variables", data: fileString});
-            }
-        }
+        
+        addOption () {
+            alert('TODO: add option method here...')
+        },
     },
 
     computed: {
         ...mapGetters('builders', ['builders']),
 
     },
+    
+    components: {
+        'vse-select' : require('components/Form/VSESelect.vue').default,
+        'vse-date' : require('components/Form/VSEDate.vue').default,
+        'vse-file-picker' : require('components/Form/VSEFilePicker.vue').default,
+    }
 }
 </script>
 

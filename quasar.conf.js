@@ -52,6 +52,9 @@ module.exports = function (ctx) {
         'QCardSection',
         'QCardActions',
         'QSpace',
+        'QDate',
+        'QPopupProxy',
+        'QBtnToggle',
 
       ],
 
