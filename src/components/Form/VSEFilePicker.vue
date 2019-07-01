@@ -5,22 +5,23 @@
         :label="label"
         :rules="rules"
         :load="load"
+        :vars="varsArr"
         filled
         dense
         dark
         standout="bg-secondary text-white"
         input-class="text-grey-4"
         hide-bottom-space
-        @input="$emit('update', $event)">
+        @input="$emit('update:file', $event)">
 
         <template v-slot:append>
             <q-btn
-                v-if="file !== null"
+                v-if="checkValid()"
                 round
                 dense
                 flat
                 icon="cancel"
-                @click.stop="$emit('input', '')" />
+                @click.stop="clear" />
             <q-btn
                 round
                 dense
@@ -35,11 +36,25 @@
 import { QInput } from "quasar";
 
 export default {
-    props: ['file', 'label', 'rules', 'load'],
+    props: ['file', 'label', 'rules', 'load', 'varsArr'],
     components: {
         QInput
     },
     methods: {
+
+        clear () {
+            this.$emit('input', '')
+            this.$emit('fill', [])
+        },
+
+        checkValid () {
+
+            if(this.file == null || this.file == ""){
+                return false;
+            }
+            
+            return true;
+        },
 
         getFile () {
             
@@ -65,6 +80,20 @@ export default {
                 }
                 console.log('sending file name to server')
                 console.log(fileString[0])
+
+                //set up listener event
+                this.$socket.on('give.variables', (data) => {
+                    console.log('received ->')
+                    let payload = JSON.parse(data);
+                    console.log(payload.type);
+                    console.log(payload.data);
+
+                    console.log('sending data to vars array');
+                    this.$emit('update:varsArr', payload.data); //put the data into -THIS- picker's load
+                    console.log('removing listener for \'give.variables\' for: ' + this.label);
+                    this.$socket.removeListener('give.variables'); //stop listening for this event
+                });
+
                this.$socket.emit('get.variables', fileString[0])
                this.$emit('input', fileString[0]);
             }

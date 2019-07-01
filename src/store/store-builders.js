@@ -20,17 +20,6 @@ const state = {
         },
 
         fileLocations: '~Templates/Builders/HomeBuilderHomes/',
-
-        signTypes: {
-
-          'AVAILABLE': {
-
-              phonenumber: '',
-              frame: '',
-              doubleFaced: false,
-          }, 
-        },
-
       },
     },
   }
@@ -71,10 +60,6 @@ const getters = {
 
     locations: (state, key) => {
       return state.builders[key].locations;
-    },
-    
-    types: (state, key) => {
-      return state.builders[key].signTypes;
     },
 }
 

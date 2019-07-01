@@ -6,6 +6,7 @@
         class="q-gutter-xs"
         ref="addForm"
         >
+
         <!-- Art and Order Dates -->
         <div class="row q-pt-sm">
             <div class="col q-pr-xs">
@@ -60,21 +61,66 @@
             v-model="orderToReturn.file_art"
             :file.sync="orderToReturn.file_art"
             :load="true"
-            label="art file" />
-        
-        <!-- Signage Type Dropdown -->
-        <!-- <vse-select
-            v-if="orderToReturn.customer !== null"
-            :value.sync="orderToReturn.type"
-            label="type"
-            :options="Object.keys(builders[orderToReturn.customer].signTypes)"
+            :varsArr.sync="variables"
             :rules="[ val => !!val ]"
-            @add-option="addOption"/> -->
+            label="art file"
+            @fill="variables = $event" />
+        
+        <!-- IS THIS SIGN SINGLE FACED OR DOUBLE-->
+        <div class="q-gutter-xs">
+            <q-btn-toggle
+                v-model="orderToReturn.double_face"
+                spread
+                dense
+                rounded
+                no-caps
+                class="btn-toggle"
+                toggle-color="secondary"
+                color="primary"
+                text-color="grey-4"
+                :options="[
+                    {label: 'single face', value: false},
+                    {label: 'double face', value: true}]" />
+        
+         <!-- IF DOUBLE, IS IT SAME FACE ON BOTH SIDES-->
+            <q-btn-toggle
+                v-model="orderToReturn.same_face"
+                v-if="orderToReturn.double_face"
+                spread
+                dense
+                rounded
+                no-caps
+                class="btn-toggle"
+                toggle-color="secondary"
+                color="primary"
+                text-color="grey-4"
+                :options="[
+                    {label: 'same face', value: true},
+                    {label: 'different face', value: false}]" />
+        </div>
+
+        <!-- Art File Filepicker-->
+        <vse-file-picker 
+            v-if="!orderToReturn.same_face"
+            v-model="orderToReturn.file_art_back"
+            :file.sync="orderToReturn.file_art_back"
+            :load="true"
+            :varsArr.sync="back_variables"
+            :rules="[ val => !!val ]"
+            label="art file (back)"
+            @fill="back_variables = $event" />
+
+        <!-- Sign Type Dropdown -->
+        <vse-select
+            :value.sync="orderToReturn.type"
+            label="sign type"
+            :options="signOptions"
+            :rules="[ val => !!val ]"
+            @add-option="addOption"/>
 
         <!-- Quantity Input -->
         <q-input
             v-model="orderToReturn.qty"
-            v-if="orderToReturn.type"
             label="quantity"
             filled
             dense
@@ -85,6 +131,14 @@
             hide-bottom-space
             :rules="[ val => !!val ]"
             />
+
+        <!-- Proof File Filepicker-->
+        <vse-file-picker 
+            v-model="orderToReturn.file_proof"
+            :file.sync="orderToReturn.file_proof"
+            :load="false"
+            :rules="[ val => !!val ]"
+            label="proof file" />
 
         <!-- Submit & Reset buttons for the 'Add Order' Form -->
             <div class="row q-pl-sm q-pt-md">
@@ -109,7 +163,7 @@
 
         <!-- shows the 'orderToReturn' Object at the bottom of the form-->
         <pre v-if="debugMenu">{{ orderToReturn }}</pre>
-        <pre>{{variables}}</pre>
+        <pre>{{ totalVariables() }}</pre>
         
     </q-form>
 </template>
@@ -123,20 +177,35 @@ export default {
         return {
 
             orderToReturn: {
-                artDate:     null,
-                customer:    null,
-                file_art:    null,
-                file_proof:  null,
-                orderDate:   null,
-                orderNumber: null,
-                qty:         null,
-                subdivision: null,
-                type:        null,
+                artDate:       null,
+                customer:      null,
+                file_art:      null,
+                file_art_back: null,
+                file_proof:    null,
+                orderDate:     null,
+                orderNumber:   null,
+                qty:           null,
+                subdivision:   null,
+                type:          null,
+                double_face:   false,
+                same_face:     true,
+                variables: [],
             },
-
-            variables: [],
             
+            variables: [],
+            back_variables: [],
+
             debugMenu: false,
+
+            signOptions : [ 'Available - Sold',
+                            'Construction',
+                            'Development',
+                            'Lot Signs',
+                            'Main ID',
+                            'Misc',
+                            'Model Exteriors',
+                            'Model Interiors',
+                            ],
 
         }
     },
@@ -153,8 +222,14 @@ export default {
             this.orderToReturn.qty = null;
             this.orderToReturn.orderDate =  this.orderToReturn.artDate;
             this.orderToReturn.file_art = null;
+            this.orderToReturn.file_art_back = null;
             this.orderToReturn.file_proof = null;
+            this.orderToReturn.same_face = true;
+            this.orderToReturn.double_face = false;
+            this.orderToReturn.variables = [];
+            this.orderToReturn.back_variables = [];
             this.variables = [];
+            this.back_variables = [];
         },
        
         onSubmit () {
@@ -198,7 +273,12 @@ export default {
 
     computed: {
         ...mapGetters('builders', ['builders']),
-
+       
+       totalVariables: function () {
+          var c = [...new Set([...this.variables, ...this.back_variables])];
+          
+          return c;
+        }
     },
     
     components: {
@@ -208,18 +288,11 @@ export default {
     },
 
     mounted () {
-        this.$socket.on('give.variables', (data) => {
-            console.log('received ->')
-            let payload = JSON.parse(data);
-            console.log(payload.type);
-            console.log(payload.data);
-
-            this.variables = payload.data;
-        });
     },
 }
 </script>
 
-<style>
-
+<style lang="stylus" scoped>
+.btn-toggle
+    border 1px solid #5b6670
 </style>
