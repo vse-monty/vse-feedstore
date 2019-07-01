@@ -110,6 +110,29 @@
             label="art file (back)"
             @fill="back_variables = $event" />
 
+
+
+        <!-- THIS IS WHERE WE WILL POPULATE THE INPUTS FOR VARIABLES -->
+        <q-list
+            v-if="totalVariables.length !== 0"
+            class="q-gutter-xs" >
+
+            <vse-variable-input
+                v-for="(tv, key) in totalVariables"
+                :key="key"
+                v-model="orderToReturn.variables[key].value"
+                :id="key"
+                :varType="tv.type"
+                :varValue.sync="orderToReturn.variables[key].value"
+                :varsArr.sync="orderToReturn.variables"
+                :label="orderToReturn.variables[key].name"
+                :rules="[ val => !!val ]"
+                />
+
+        </q-list>
+        <!-- END VARIABLE POPULATION -->
+
+
         <!-- Sign Type Dropdown -->
         <vse-select
             :value.sync="orderToReturn.type"
@@ -163,7 +186,7 @@
 
         <!-- shows the 'orderToReturn' Object at the bottom of the form-->
         <pre v-if="debugMenu">{{ orderToReturn }}</pre>
-        <pre>{{ totalVariables() }}</pre>
+        <!-- <pre>{{ totalVariables }}</pre> -->
         
     </q-form>
 </template>
@@ -194,8 +217,10 @@ export default {
             
             variables: [],
             back_variables: [],
+            shouldUpdateVariables: false,
+            showVariablesInputs: false,
 
-            debugMenu: false,
+            debugMenu: true,
 
             signOptions : [ 'Available - Sold',
                             'Construction',
@@ -275,16 +300,20 @@ export default {
         ...mapGetters('builders', ['builders']),
        
        totalVariables: function () {
-          var c = [...new Set([...this.variables, ...this.back_variables])];
-          
-          return c;
-        }
+          let arr = this.$_.unionWith(this.variables, this.back_variables, this.$_.isEqual);
+          this.orderToReturn.variables = [];
+          for(var i = 0; i < arr.length; i++){
+              this.orderToReturn.variables.push({name: arr[i].name, value: ""});
+          }
+          return arr;
+        },
     },
     
     components: {
         'vse-select' : require('components/Form/VSESelect.vue').default,
         'vse-date' : require('components/Form/VSEDate.vue').default,
         'vse-file-picker' : require('components/Form/VSEFilePicker.vue').default,
+        'vse-variable-input' : require('components/Form/VSEVariableInput.vue').default,
     },
 
     mounted () {
