@@ -1,6 +1,6 @@
 <template>
     <div class="q-pa-md">
-        <q-header elevated>
+        <q-header>
             <q-bar class="q-electron-drag">
                 <q-icon name="whatshot" />
                 <!-- <div>VSE Feed Store</div> -->

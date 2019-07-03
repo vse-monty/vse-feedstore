@@ -46,7 +46,8 @@
             <q-btn
             style="width: 160px; height 10px"
             color="grey-8"
-            label="illy"/>
+            label="illy"
+            @click="openILST()"/>
         </div>
     </q-drawer>
 
