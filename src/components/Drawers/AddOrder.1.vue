@@ -1,8 +1,8 @@
 <template>
 <!--
-    THIS IS SPECIFICALLY FOR THE MVP
+    THIS IS PART OF WHAT THE FORM WILL ACTUALLY BE
+    WITH THE CUSTOM SELECTORS AND SUCH
 -->
-
     <q-form
         @submit="onSubmit"
         @reset="onReset"
@@ -40,79 +40,25 @@
             standout="bg-secondary text-white"
             input-class="text-grey-4"
             hide-bottom-space
-            lazy-rules
-            :rules="[ val => !!val && val.length == 6 ]"
+            :rules="[ val => !!val && val.length == 6]"
             />
-       
-        <!-- Customer -->
-        <q-input
-            v-model="orderToReturn.customer"
-            filled
-            dense
-            dark
-            clearable
+
+        <!-- Customer Dropdown -->
+        <vse-select 
+            :value.sync="orderToReturn.customer"
             label="customer"
-            standout="bg-secondary text-white"
-            input-class="text-grey-4"
-            hide-bottom-space
-            lazy-rules
+            :options="Object.keys(builders)"
             :rules="[ val => !!val ]"
-            />
-
-        <!-- Subdivision -->
-        <q-input
-            v-model="orderToReturn.subdivision"
+            @add-option="addCustomer=true"/>
+        
+        <!-- Subdivision Dropdown -->
+        <vse-select
+            v-if="orderToReturn.customer !== null"
+            :value.sync="orderToReturn.subdivision"
             label="subdivision"
-            filled
-            dense
-            dark
-            clearable
-            standout="bg-secondary text-white"
-            input-class="text-grey-4"
-            hide-bottom-space
-            lazy-rules
+            :options="Object.keys(builders[orderToReturn.customer].locations)"
             :rules="[ val => !!val ]"
-            />
-      
-        <!-- Address Line 1 -->
-        <q-input
-            v-model="addressLine1"
-            label="address line 1"
-            filled
-            dense
-            dark
-            clearable
-            standout="bg-secondary text-white"
-            input-class="text-grey-4"
-            hide-bottom-space
-            />
-       
-        <!-- Address Line 2 -->
-        <q-input
-            v-model="addressLine2"
-            label="address line 2"
-            filled
-            dense
-            dark
-            clearable
-            standout="bg-secondary text-white"
-            input-class="text-grey-4"
-            hide-bottom-space
-            />
-
-        <!-- Quantity Input -->
-        <q-input
-            v-model="orderToReturn.quantity"
-            label="quantity"
-            filled
-            dense
-            dark
-            clearable
-            standout="bg-secondary text-white"
-            input-class="text-grey-4"
-            hide-bottom-space
-            :rules="[ val => !!val ]"
-            />
+            @add-option="addOption"/>
 
         <!-- Art File Filepicker-->
         <vse-file-picker 
@@ -199,18 +145,10 @@
             :rules="[ val => !!val ]"
             @add-option="addOption"/>
 
-        <!-- Proof File Filepicker-->
-        <vse-file-picker 
-            v-model="orderToReturn.file_proof"
-            :file.sync="orderToReturn.file_proof"
-            :load="false"
-            :rules="[ val => !!val ]"
-            label="proof file" />
-
-        <!-- Artist Input -->
+        <!-- Quantity Input -->
         <q-input
-            v-model="orderToReturn.artist"
-            label="artist"
+            v-model="orderToReturn.qty"
+            label="quantity"
             filled
             dense
             dark
@@ -221,24 +159,32 @@
             :rules="[ val => !!val ]"
             />
 
-        <!-- Submit & Reset buttons for the 'Add Order' Form -->
-        <div class="row q-pl-sm q-pt-md">
-            <div class="col q-pr-xs">
-                <q-btn
-                style="width: 180px; height 10px"
-                type="reset"
-                color="grey-8"
-                label="reset"/>
-            </div>
+        <!-- Proof File Filepicker-->
+        <vse-file-picker 
+            v-model="orderToReturn.file_proof"
+            :file.sync="orderToReturn.file_proof"
+            :load="false"
+            :rules="[ val => !!val ]"
+            label="proof file" />
 
-            <div class="col q-pl-xs">
-                <q-btn
-                style="width: 180px; height 10px"
-                type="submit"
-                color="secondary"
-                label="submit"/>
+        <!-- Submit & Reset buttons for the 'Add Order' Form -->
+            <div class="row q-pl-sm q-pt-md">
+                <div class="col q-pr-xs">
+                    <q-btn
+                    style="width: 180px; height 10px"
+                    type="reset"
+                    color="grey-8"
+                    label="reset"/>
+                </div>
+
+                <div class="col q-pl-xs">
+                    <q-btn
+                    style="width: 180px; height 10px"
+                    type="submit"
+                    color="secondary"
+                    label="submit"/>
+                </div>
             </div>
-        </div>
         <!-- Submit & Reset buttons for the 'Add Order' Form -->
 
 
@@ -289,7 +235,6 @@ export default {
         return {
 
             orderToReturn: {
-                address:       null,
                 artDate:       null,
                 customer:      null,
                 file_art:      null,
@@ -297,7 +242,7 @@ export default {
                 file_proof:    null,
                 orderDate:     null,
                 orderNumber:   null,
-                quantity:      null,
+                qty:           null,
                 subdivision:   null,
                 type:          null,
                 double_face:   false,
@@ -308,8 +253,8 @@ export default {
             variables: [],
             back_variables: [],
 
-            addressLine1: "",
-            addressLine2: "",
+            addCustomer: false,
+            customerToAdd: null,
 
             debugMenu: false,
 
@@ -333,12 +278,10 @@ export default {
         clearFields () {
 
             this.orderToReturn.orderNumber = null;
-            this.orderToReturn.artist = null;
-            this.orderToReturn.address = null;
             this.orderToReturn.customer = null;
             this.orderToReturn.subdivision = null;
             this.orderToReturn.type = null;
-            this.orderToReturn.quantity = null;
+            this.orderToReturn.qty = null;
             this.orderToReturn.orderDate =  this.orderToReturn.artDate;
             this.orderToReturn.file_art = null;
             this.orderToReturn.file_art_back = null;
@@ -406,12 +349,6 @@ export default {
           }
           return arr;
         },
-
-        totalAddress: function () {
-            let addy = this.addressLine1 + '\r' + this.addressLine2;
-            this.orderToReturn.address = addy;
-            return addy;
-        }
     },
     
     components: {

@@ -49,7 +49,7 @@ const mutations = {
 
     sendOrder (state, id){
       Vue.$socket.emit('order', JSON.stringify(state.orders[id]));
-      Vue.delete(that.orders, id);
+      Vue.delete(state.orders, id);
     },
 
 }

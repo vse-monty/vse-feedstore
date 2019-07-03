@@ -26,14 +26,33 @@ const state = {
  
 const mutations = {
 
-    updateBuilder (state, payload) {
-    
-        Object.assign(state.orders[payload.name], payload.updates);
-    },
+  addBuilder (state, payload) {
 
-    deleteBuilder (state, name) {
-        Vue.delete(state.builders, name);
-    },
+    let temp = {
+
+      locations: {
+
+        'Corporate': {
+          address: 'TBD',
+          phone: '000.000.0000',
+        }
+      },
+
+      fileLocations: `~Templates/Builders/'${payload}'/`,
+    };
+
+    Vue.set(state.builders, payload, temp);  
+  },
+
+  updateBuilder (state, payload) {
+  
+      Object.assign(state.builders[payload.name], payload.updates);
+  },
+  
+
+  deleteBuilder (state, name) {
+      Vue.delete(state.builders, name);
+  },
 
 }
 
@@ -45,9 +64,15 @@ const actions = {
 
     },
 
-    updateOrder ({ commit }, payload) {
+    updateBuilder ({ commit }, payload) {
 
         commit('updateBuilder', payload);
+    
+    },
+    
+    addBuilder ({ commit }, payload) {
+
+        commit('addBuilder', payload);
     
     },
 }

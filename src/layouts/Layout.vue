@@ -1,6 +1,7 @@
 <template>
-  <q-layout view="hHr lpR fFr">
-    <q-header>
+  <q-layout view="hHh lpR fFf">
+  <!-- <q-layout view="hHr lpR fFr"> -->
+    <!-- <q-header>
       <q-toolbar>
 
         <q-toolbar-title absolute-center>
@@ -8,7 +9,8 @@
         </q-toolbar-title>
 
       </q-toolbar>
-    </q-header>
+    </q-header> -->
+    <tool-bar />
 
     <q-drawer
       v-model="leftDrawerOpen"
@@ -40,6 +42,12 @@
 
       </q-list>
 
+        <div class="q-pa-sm">
+            <q-btn
+            style="width: 160px; height 10px"
+            color="grey-8"
+            label="illy"/>
+        </div>
     </q-drawer>
 
     <q-drawer
@@ -62,6 +70,7 @@
 
 <script>
 import { openURL } from 'quasar'
+const child = require('child_process').execFile;
 
 export default {
   name: 'MyLayout',
@@ -77,11 +86,11 @@ export default {
           label: 'feed',
           icon: 'send',
         },
-        {
-          to: '/addbuilder',
-          label: 'add client',
-          icon: 'add_circle',
-        },
+        // {
+        //   to: '/addbuilder',
+        //   label: 'add client',
+        //   icon: 'add_circle',
+        // },
         {
           to: '/settings',
           label: 'settings',
@@ -91,10 +100,20 @@ export default {
     }
   },
   methods: {
-    openURL
+    openURL,
+
+    openILST () {
+      child('C:\\Program Files\\Adobe\\Adobe Illustrator CC 2019\\Support Files\\Contents\\Windows\\Illustrator.exe',
+            ['C:\\Users\\dmontgomery\\Documents\\TEST\\VSE\\Templates\\Home.ai'],
+            function(err, data) {
+              console.log(err);
+              console.log(data.toString());
+      });
+    },
   },
   components: {
-    'add-order' : require('components/Drawers/AddOrder.vue').default
+    'add-order' : require('components/Drawers/AddOrder.vue').default,
+    'tool-bar' : require('./Bar.vue').default
   },
 }
 </script>
