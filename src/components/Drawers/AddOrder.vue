@@ -207,20 +207,6 @@
             :rules="[ val => !!val ]"
             label="proof file" />
 
-        <!-- Artist Input -->
-        <q-input
-            v-model="orderToReturn.artist"
-            label="artist"
-            filled
-            dense
-            dark
-            clearable
-            standout="bg-secondary text-white"
-            input-class="text-grey-4"
-            hide-bottom-space
-            :rules="[ val => !!val ]"
-            />
-
         <!-- Submit & Reset buttons for the 'Add Order' Form -->
         <div class="row q-pl-sm q-pt-md">
             <div class="col q-pr-xs">
@@ -239,39 +225,6 @@
                 label="submit"/>
             </div>
         </div>
-        <!-- Submit & Reset buttons for the 'Add Order' Form -->
-
-
-        <!-- Dialog Boxes For Adding -->
-        <q-dialog v-model="addCustomer" persistent>
-            <q-card style="min-width: 400px">
-                <q-card-section>
-                    <div class="text-h6">add customer</div>
-                </q-card-section>
-
-                <q-card-section>
-                    <q-input
-                        v-model="customerToAdd"
-                        label="customer"
-                        autofocus
-                        filled
-                        dense
-                        dark
-                        clearable
-                        standout="bg-secondary text-white"
-                        input-class="text-grey-4"
-                        hide-bottom-space
-                        :rules="[ val => !!val ]"
-                        @add-option="addOption({type: 'customer', value: customerToAdd})"
-                        />
-                </q-card-section>
-
-                <q-card-actions align="right" class="text-primary">
-                    <q-btn label="cancel" v-close-popup />
-                    <q-btn label="add customer" v-close-popup @click="$emit('add-option')" />
-                </q-card-actions>
-            </q-card>
-        </q-dialog>
 
         <!-- shows the 'orderToReturn' Object at the bottom of the form-->
         <pre v-if="debugMenu">{{ orderToReturn }}</pre>
@@ -283,13 +236,15 @@
 <script>
 import { mapGetters } from 'vuex';
 import { mapActions } from 'vuex';
+import { constants } from 'fs';
 
 export default {
     data () {
         return {
 
             orderToReturn: {
-                address:       null,
+                artist:      'DAVE',
+                address:       '',
                 artDate:       null,
                 customer:      null,
                 file_art:      null,
@@ -308,8 +263,8 @@ export default {
             variables: [],
             back_variables: [],
 
-            addressLine1: "",
-            addressLine2: "",
+            addressLine1: '',
+            addressLine2: '',
 
             debugMenu: false,
 
@@ -328,13 +283,11 @@ export default {
     methods: {
 
         ...mapActions('orders', ['addOrder']),
-        ...mapActions('builders', ['addBuilder']),
 
         clearFields () {
 
             this.orderToReturn.orderNumber = null;
-            this.orderToReturn.artist = null;
-            this.orderToReturn.address = null;
+            this.orderToReturn.address = '';
             this.orderToReturn.customer = null;
             this.orderToReturn.subdivision = null;
             this.orderToReturn.type = null;
@@ -348,6 +301,8 @@ export default {
             this.orderToReturn.variables = [];
             this.variables = [];
             this.back_variables = [];
+            this.addressLine1 = '';
+            this.addressLine2 = '';
         },
        
         onSubmit () {
@@ -355,6 +310,7 @@ export default {
             this.$refs.addForm.validate()
             .then(success => {
                 if (success) {
+                    this.orderToReturn.address = this.totalAddress;
                     this.addOrder(this.orderToReturn);
                     this.$refs.addForm.resetValidation();
                     this.clearFields();
@@ -409,7 +365,7 @@ export default {
 
         totalAddress: function () {
             let addy = this.addressLine1 + '\r' + this.addressLine2;
-            this.orderToReturn.address = addy;
+            this.orderToReturn.address = (' ' + addy).slice(1);
             return addy;
         }
     },

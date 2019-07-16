@@ -12,7 +12,7 @@
         :order="order"
         :id="key"
         class="q-ma-xs" 
-        @sendOrder="sendOrder({type: 'order', data: order})"
+        @sendOrder="sendOrder(order)"
         />
 
     </q-list>
@@ -55,7 +55,7 @@ import { mapGetters } from 'vuex'
         console.log('sending order')
         console.log(payload);
 
-        this.$socket.emit('to.panel', JSON.stringify(payload));
+        this.$socket.emit('order', JSON.stringify(payload));
       },
     },
     computed: {

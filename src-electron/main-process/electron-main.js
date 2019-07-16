@@ -19,7 +19,7 @@ function createWindow () {
     height: 700,
     useContentSize: true,
     frame: false,
-    alwaysOnTop: true,
+    alwaysOnTop: false,
     resizable: false,
   })
 

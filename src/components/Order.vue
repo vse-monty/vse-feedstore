@@ -6,18 +6,20 @@
     v-ripple
     class="bg-secondary">
 
-    <q-item-section class="col-2 gt-sm">
-      <q-item-label class="q-mt-sm text-weight-bolder">{{ order.orderNumber }}</q-item-label>
+   <q-item-section class="col-2 gt-xs">
+      <q-item-label class="text-overline text-weight-bolder">
+        {{ order.orderNumber }}
+      </q-item-label>
     </q-item-section>
 
-    <q-item-section top>
+    <q-item-section top class="q-pl-sm">
       <q-item-label lines="1">
         <span class="text-weight-bold">{{ order.customer }}</span>
         <span class="text-blue-grey-3"> - {{ order.subdivision }}</span>
       </q-item-label>
       <q-item-label class="q-mt-xs text-uppercase text-grey-4">
         <small><span class="q-pr-md">{{ order.type }}</span>
-        <span class="">QTY : {{ order.qty }}</span></small>
+        <span class="">QTY : {{ order.quantity }}</span></small>
       </q-item-label>
     </q-item-section>
 
