@@ -178,12 +178,12 @@
             <vse-variable-input
                 v-for="(tv, key) in totalVariables"
                 :key="key"
-                v-model="orderToReturn.variables[key].value"
+                v-model="orderToReturn.variablesArr[key].value"
                 :id="key"
                 :varType="tv.type"
-                :varValue.sync="orderToReturn.variables[key].value"
-                :varsArr.sync="orderToReturn.variables"
-                :label="orderToReturn.variables[key].name"
+                :varValue.sync="orderToReturn.variablesArr[key].value"
+                :varsArr.sync="orderToReturn.variablesArr"
+                :label="orderToReturn.variablesArr[key].name"
                 :rules="[ val => !!val ]"
                 />
 
@@ -257,7 +257,7 @@ export default {
                 type:          null,
                 double_face:   false,
                 same_face:     true,
-                variables: [],
+                variablesArr:  [],
             },
             
             variables: [],
@@ -266,7 +266,7 @@ export default {
             addressLine1: '',
             addressLine2: '',
 
-            debugMenu: false,
+            debugMenu: true,
 
             signOptions : [ 'Available - Sold',
                             'Construction',
@@ -298,7 +298,7 @@ export default {
             this.orderToReturn.file_proof = null;
             this.orderToReturn.same_face = true;
             this.orderToReturn.double_face = false;
-            this.orderToReturn.variables = [];
+            this.orderToReturn.variablesArr = [];
             this.variables = [];
             this.back_variables = [];
             this.addressLine1 = '';
@@ -349,17 +349,20 @@ export default {
                     return;
             }
         },
+       
     },
 
     computed: {
         ...mapGetters('builders', ['builders']),
        
        totalVariables: function () {
-          let arr = this.$_.unionWith(this.variables, this.back_variables, this.$_.isEqual);
-          this.orderToReturn.variables = [];
-          for(var i = 0; i < arr.length; i++){
-              this.orderToReturn.variables.push({name: arr[i].name, value: ""});
+           let arr = this.$_.unionWith(this.variables, this.back_variables, this.$_.isEqual);
+           this.orderToReturn.variablesArr = [];
+
+           for(var i = 0; i < arr.length; i++){
+              this.orderToReturn.variablesArr.push({name: arr[i].name, value: ""});
           }
+
           return arr;
         },
 

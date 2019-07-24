@@ -98,7 +98,7 @@ export default {
 
       sendOrder(id) {
 
-        this.$emit('sendOrder')
+        this.$emit('sendOrder', id);
         this.$q.notify('order sent to illustrator panel')
       },
     }

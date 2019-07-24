@@ -94,7 +94,7 @@ export default {
                     this.$socket.removeListener('give.variables'); //stop listening for this event
                 });
 
-               this.$socket.emit('get.variables', fileString[0])
+               this.$socket.emit('get.variables', encodeURI(fileString[0]));
                this.$emit('input', fileString[0]);
             }
         },

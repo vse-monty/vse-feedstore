@@ -52,7 +52,7 @@ import { mapGetters } from 'vuex'
         this.$emit('closeDrawer')
       },
       sendOrder(payload){
-        console.log('sending order')
+        console.log('sending order');
         console.log(payload);
 
         this.$socket.emit('order', JSON.stringify(payload));
