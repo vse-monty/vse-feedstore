@@ -266,7 +266,7 @@ export default {
             addressLine1: '',
             addressLine2: '',
 
-            debugMenu: true,
+            debugMenu: false,
 
             signOptions : [ 'Available - Sold',
                             'Construction',
