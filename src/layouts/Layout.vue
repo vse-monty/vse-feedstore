@@ -1,15 +1,5 @@
 <template>
   <q-layout view="hHh lpR fFf">
-  <!-- <q-layout view="hHr lpR fFr"> -->
-    <!-- <q-header>
-      <q-toolbar>
-
-        <q-toolbar-title absolute-center>
-         VSE Feed Store
-        </q-toolbar-title>
-
-      </q-toolbar>
-    </q-header> -->
     <tool-bar />
 
     <q-drawer
@@ -51,7 +41,7 @@
         </div>
     </q-drawer>
 
-    <q-drawer
+    <!-- <q-drawer
       v-model="orderDrawerOpen"
       :breakpoint=10
       :width=400
@@ -60,7 +50,7 @@
       content-class="bg-grey-9">
       <add-order
        @closeDrawer="orderDrawerOpen = false"/>
-    </q-drawer>
+    </q-drawer> -->
 
     <q-page-container>
       <router-view 
@@ -78,20 +68,25 @@ export default {
   data () {
     return {
       leftDrawerOpen: true,
-      orderDrawerOpen: true,
+      orderDrawerOpen: false,
       builderDrawerOpen: false,
       
       navs: [
+        {
+          to: '/addorder',
+          label: 'add order',
+          icon: 'insert_drive_file',
+        },
+        {
+          to: '/addbatch',
+          label: 'batch orders',
+          icon: 'file_copy',
+        },
         {
           to: '/',
           label: 'feed',
           icon: 'send',
         },
-        // {
-        //   to: '/addbuilder',
-        //   label: 'add client',
-        //   icon: 'add_circle',
-        // },
         {
           to: '/settings',
           label: 'settings',

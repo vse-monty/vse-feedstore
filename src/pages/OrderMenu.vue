@@ -2,17 +2,17 @@
   <q-page padding>
     
     <q-list
-    padding
-    class="q-mx-md"
-    style="max-width: 600px">
+      padding
+      class="q-mx-md"
+      style="max-width: 600px">
 
         <order
-        v-for="(order, key) in orders"
-        :key="key"
-        :order="order"
-        :id="key"
-        class="q-ma-xs" 
-        @sendOrder="sendOrder(order)"
+          v-for="(order, key) in orders"
+          :key="key"
+          :order="order"
+          :id="key"
+          class="q-ma-xs" 
+          @sendOrder="sendOrder(order)"
         />
 
     </q-list>
@@ -28,10 +28,6 @@
         color='secondary'/>
     
     </q-page-sticky>
-
-    <!-- <q-dialog v-model="showAddOrder">
-      <add-order/>
-    </q-dialog> -->
 
   </q-page>
 </template>

@@ -51,6 +51,7 @@ module.exports = function (ctx) {
         'QSelect',
         'QCard',
         'QCardSection',
+        'QSeparator',
         'QCardActions',
         'QSpace',
         'QDate',
@@ -58,6 +59,10 @@ module.exports = function (ctx) {
         'QBtnToggle',
         'QBar',
         'QScrollArea',
+        'QTable',
+        'QTh',
+        'QTr',
+        'QTd',
       ],
 
       directives: [

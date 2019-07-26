@@ -1,236 +1,229 @@
 <template>
-<!--
-    THIS IS SPECIFICALLY FOR THE MVP
--->
+	<q-form
+		@submit="onSubmit"
+		@reset="onReset"
+		no-error-focus
+		class="q-gutter-xs"
+		ref="addForm"
+		>
 
-    <q-form
-        @submit="onSubmit"
-        @reset="onReset"
-        no-error-focus
-        class="q-gutter-xs"
-        ref="addForm"
-        >
+		<!-- Art and Order Dates -->
+		<div class="row q-pt-sm">
+			<div class="col q-pr-xs">
+				<vse-date
+					v-model="orderToReturn.orderDate"
+					:date.sync="orderToReturn.orderDate"
+					label="order date" />
+			</div>
 
-        <!-- Art and Order Dates -->
-        <div class="row q-pt-sm">
-            <div class="col q-pr-xs">
-                <vse-date
-                    v-model="orderToReturn.orderDate"
-                    :date.sync="orderToReturn.orderDate"
-                    label="order date" />
-            </div>
-            <div class="col q-pl-auto">
-                <vse-date
-                    v-model="orderToReturn.artDate"
-                    :date.sync="orderToReturn.artDate"
-                    label="art date"
-                    disable/>
-            </div>
-        </div>
+			<div class="col q-pl-auto">
+				<vse-date
+					v-model="orderToReturn.artDate"
+					:date.sync="orderToReturn.artDate"
+					label="art date"
+					disable/>
+			</div>
+		</div>
 
-        <!-- Order Number -->
-        <q-input
-            v-model="orderToReturn.orderNumber"
-            autofocus
-            filled
-            dense
-            dark
-            clearable
-            label="order number"
-            standout="bg-secondary text-white"
-            input-class="text-grey-4"
-            hide-bottom-space
-            lazy-rules
-            :rules="[ val => !!val && val.length == 6 ]"
-            />
-       
-        <!-- Customer -->
-        <q-input
-            v-model="orderToReturn.customer"
-            filled
-            dense
-            dark
-            clearable
-            label="customer"
-            standout="bg-secondary text-white"
-            input-class="text-grey-4"
-            hide-bottom-space
-            lazy-rules
-            :rules="[ val => !!val ]"
-            />
+		<!-- Order Number -->
+		<q-input
+			v-model="orderToReturn.orderNumber"
+			autofocus
+			filled
+			dense
+			dark
+			clearable
+			label="order number"
+			standout="bg-secondary text-white"
+			input-class="text-grey-4"
+			hide-bottom-space
+			lazy-rules
+			:rules="[ val => !!val && val.length == 6 ]"
+			/>
+		
+		<!-- Customer -->
+		<q-input
+			v-model="orderToReturn.customer"
+			filled
+			dense
+			dark
+			clearable
+			label="customer"
+			standout="bg-secondary text-white"
+			input-class="text-grey-4"
+			hide-bottom-space
+			lazy-rules
+			:rules="[ val => !!val ]"
+			/>
 
-        <!-- Subdivision -->
-        <q-input
-            v-model="orderToReturn.subdivision"
-            label="subdivision"
-            filled
-            dense
-            dark
-            clearable
-            standout="bg-secondary text-white"
-            input-class="text-grey-4"
-            hide-bottom-space
-            lazy-rules
-            :rules="[ val => !!val ]"
-            />
-      
-        <!-- Address Line 1 -->
-        <q-input
-            v-model="addressLine1"
-            label="address line 1"
-            filled
-            dense
-            dark
-            clearable
-            standout="bg-secondary text-white"
-            input-class="text-grey-4"
-            hide-bottom-space
-            />
-       
-        <!-- Address Line 2 -->
-        <q-input
-            v-model="addressLine2"
-            label="address line 2"
-            filled
-            dense
-            dark
-            clearable
-            standout="bg-secondary text-white"
-            input-class="text-grey-4"
-            hide-bottom-space
-            />
+		<!-- Subdivision -->
+		<q-input
+			v-model="orderToReturn.subdivision"
+			label="subdivision"
+			filled
+			dense
+			dark
+			clearable
+			standout="bg-secondary text-white"
+			input-class="text-grey-4"
+			hide-bottom-space
+			lazy-rules
+			:rules="[ val => !!val ]"
+			/>
 
-        <!-- Quantity Input -->
-        <q-input
-            v-model="orderToReturn.quantity"
-            label="quantity"
-            filled
-            dense
-            dark
-            clearable
-            standout="bg-secondary text-white"
-            input-class="text-grey-4"
-            hide-bottom-space
-            :rules="[ val => !!val ]"
-            />
+		<!-- Address Line 1 -->
+		<q-input
+			v-model="addressLine1"
+			label="address line 1"
+			filled
+			dense
+			dark
+			clearable
+			standout="bg-secondary text-white"
+			input-class="text-grey-4"
+			hide-bottom-space
+			/>
+		
+		<!-- Address Line 2 -->
+		<q-input
+			v-model="addressLine2"
+			label="address line 2"
+			filled
+			dense
+			dark
+			clearable
+			standout="bg-secondary text-white"
+			input-class="text-grey-4"
+			hide-bottom-space
+			/>
 
-        <!-- Art File Filepicker-->
-        <vse-file-picker 
-            v-model="orderToReturn.file_art"
-            :file.sync="orderToReturn.file_art"
-            :load="true"
-            :varsArr.sync="variables"
-            :rules="[ val => !!val ]"
-            label="art file"
-            @fill="variables = $event" />
-        
-        <!-- IS THIS SIGN SINGLE FACED OR DOUBLE-->
-        <div class="q-gutter-xs">
-            <q-btn-toggle
-                v-model="orderToReturn.double_face"
-                spread
-                dense
-                rounded
-                no-caps
-                class="btn-toggle"
-                toggle-color="secondary"
-                color="primary"
-                text-color="grey-4"
-                :options="[
-                    {label: 'single face', value: false},
-                    {label: 'double face', value: true}]" />
-        
-         <!-- IF DOUBLE, IS IT SAME FACE ON BOTH SIDES-->
-            <q-btn-toggle
-                v-model="orderToReturn.same_face"
-                v-if="orderToReturn.double_face"
-                spread
-                dense
-                rounded
-                no-caps
-                class="btn-toggle"
-                toggle-color="secondary"
-                color="primary"
-                text-color="grey-4"
-                :options="[
-                    {label: 'same face', value: true},
-                    {label: 'different face', value: false}]" />
-        </div>
+		<!-- Quantity Input -->
+		<q-input
+			v-model="orderToReturn.quantity"
+			label="quantity"
+			filled
+			dense
+			dark
+			clearable
+			standout="bg-secondary text-white"
+			input-class="text-grey-4"
+			hide-bottom-space
+			:rules="[ val => !!val ]"
+			/>
 
-        <!-- Art File Filepicker-->
-        <vse-file-picker 
-            v-if="!orderToReturn.same_face"
-            v-model="orderToReturn.file_art_back"
-            :file.sync="orderToReturn.file_art_back"
-            :load="true"
-            :varsArr.sync="back_variables"
-            :rules="[ val => !!val ]"
-            label="art file (back)"
-            @fill="back_variables = $event" />
+		<!-- Art File Filepicker-->
+		<vse-file-picker 
+			v-model="orderToReturn.file_art"
+			:file.sync="orderToReturn.file_art"
+			:load="true"
+			:varsArr.sync="variables"
+			:rules="[ val => !!val ]"
+			label="art file"
+			@fill="variables = $event" />
+		
+		<div class="q-gutter-xs">
+			<!-- IS THIS SIGN SINGLE FACED OR DOUBLE-->
+			<q-btn-toggle
+				v-model="orderToReturn.double_face"
+				spread
+				dense
+				rounded
+				no-caps
+				class="btn-toggle"
+				toggle-color="secondary"
+				color="primary"
+				text-color="grey-4"
+				:options="[
+						{label: 'single face', value: false},
+						{label: 'double face', value: true}]" />
+		
+			<!-- IF DOUBLE, IS IT SAME FACE ON BOTH SIDES-->
+			<q-btn-toggle
+				v-model="orderToReturn.same_face"
+				v-if="orderToReturn.double_face"
+				spread
+				dense
+				rounded
+				no-caps
+				class="btn-toggle"
+				toggle-color="secondary"
+				color="primary"
+				text-color="grey-4"
+				:options="[
+						{label: 'same face', value: true},
+						{label: 'different face', value: false}]" />
+		</div>
 
+		<!-- Art File Filepicker-->
+		<vse-file-picker 
+			v-if="!orderToReturn.same_face"
+			v-model="orderToReturn.file_art_back"
+			:file.sync="orderToReturn.file_art_back"
+			:load="true"
+			:varsArr.sync="back_variables"
+			:rules="[ val => !!val ]"
+			label="art file (back)"
+			@fill="back_variables = $event" />
 
+		<!-- THIS IS WHERE WE WILL POPULATE THE INPUTS FOR VARIABLES -->
+		<q-list
+			v-if="totalVariables.length !== 0"
+			class="q-gutter-xs" >
 
-        <!-- THIS IS WHERE WE WILL POPULATE THE INPUTS FOR VARIABLES -->
-        <q-list
-            v-if="totalVariables.length !== 0"
-            class="q-gutter-xs" >
+			<vse-variable-input
+				v-for="(tv, key) in totalVariables"
+				:key="key"
+				v-model="orderToReturn.variablesArr[key].value"
+				:id="key"
+				:varType="tv.type"
+				:varValue.sync="orderToReturn.variablesArr[key].value"
+				:varsArr.sync="orderToReturn.variablesArr"
+				:label="orderToReturn.variablesArr[key].name"
+				:rules="[ val => !!val ]"
+				/>
+		</q-list>
+		<!-- END VARIABLE POPULATION -->
 
-            <vse-variable-input
-                v-for="(tv, key) in totalVariables"
-                :key="key"
-                v-model="orderToReturn.variablesArr[key].value"
-                :id="key"
-                :varType="tv.type"
-                :varValue.sync="orderToReturn.variablesArr[key].value"
-                :varsArr.sync="orderToReturn.variablesArr"
-                :label="orderToReturn.variablesArr[key].name"
-                :rules="[ val => !!val ]"
-                />
+		<!-- Sign Type Dropdown -->
+		<vse-select
+			:value.sync="orderToReturn.type"
+			label="sign type"
+			:options="signOptions"
+			:rules="[ val => !!val ]"
+			@add-option="addOption"/>
 
-        </q-list>
-        <!-- END VARIABLE POPULATION -->
+		<!-- Proof File Filepicker-->
+		<vse-file-picker 
+			v-model="orderToReturn.file_proof"
+			:file.sync="orderToReturn.file_proof"
+			:load="false"
+			:rules="[ val => !!val ]"
+			label="proof file" />
 
+		<!-- Submit & Reset buttons for the 'Add Order' Form -->
+		<div class="row q-pl-sm q-pt-md">
+			<div class="col q-pr-xs">
+				<q-btn
+					style="width: 180px; height 10px"
+					type="reset"
+					color="grey-8"
+					label="reset"/>
+			</div>
 
-        <!-- Sign Type Dropdown -->
-        <vse-select
-            :value.sync="orderToReturn.type"
-            label="sign type"
-            :options="signOptions"
-            :rules="[ val => !!val ]"
-            @add-option="addOption"/>
+			<div class="col q-pl-xs">
+				<q-btn
+					style="width: 180px; height 10px"
+					type="submit"
+					color="secondary"
+					label="submit"/>
+			</div>
+		</div>
 
-        <!-- Proof File Filepicker-->
-        <vse-file-picker 
-            v-model="orderToReturn.file_proof"
-            :file.sync="orderToReturn.file_proof"
-            :load="false"
-            :rules="[ val => !!val ]"
-            label="proof file" />
-
-        <!-- Submit & Reset buttons for the 'Add Order' Form -->
-        <div class="row q-pl-sm q-pt-md">
-            <div class="col q-pr-xs">
-                <q-btn
-                style="width: 180px; height 10px"
-                type="reset"
-                color="grey-8"
-                label="reset"/>
-            </div>
-
-            <div class="col q-pl-xs">
-                <q-btn
-                style="width: 180px; height 10px"
-                type="submit"
-                color="secondary"
-                label="submit"/>
-            </div>
-        </div>
-
-        <!-- shows the 'orderToReturn' Object at the bottom of the form-->
-        <pre v-if="debugMenu">{{ orderToReturn }}</pre>
-        <!-- <pre>{{ totalVariables }}</pre> -->
-        
-    </q-form>
+		<!-- shows the 'orderToReturn' Object at the bottom of the form-->
+		<pre v-if="debugMenu">{{ orderToReturn }}</pre>
+		<!-- <pre>{{ totalVariables }}</pre> -->
+			
+	</q-form>
 </template>
 
 <script>

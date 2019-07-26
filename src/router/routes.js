@@ -12,6 +12,14 @@ const routes = [
         path: '/settings',
         component: () => import('pages/Settings.vue')
       },
+      {
+        path: '/addorder',
+        component: () => import('pages/AddOrder.vue')
+      },
+      {
+        path: '/addbatch',
+        component: () => import('pages/AddBatch.vue')
+      },
     ]
   }
 ]
