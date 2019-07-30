@@ -42,8 +42,7 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view 
-        @closeDrawer="orderDrawerOpen = true"/>
+      <router-view />
     </q-page-container>
   </q-layout>
 </template>
@@ -57,8 +56,6 @@ export default {
   data () {
     return {
       leftDrawerOpen: true,
-      orderDrawerOpen: false,
-      builderDrawerOpen: false,
       
       navs: [
         {
@@ -80,6 +77,7 @@ export default {
     }
   },
   methods: {
+
     openURL,
 
     openILST () {
@@ -91,9 +89,14 @@ export default {
       });
     },
   },
+
   components: {
-    'add-order' : require('components/Drawers/AddOrder.vue').default,
     'tool-bar' : require('./Bar.vue').default
+  },
+
+  mounted(){
+
+    //this.openILST();
   },
 }
 </script>

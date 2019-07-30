@@ -1,5 +1,4 @@
 <template>
-  <!--TODO: ADD click event, to open an editing modal for the order -->
   <q-item
     @click="$emit('update')"
     clickable

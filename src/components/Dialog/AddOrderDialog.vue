@@ -5,8 +5,8 @@
 			@reset="onReset"
 			no-error-focus
 			class="q-gutter-sm"
-			ref="addOrderForm"
-			>
+			ref="addOrderForm">
+
 			<q-card-section class="q-gutter-xs">
 
 				<!-- Art and Order Dates -->
@@ -40,8 +40,7 @@
 					input-class="text-grey-4"
 					hide-bottom-space
 					lazy-rules
-					:rules="[ val => !!val && val.length == 6 ]"
-					/>
+					:rules="[ val => !!val && val.length == 6 ]"/>
 
 				<!-- Customer -->
 				<q-input
@@ -55,8 +54,7 @@
 					input-class="text-grey-4"
 					hide-bottom-space
 					lazy-rules
-					:rules="[ val => !!val ]"
-					/>
+					:rules="[ val => !!val ]"/>
 
 				<!-- Subdivision -->
 				<q-input
@@ -70,8 +68,7 @@
 					input-class="text-grey-4"
 					hide-bottom-space
 					lazy-rules
-					:rules="[ val => !!val ]"
-					/>
+					:rules="[ val => !!val ]"/>
 
 				<!-- Address Line 1 -->
 				<q-input
@@ -83,8 +80,7 @@
 					clearable
 					standout="bg-secondary text-white"
 					input-class="text-grey-4"
-					hide-bottom-space
-					/>
+					hide-bottom-space/>
 				
 				<!-- Address Line 2 -->
 				<q-input
@@ -96,8 +92,7 @@
 					clearable
 					standout="bg-secondary text-white"
 					input-class="text-grey-4"
-					hide-bottom-space
-					/>
+					hide-bottom-space/>
 
 				<!-- Quantity Input -->
 				<q-input
@@ -110,8 +105,7 @@
 					standout="bg-secondary text-white"
 					input-class="text-grey-4"
 					hide-bottom-space
-					:rules="[ val => !!val ]"
-					/>
+					:rules="[ val => !!val ]"/>
 
 				<!-- Art File Filepicker-->
 				<vse-file-picker 
@@ -177,9 +171,7 @@
 						:varType="tv.type"
 						:varValue.sync="the_order.variablesArr[key].value"
 						:label="the_order.variablesArr[key].name"
-						:rules="[ val => !!val ]"
-						/>
-
+						:rules="[ val => !!val ]"/>
 				</q-list>
 
 				<!-- Sign Type Dropdown -->

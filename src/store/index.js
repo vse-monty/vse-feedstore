@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 import orders from './store-orders.js'
+import batches from './store-batch.js'
 
 Vue.use(Vuex)
 
@@ -14,6 +15,7 @@ export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
       orders,
+      batches,
     },
 
     // enable strict mode (adds overhead!)

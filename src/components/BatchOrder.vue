@@ -1,7 +1,6 @@
 <template>
-  <!--TODO: ADD click event, to open an editing modal for the order -->
   <q-item
-    @click="updateOrder({id: id, updates: {type: 'banana'} })"
+    @click="$emit('update')"
     clickable
     v-ripple
     class="bg-secondary">
@@ -12,10 +11,9 @@
       </q-item-label>
     </q-item-section>
 
-    <q-item-section top class="q-pl-sm">
+    <q-item-section class="q-pl-sm">
       <q-item-label lines="1">
-        <span class="text-weight-bold">{{ order.customer }}</span>
-        <span class="text-blue-grey-3"> - {{ order.subdivision }}</span>
+        <span class="text-weight-medium text-grey-4">SUBDIVISION : </span><span class="text-weight-bold text-blue-grey-3">{{ order.subdivision }}</span>
       </q-item-label>
       <q-item-label class="q-mt-xs text-uppercase text-grey-4">
         <small><span class="q-pr-md">{{ order.type }}</span>
@@ -23,9 +21,15 @@
       </q-item-label>
     </q-item-section>
 
+    <q-item-section class="q-pl-sm">
+      <q-item-label lines="1" v-for="(o, idx) in order.variablesArr" :key="idx">
+        <small><span class="text-cyan-3">{{ o.name }} - </span>
+        <span class="text-blue-grey-2">{{ o.value }}</span></small>
+      </q-item-label>
+    </q-item-section>
+
     <q-item-section side>
       <div class="text-grey-8 q-gutter-xs">
-        <!-- TODO: ADD click events to the buttons to send and delete orders-->
         <q-btn
         @click.stop="confirmDelete(id)"
         class="gt-xs text-grey-4"
@@ -35,17 +39,6 @@
         dense
         round
         icon="delete" />
-        
-        <q-btn
-        @click.stop="sendOrder(id)"
-        class="gt-xs text-blue-grey-3"
-        size="11px"
-        flat
-        exact
-        dense
-        round
-        icon="send" />
-
       </div>
     </q-item-section>
   </q-item>

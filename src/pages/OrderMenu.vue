@@ -7,7 +7,7 @@
 			flat>
 
 			<q-card-section>
-				<div class="text-h4">order feed</div>
+				<div class="text-h6">order feed</div>
 			</q-card-section>
 		</q-card>
 
@@ -62,11 +62,12 @@
 <script>
 
 import { mapGetters } from 'vuex'
-import { mapActions } from 'vuex';
+import { mapActions } from 'vuex'
 
   export default {
     data() {
-      return{
+      return {
+
         showAddOrderForm: false,
         showEditOrderForm: false,
 
@@ -76,16 +77,19 @@ import { mapActions } from 'vuex';
         },
       }
     },
+
     methods: {
+
       ...mapActions('orders',
                     ['updateOrder',
-                    'deleteOrder',
                     'sendOrder'
                     ]),
 
       sendOrder(payload){
+
         this.$socket.emit('order', JSON.stringify(payload));
       },
+
       updateOrder(payload){
 
         console.log('updateOrder');
@@ -100,9 +104,11 @@ import { mapActions } from 'vuex';
       }
     },
     computed: {
+
       ...mapGetters('orders', ['orders'])
     },
     components: {
+      
       'order' : require('components/Order.vue').default,
       'add-order-form' : require('components/Dialog/AddOrderDialog.vue').default,
       'edit-order-form' : require('components/Dialog/EditOrderDialog.vue').default,
