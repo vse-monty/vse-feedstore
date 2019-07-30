@@ -63,6 +63,7 @@ module.exports = function (ctx) {
         'QTh',
         'QTr',
         'QTd',
+        'QPopupEdit'
       ],
 
       directives: [

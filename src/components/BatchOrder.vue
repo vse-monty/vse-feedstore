@@ -1,7 +1,7 @@
 <template>
   <!--TODO: ADD click event, to open an editing modal for the order -->
   <q-item
-    @click="$emit('update')"
+    @click="updateOrder({id: id, updates: {type: 'banana'} })"
     clickable
     v-ripple
     class="bg-secondary">
@@ -12,7 +12,7 @@
       </q-item-label>
     </q-item-section>
 
-    <q-item-section class="q-pl-sm">
+    <q-item-section top class="q-pl-sm">
       <q-item-label lines="1">
         <span class="text-weight-bold">{{ order.customer }}</span>
         <span class="text-blue-grey-3"> - {{ order.subdivision }}</span>
@@ -23,15 +23,9 @@
       </q-item-label>
     </q-item-section>
 
-    <q-item-section class="q-pl-sm">
-      <q-item-label lines="1" v-for="(o, idx) in order.variablesArr" :key="idx">
-        <small><span class="text-cyan-3">{{ o.name }} - </span>
-        <span class="text-blue-grey-2">{{ o.value }}</span></small>
-      </q-item-label>
-    </q-item-section>
-
     <q-item-section side>
       <div class="text-grey-8 q-gutter-xs">
+        <!-- TODO: ADD click events to the buttons to send and delete orders-->
         <q-btn
         @click.stop="confirmDelete(id)"
         class="gt-xs text-grey-4"
@@ -51,6 +45,7 @@
         dense
         round
         icon="send" />
+
       </div>
     </q-item-section>
   </q-item>

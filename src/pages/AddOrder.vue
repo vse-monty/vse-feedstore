@@ -41,8 +41,7 @@
             input-class="text-grey-4"
             hide-bottom-space
             lazy-rules
-            :rules="[ val => !!val && val.length == 6 ]"
-            />
+            :rules="[ val => !!val && val.length == 6 ]"/>
        
         <!-- Customer -->
         <q-input
@@ -381,7 +380,7 @@ export default {
     },
 
     mounted () {
-        // this.$refs.addForm.onReset();
+        
     },
 }
 </script>

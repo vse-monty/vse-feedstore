@@ -35,22 +35,11 @@
         <div class="q-pa-sm">
             <q-btn
             style="width: 160px; height 10px"
-            color="grey-8"
-            label="illy"
+            color="blue-grey-7"
+            label="illustrator"
             @click="openILST()"/>
         </div>
     </q-drawer>
-
-    <!-- <q-drawer
-      v-model="orderDrawerOpen"
-      :breakpoint=10
-      :width=400
-      side="right"
-      elevated
-      content-class="bg-grey-9">
-      <add-order
-       @closeDrawer="orderDrawerOpen = false"/>
-    </q-drawer> -->
 
     <q-page-container>
       <router-view 
@@ -73,19 +62,14 @@ export default {
       
       navs: [
         {
-          to: '/addorder',
-          label: 'add order',
+          to: '/',
+          label: 'order',
           icon: 'insert_drive_file',
         },
         {
-          to: '/addbatch',
+          to: '/batch',
           label: 'batch orders',
           icon: 'file_copy',
-        },
-        {
-          to: '/',
-          label: 'feed',
-          icon: 'send',
         },
         {
           to: '/settings',

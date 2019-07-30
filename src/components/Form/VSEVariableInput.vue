@@ -2,8 +2,6 @@
     <!-- ** THIS IS FOR GETTING FILES FROM SYSTEM **-->
     <q-input
         :value="varValue"
-        :arr="varsArr"
-        :id="id"
         :varType="varType"
         :label="label"
         :rules="rules"
@@ -39,7 +37,7 @@
 import { QInput } from "quasar";
 
 export default {
-    props: ['rules', 'label', 'id', 'varValue', 'varsArr', 'varType'],
+    props: ['rules', 'label', 'varValue', 'varType'],
     components: {
         QInput
     },
