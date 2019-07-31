@@ -17,6 +17,7 @@
 					dense
 					dark
 					clearable
+					disable
 					label="order number"
 					standout="bg-secondary text-white"
 					input-class="text-grey-4"
@@ -119,8 +120,11 @@
 import { mapGetters } from 'vuex';
 import { mapActions } from 'vuex';
 import { constants } from 'fs';
+import { lookup } from 'dns';
 
 export default {
+	
+	props: ['editID'],
 
 	data () {
 		return {
@@ -139,9 +143,10 @@ export default {
 			addressLine2: '',
 
 			debugMenu: false,
-			hasVars:   false,
+			hasVars: false,
 		}
 	},
+
 	methods: {
 
 		...mapActions('batches', ['addOrder']),
@@ -178,15 +183,57 @@ export default {
 			
 			let arr = this.batch_shared.totalVariables;
 
+			if(arr.length == 0){
+
+				this.hasVars = false;
+				this.the_order.variablesArr = [];
+				return;
+			}
+
 			for(var i = 0; i < arr.length; i++){
 				this.the_order.variablesArr.push({name: arr[i].name, value: ""});
 			}
-		}
+
+			this.hasVars = true;
+		},
+
+		checkVariablesArray () {
+
+			let arr1 = this.batch_shared.totalVariables;
+			let arr2 = this.the_order.variablesArr;
+
+			if(arr1.length == 0){
+
+				this.hasVars = false;
+				this.the_order.variablesArr = [];
+				return;
+			}
+
+			if(arr1.length !== arr2.length){ 
+				
+				this.the_order.variablesArr = []
+				this.clearVarArray();
+				return;
+
+			} else {
+				
+				for(let i = 0; i < arr1.length; i++){
+					
+					if(arr1[i].name !== arr2[i].name){
+						
+						this.the_order.variablesArr = []
+						this.clearVarArray();
+						return;
+					}
+				}
+			}
+		},
+		
 	},
 
 	computed: {
 
-		...mapGetters('batches', ['batch_shared']),
+		...mapGetters('batches', ['batch_order', 'batch_shared']),
 
 		totalAddress: function () {
 			
@@ -204,20 +251,18 @@ export default {
 	},
 
 	mounted () {
-		console.log(this.batch_shared);
+		
+		let obj = {}
+		Object.assign(obj, this.batch_order(this.editID));
+		Object.assign(this.the_order, obj);
 
-		if(this.batch_shared.totalVariables.length !== 0){
+		this.addressLine1 = this.addressLine2 = "";
 
-			this.hasVars = true;
+		let addy = this.the_order.address.split(/\r\n|\r|\n/);
+		this.addressLine1 = addy[0];
+		this.addressLine2 = addy[1];
 
-			let arr = this.batch_shared.totalVariables;
-
-			for(let i = 0; i < arr.length; i++){
-				this.the_order.variablesArr.push({name: arr[i].name, value: ""});
-			}
-		}
-		console.log('mounted add-batch-order')
-		console.log(this.the_order);
+		this.checkVariablesArray();
 	},
 }
 </script>

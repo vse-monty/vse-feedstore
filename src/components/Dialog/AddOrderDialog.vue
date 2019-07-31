@@ -162,8 +162,7 @@
 				<!-- THIS IS WHERE WE WILL POPULATE THE INPUTS FOR VARIABLES -->
 				<q-list
 					v-if="totalVariables.length !== 0"
-					class="q-gutter-xs" >
-
+					class="row" >
 					<vse-variable-input
 						v-for="(tv, key) in totalVariables"
 						:key="key"

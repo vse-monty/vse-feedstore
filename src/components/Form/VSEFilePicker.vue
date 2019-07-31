@@ -89,7 +89,7 @@ export default {
                     console.log(payload.data);
 
                     console.log('sending data to vars array');
-                    this.$emit('update:varsArr', payload.data); //put the data into -THIS- picker's load
+                    this.$emit('fill', payload.data); //put the data into -THIS- picker's load
                     console.log('removing listener for \'give.variables\' for: ' + this.label);
                     this.$socket.removeListener('give.variables'); //stop listening for this event
                 });

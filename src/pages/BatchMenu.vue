@@ -1,31 +1,31 @@
 <template>
-  <q-page padding>
+  <q-page>
+    <q-item
+      @click="showEditShared = true"
+      clickable
+      v-ripple
+      dark
+      class="row bg-blue-grey-7 q-mx-auto"
+      style="max-width: 750px">
 
-    <div class="row q-mx-xl">
-      <div class="col-6 q-pr-md">
-        <q-card dark class="bg-secondary text-center" style="min-height: 150px">
-          <q-card-section>
-            <span class="text-h6">{{ batch_shared.customer }}</span>
-            <span class="text-overline"> - {{ batch_shared.type }}</span>
-            <q-separator dark  spaced/>
-            <div class="text-overline">orders in batch - {{ totalOrders }}</div>
-          </q-card-section>
-        </q-card>
-      </div>
-      
-      <div class="col-6 q-pl-md">
-        <q-card dark class="bg-secondary text-center" style="min-height: 150px">
-          <q-card-section>
-            <div class="text-h6">dynamic slots</div>
-            <q-separator dark spaced/>
-            <div v-for="(o, idx) in batch_shared.totalVariables" :key="idx">
-              <small><span class="text-cyan-3">{{ o.name }} - </span>
-              <span class="text-blue-grey-2">{{ o.type }}</span></small>
-            </div>
-          </q-card-section>
-        </q-card>
-      </div>
-    </div>
+      <q-item-section class="q-pl-xl">
+        <q-item-label lines="1">
+          <span class="text-h6 text-weight-bold text-grey-4">{{ batch_shared.customer }}</span>
+        </q-item-label>
+      </q-item-section>
+  
+      <q-item-section class="q-pl-xl text-subtitle1">
+        <q-item-label>
+          <span class="text-weight-medium text-grey-4">{{ batch_shared.type }}</span>
+        </q-item-label>
+      </q-item-section>
+  
+      <q-item-section>
+        <q-item-label class="q-pr-xl text-uppercase text-overline text-grey-4">
+          <small>orders in batch - {{ totalOrders }}</small>
+        </q-item-label>
+      </q-item-section>
+    </q-item>
 
     <q-list
       padding
@@ -35,9 +35,8 @@
           v-for="(order, key) in batch_orders"
           :key="key"
           :order="order"
-          :id="key"
           class="q-ma-xs" 
-          @sendOrder="console.log(order)"/>
+          @update="updateOrder($event)"/>
 
     </q-list>
     
@@ -46,7 +45,8 @@
       :offset="[30,30]">
 				<q-btn
 					icon="clear"
-					color="secondary">
+					color="secondary"
+          @click="confirmDelete()">
           <q-tooltip>clear all</q-tooltip>
 				</q-btn>
     </q-page-sticky>
@@ -54,17 +54,6 @@
     <q-page-sticky
       position='bottom-left'
       :offset="[100,30]">
-				<q-btn
-					icon="edit"
-					color="secondary"
-          @click="showEditShared = true">
-          <q-tooltip>edit shared info</q-tooltip>
-				</q-btn>
-    </q-page-sticky>
- 
-    <q-page-sticky
-      position='bottom-left'
-      :offset="[170,30]">
 				<q-btn
 					icon="add"
 					color="secondary"
@@ -78,7 +67,8 @@
       :offset="[30,30]">
 			<q-btn 
 				icon="send"
-				color="secondary">
+				color="secondary"
+        @click="sendAll()">
           <q-tooltip>send all</q-tooltip>
 				</q-btn>
     </q-page-sticky>
@@ -103,6 +93,16 @@
 				<add-batch-order
 					@close="showAddOrder = false"/>
 			</q-dialog>
+			
+      <q-dialog
+				v-model="showEditOrder"
+				dark
+				class="bg-primary"
+				ref="EditOrder">
+				<edit-batch-order
+          :editID="editID"
+					@close="showEditOrder = false"/>
+			</q-dialog>
 		</div>
 
   </q-page>
@@ -122,6 +122,8 @@ import { mapActions } from 'vuex'
         showAddOrder: false,
         showEditOrder: false,
 
+        editID: null,
+
         editPackage: {
           id: null,
           order: {}
@@ -133,7 +135,36 @@ import { mapActions } from 'vuex'
     },
 
     methods: {
+      
+      ...mapActions('batches', ['clearOrders', 'sendAll']),
 
+      updateOrder(id) {
+        this.editID = id;
+        this.showEditOrder = true;
+      },
+
+      confirmDelete(id) {
+        this.$q.dialog({
+          title: 'delete all orders from batch?',
+          message: '',
+          position: 'standard',
+          ok: {
+            push: true,
+            color: 'negative',
+            flat: true,
+          },
+          cancel: {
+            push: true,
+            color: 'white',
+            flat: true,
+          },
+          dark: true,
+          persistent: true,
+        }).onOk(() => {
+          this.clearOrders();
+          this.$q.notify('all orders yeet\'d from batch');
+        })
+      },
     },
 
     computed: {
@@ -150,6 +181,7 @@ import { mapActions } from 'vuex'
       'batch-order' : require('components/BatchOrder.vue').default,
       'edit-batch-shared' : require('components/Dialog/EditBatchSharedDialog.vue').default,
       'add-batch-order' : require('components/Dialog/AddBatchOrderDialog.vue').default,
+      'edit-batch-order' : require('components/Dialog/EditBatchOrderDialog.vue').default,
     },
 
     mounted () {

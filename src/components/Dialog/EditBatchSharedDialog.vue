@@ -5,7 +5,7 @@
 			@reset="onReset"
 			no-error-focus
 			class="q-gutter-sm"
-			ref="editBatchSharedForm">
+			ref="EditBatchSharedForm">
 
 			<q-card-section class="q-gutter-xs">
 
@@ -53,7 +53,7 @@
 					v-model="the_shared.file_art"
 					:file.sync="the_shared.file_art"
 					:load="true"
-					:varsArr.sync="variables"
+					:varsArr.sync="v_"
 					:rules="[ val => !!val ]"
 					label="art file"
 					@fill="$emit('update:variables', $event)"/>
@@ -166,7 +166,10 @@ export default {
 				totalVariables:   [],
 			},
 
-			debugMenu: true,
+			v_: [],
+			vb_: [],
+
+			debugMenu: false,
 
 			signOptions : [ 'Available - Sold',
 											'Construction',
@@ -198,11 +201,14 @@ export default {
 
 			this.$emit('update:variables', []);
 			this.$emit('update:variables_back', []);
+			
+			this.v_ = [];
+			this.vb_ = [];
 		},
 		
 		onSubmit () {
 
-			this.$refs.editBatchSharedForm.validate()
+			this.$refs.EditBatchSharedForm.validate()
 			.then(success => {
 					if (success) {
 						this.the_shared.totalVariables = this.totalVariables;
@@ -223,7 +229,7 @@ export default {
 			...mapGetters('batches', ['batch_shared']),
 
 			totalVariables: function () {
-				
+
 				let arr = this.$_.unionWith(this.variables, this.variables_back, this.$_.isEqual);
 
 				return arr;
@@ -245,7 +251,22 @@ export default {
 			if(this.batch_shared.customer){
 				Object.assign(this.the_shared, this.batch_shared);
 			}
+			this.v_ = this.variables;
+			this.vb_ = this.variables_back;
 	},
+
+	watch: {
+
+		variables: function () {
+
+			this.v_ = this.variables;
+		},
+
+		variables_back: function () {
+
+			this.vb_ = this.variables_back;
+		},
+	}
 }
 </script>
 

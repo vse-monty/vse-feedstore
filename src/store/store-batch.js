@@ -16,7 +16,7 @@ const state = {
 
       double_face: false,
       same_face: true,
-      
+
       totalVariables: [],
     },
 
@@ -27,19 +27,69 @@ const state = {
 const mutations = {
 
     updateBatch (state, payload) {
+
       Object.assign(state.shared, payload);
     },
 
     addOrder (state, payload) {
+
       Vue.set(state.orders, payload.id, payload.order);
     },
 
     deleteOrder (state, order_number) {
+
       Vue.delete(state.orders, order_number);
     },
 
     updateOrder (state, payload) {
+
       Object.assign(state.orders[payload.id], payload.updates);
+    },
+
+    clearOrders (state) {
+
+      let orders = Object.keys(state.orders);
+      
+      for(let i = 0; i < orders.length; i++){
+
+        Vue.delete(state.orders, orders[i]);
+      }
+    },
+
+    sendAll (state) {
+      let orders = [];
+      let keys = Object.keys(state.orders);
+      let length = keys.length; 
+    
+      for(let i = 0; i < length; i++){
+
+        let current = {};
+        Object.assign(current, state.shared, state.orders[keys[i]]);
+        orders.push(current);
+      }
+
+      console.log('batch');
+
+      this.$socket.emit('batch', JSON.stringify(orders));
+
+    //   {
+
+    //     artist: 'DAVE',
+    //       artDate: null,
+    //         orderDate: null,
+    //           customer: null,
+    //             type: null,
+
+    //               file_art: null,
+    //                 file_art_back: null,
+    //                   file_proof: null,
+
+    //                     double_face: false,
+    //                       same_face: true,
+
+    //                         totalVariables: [],
+    // }
+      //Vue.delete(state.orders, id);
     }
 }
 
@@ -77,6 +127,16 @@ const actions = {
       console.log('update-batch-order-vuex');
       commit('updateOrder', payload);
     },
+
+    clearOrders ({ commit }) {
+
+      commit('clearOrders');
+    },
+
+    sendAll ({ commit }) {
+
+      commit('sendAll');
+    }
 }
 
 const getters = {
@@ -91,6 +151,11 @@ const getters = {
 
     batch_orders: (state) => {
       return state.orders
+    },
+
+    batch_order: (state) => (id) => {
+
+      return state.orders[id]
     }
 
 }
