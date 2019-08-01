@@ -1,9 +1,10 @@
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout view="hHh LpR lFf">
     <tool-bar />
 
     <q-drawer
       v-model="leftDrawerOpen"
+      elevated
       :breakpoint=10
       :width=175
       content-class="bg-secondary">
@@ -44,6 +45,10 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <q-footer ref="MyFooter" :class="footer.footer_class" style="max-height: 30px">
+        <small>{{ footer.footer_message }}</small>
+    </q-footer>
   </q-layout>
 </template>
 
@@ -56,6 +61,11 @@ export default {
   data () {
     return {
       leftDrawerOpen: true,
+
+      footer: {
+          footer_class: "text-center bg-negative",
+          footer_message: 'this app is not connected to illustrator...'
+        },
       
       navs: [
         {
@@ -88,6 +98,12 @@ export default {
               console.log(data.toString());
       });
     },
+
+    setFooter (the_class, the_message) {
+
+      this.footer.footer_class = the_class;
+      this.footer.footer_message = the_message;
+    },
   },
 
   components: {
@@ -96,7 +112,14 @@ export default {
 
   mounted(){
 
-    //this.openILST();
+    let foot = this.setFooter;
+    //listeners for illustrator connections...
+    this.$socket.on('illustrator.disconnected', () => {
+      foot('text-center bg-negative', 'this app is not connected to illustrator...')
+    });
+    this.$socket.on('illustrator.connected', () => {
+      foot('text-center bg-positive', 'connected to illustrator...')
+    });
   },
 }
 </script>
