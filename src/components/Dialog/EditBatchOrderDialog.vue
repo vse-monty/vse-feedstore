@@ -124,7 +124,7 @@ import { lookup } from 'dns';
 
 export default {
 	
-	props: ['editID'],
+	props: ['editPackage'],
 
 	data () {
 		return {
@@ -138,6 +138,8 @@ export default {
 
 				variablesArr:  [],
 			},
+			
+			the_id: null,
 
 			addressLine1: '',
 			addressLine2: '',
@@ -149,11 +151,10 @@ export default {
 
 	methods: {
 
-		...mapActions('batches', ['addOrder']),
+		...mapActions('batches', ['updateOrder']),
 
 		clearFields () {
 
-			this.the_order.orderNumber = null;
 			this.the_order.address = '';
 			this.the_order.subdivision = null;
 			this.the_order.quantity = null;
@@ -170,7 +171,7 @@ export default {
 			.then(success => {
 				if (success) {
 					this.the_order.address = this.totalAddress;
-					this.addOrder(this.the_order);
+					this.updateOrder({id: this.the_id, updates: this.the_order});
 					this.$emit('close');
 				}})
 		},
@@ -252,10 +253,8 @@ export default {
 
 	mounted () {
 		
-		let obj = {}
-		Object.assign(obj, this.batch_order(this.editID));
-		Object.assign(this.the_order, obj);
-
+		Object.assign(this.the_order, this.editPackage.order);
+		this.the_id = this.editPackage.id;
 		this.addressLine1 = this.addressLine2 = "";
 
 		let addy = this.the_order.address.split(/\r\n|\r|\n/);

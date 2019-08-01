@@ -35,8 +35,9 @@
           v-for="(order, key) in batch_orders"
           :key="key"
           :order="order"
-          class="q-ma-xs" 
-          @update="updateOrder($event)"/>
+          :editID.sync="editID"
+          @update="updateOrder({order: order, id: key})"
+          class="q-ma-xs"/>
 
     </q-list>
     
@@ -100,7 +101,7 @@
 				class="bg-primary"
 				ref="EditOrder">
 				<edit-batch-order
-          :editID="editID"
+          :editPackage="editPackage"
 					@close="showEditOrder = false"/>
 			</q-dialog>
 		</div>
@@ -113,6 +114,7 @@
 
 import { mapGetters } from 'vuex'
 import { mapActions } from 'vuex'
+import { setTimeout } from 'timers';
 
   export default {
     data () {
@@ -138,8 +140,11 @@ import { mapActions } from 'vuex'
       
       ...mapActions('batches', ['clearOrders', 'sendAll']),
 
-      updateOrder(id) {
-        this.editID = id;
+      updateOrder(payload){
+
+        let obj = {}
+        Object.assign(obj, payload);
+        Object.assign(this.editPackage, obj);
         this.showEditOrder = true;
       },
 
@@ -186,6 +191,13 @@ import { mapActions } from 'vuex'
 
     mounted () {
       this.showEditShared = true;
+    },
+
+    watch: {
+
+      editID: function () {
+        this.showEditOrder = true;
+      }
     }
    }
 

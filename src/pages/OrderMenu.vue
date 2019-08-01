@@ -92,15 +92,10 @@ import { mapActions } from 'vuex'
 
       updateOrder(payload){
 
-        console.log('updateOrder');
-        console.log(payload)
         let obj = {}
         Object.assign(obj, payload);
         Object.assign(this.editPackage, obj);
-        // this.editPackage.id = id;
-         this.showEditOrderForm = true;
-         console.log(this.editPackage);
-        // console.log(this.showEditOrderForm);
+        this.showEditOrderForm = true;
       }
     },
     computed: {

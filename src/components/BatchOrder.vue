@@ -1,6 +1,6 @@
 <template>
   <q-item
-    @click="$emit('update', order.orderNumber)"
+    @click="$emit('update')"
     clickable
     v-ripple
     class="bg-secondary q-mx-auto"
@@ -49,6 +49,7 @@
 <script>
 import { Dialog } from 'quasar'
 import { mapActions } from 'vuex';
+import { setTimeout } from 'timers';
 
 export default {
 
@@ -82,7 +83,7 @@ export default {
     removeOrder (id) {
       this.deleteOrder(id)
       this.$q.notify('order yeet\'d from batch')
-    },
+    }
   }
 }
 </script>

@@ -260,7 +260,7 @@ export default {
 						addressLine1: '',
 						addressLine2: '',
 
-						debugMenu: true,
+						debugMenu: false,
 
 						signOptions : [ 'Available - Sold',
 														'Construction',
@@ -359,6 +359,7 @@ export default {
 		},
 
 		mounted () {
+
 				Object.assign(this.the_order, this.editPackage.order);
 				this.the_id = this.editPackage.id;
 				this.addressLine1 = this.addressLine2 = "";
