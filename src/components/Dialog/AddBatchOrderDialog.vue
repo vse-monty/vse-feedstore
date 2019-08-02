@@ -205,7 +205,6 @@ export default {
 	},
 
 	mounted () {
-		console.log(this.batch_shared);
 
 		if(this.batch_shared.totalVariables.length !== 0){
 
@@ -217,8 +216,6 @@ export default {
 				this.the_order.variablesArr.push({name: arr[i].name, value: ""});
 			}
 		}
-		console.log('mounted add-batch-order')
-		console.log(this.the_order);
 	},
 }
 </script>

@@ -35,7 +35,6 @@
           v-for="(order, key) in batch_orders"
           :key="key"
           :order="order"
-          :editID.sync="editID"
           @update="updateOrder({order: order, id: key})"
           class="q-ma-xs"/>
 
@@ -83,7 +82,8 @@
 				<edit-batch-shared
           :variables.sync="v_front"
           :variables_back.sync="v_back"
-					@close="showEditShared = false"/>
+					@close="showEditShared = false"
+          @first="hasShared = true;"/>
 			</q-dialog>
 			
       <q-dialog
@@ -105,7 +105,6 @@
 					@close="showEditOrder = false"/>
 			</q-dialog>
 		</div>
-
   </q-page>
 </template>
 
@@ -116,90 +115,91 @@ import { mapGetters } from 'vuex'
 import { mapActions } from 'vuex'
 import { setTimeout } from 'timers';
 
-  export default {
-    data () {
-      return {
-        
-        showEditShared: false,
-        showAddOrder: false,
-        showEditOrder: false,
+export default {
 
-        editID: null,
-
-        editPackage: {
-          id: null,
-          order: {}
-        },
-
-        v_front: [],
-        v_back:  [],
-      }
-    },
-
-    methods: {
+  data () {
+    return {
       
-      ...mapActions('batches', ['clearOrders', 'sendAll']),
+      showEditShared: false,
+      showAddOrder: false,
+      showEditOrder: false,
+      hasShared: false,
 
-      updateOrder(payload){
-
-        let obj = {}
-        Object.assign(obj, payload);
-        Object.assign(this.editPackage, obj);
-        this.showEditOrder = true;
+      editPackage: {
+        id: null,
+        order: {}
       },
 
-      confirmDelete(id) {
-        this.$q.dialog({
-          title: 'delete all orders from batch?',
-          message: '',
-          position: 'standard',
-          ok: {
-            push: true,
-            color: 'negative',
-            flat: true,
-          },
-          cancel: {
-            push: true,
-            color: 'white',
-            flat: true,
-          },
-          dark: true,
-          persistent: true,
-        }).onOk(() => {
-          this.clearOrders();
-          this.$q.notify('all orders yeet\'d from batch');
-        })
-      },
-    },
-
-    computed: {
-
-      ...mapGetters('batches', ['batch', 'batch_shared', 'batch_orders']),
-
-      totalOrders: function () {
-        return Object.keys(this.batch_orders).length;
-      }
-    },
-
-    components: {
-
-      'batch-order' : require('components/BatchOrder.vue').default,
-      'edit-batch-shared' : require('components/Dialog/EditBatchSharedDialog.vue').default,
-      'add-batch-order' : require('components/Dialog/AddBatchOrderDialog.vue').default,
-      'edit-batch-order' : require('components/Dialog/EditBatchOrderDialog.vue').default,
-    },
-
-    mounted () {
-      this.showEditShared = true;
-    },
-
-    watch: {
-
-      editID: function () {
-        this.showEditOrder = true;
-      }
+      v_front: [],
+      v_back:  [],
     }
-   }
+  },
+
+  methods: {
+    
+    ...mapActions('batches', ['clearBatch', 'sendAll']),
+
+    updateOrder(payload){
+
+      let obj = {}
+      Object.assign(obj, payload);
+      Object.assign(this.editPackage, obj);
+      this.showEditOrder = true;
+    },
+
+    confirmDelete(id) {
+
+      this.$q.dialog({
+        title: 'delete all orders from batch?',
+        message: '',
+        position: 'standard',
+        ok: {
+          push: true,
+          color: 'negative',
+          flat: true,
+        },
+        cancel: {
+          push: true,
+          color: 'white',
+          flat: true,
+        },
+        dark: true,
+        persistent: true,
+      }).onOk(() => {
+        this.clearBatch();
+        this.v_front = [];
+        this.v_back = [];
+        this.$q.notify('all orders yeet\'d from batch');
+      })
+    },
+  },
+
+  computed: {
+
+    ...mapGetters('batches', ['batch', 'batch_shared', 'batch_orders']),
+
+    totalOrders: function () {
+      return Object.keys(this.batch_orders).length;
+    }
+  },
+
+  components: {
+
+    'batch-order' : require('components/BatchOrder.vue').default,
+    'edit-batch-shared' : require('components/Dialog/EditBatchSharedDialog.vue').default,
+    'add-batch-order' : require('components/Dialog/AddBatchOrderDialog.vue').default,
+    'edit-batch-order' : require('components/Dialog/EditBatchOrderDialog.vue').default,
+  },
+
+  mounted () {
+
+    if(this.batch_shared.artDate == null){
+
+      this.showEditShared = true;
+    }
+  },
+
+  }
 
 </script>
 

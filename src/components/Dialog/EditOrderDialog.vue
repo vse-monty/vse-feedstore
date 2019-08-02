@@ -334,7 +334,6 @@ export default {
 			
 			totalVariables: function () {
 
-				console.log('totalVariables');
 				let arr = this.$_.unionWith(this.variables, this.back_variables, this.$_.isEqual);
 				this.the_order.variablesArr = [];
 				this.the_order.totalVariables = arr;
@@ -369,8 +368,6 @@ export default {
 				let addy = this.the_order.address.split(/\r\n|\r|\n/);
 				this.addressLine1 = addy[0];
 				this.addressLine2 = addy[1];
-				console.log('the order->');
-				console.log(this.the_order);
 		},
 }
 </script>

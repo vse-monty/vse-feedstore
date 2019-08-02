@@ -44,7 +44,7 @@ const actions = {
     },
 
     addOrder ({ commit }, order) {
-      console.log('add-order-vuex')
+
       let id = uid();
       let clone = Object.assign({}, order);
       let payload = {

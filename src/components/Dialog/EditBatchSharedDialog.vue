@@ -212,6 +212,8 @@ export default {
 			.then(success => {
 					if (success) {
 						this.the_shared.totalVariables = this.totalVariables;
+						this.$emit('update:variables', this.variables);
+						this.$emit('update:variables_back', this.variables_back);
 						this.updateBatch(this.the_shared);
 						this.$emit('first');
 						this.$emit('close');
