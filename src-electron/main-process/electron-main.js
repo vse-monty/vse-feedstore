@@ -21,6 +21,9 @@ function createWindow () {
     frame: false,
     alwaysOnTop: false,
     resizable: false,
+    webPreferences: {
+      nodeIntegration: true
+    }
   })
 
   mainWindow.loadURL(process.env.APP_URL)

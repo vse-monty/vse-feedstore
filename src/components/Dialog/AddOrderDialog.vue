@@ -117,7 +117,6 @@
 					label="art file"
 					@fill="variables = $event" />
 
-				<div class="q-gutter-xs">
 					<!-- IS THIS SIGN SINGLE FACED OR DOUBLE-->
 					<q-btn-toggle
 						v-model="the_order.double_face"
@@ -146,7 +145,6 @@
 						:options="[
 							{label: 'same face', value: true},
 							{label: 'different face', value: false}]" />
-				</div>
 
 				<!-- Art File Filepicker-->
 				<vse-file-picker 
@@ -161,8 +159,7 @@
 
 				<!-- THIS IS WHERE WE WILL POPULATE THE INPUTS FOR VARIABLES -->
 				<q-list
-					v-if="totalVariables.length !== 0"
-					class="row" >
+					v-if="totalVariables.length !== 0">
 					<vse-variable-input
 						v-for="(tv, key) in totalVariables"
 						:key="key"
@@ -170,7 +167,8 @@
 						:varType="tv.type"
 						:varValue.sync="the_order.variablesArr[key].value"
 						:label="the_order.variablesArr[key].name"
-						:rules="[ val => !!val ]"/>
+						:rules="[ val => !!val ]"
+						class="q-pt-xs"/>
 				</q-list>
 
 				<!-- Sign Type Dropdown -->
@@ -209,7 +207,7 @@
 
 		<!-- shows the 'orderToReturn' Object at the bottom of the form-->
 		<pre v-if="debugMenu">{{ the_order }}</pre>
-		<pre>{{ totalVariables }}</pre>
+		<pre v-if="debugMenu">{{ totalVariables }}</pre>
 
 		</q-form>
 	</q-card>
@@ -248,7 +246,7 @@ export default {
 						addressLine1: '',
 						addressLine2: '',
 
-						debugMenu: true,
+						debugMenu: false,
 
 						signOptions : [ 'Available - Sold',
 														'Construction',
@@ -293,6 +291,7 @@ export default {
 						.then(success => {
 								if (success) {
 										this.the_order.address = this.totalAddress;
+										this.the_order.totalVariables = this.totalVariables;
 										this.addOrder(this.the_order);
 										this.$emit('close');
 								}})

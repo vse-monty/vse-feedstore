@@ -78,9 +78,10 @@
 
 				<!-- THIS IS WHERE WE WILL POPULATE THE INPUTS FOR VARIABLES -->
 				<q-list
-					v-if="hasVars">
+					v-if="batch_shared.totalVariables.length !== 0">
+
 					<vse-variable-input
-						v-for="(tv, key) in batch_shared.totalVariables"
+						v-for="(tv, key) in the_order.totalVariables"
 						:key="key"
 						v-model="the_order.variablesArr[key].value"
 						:varType="tv.type"
@@ -145,7 +146,6 @@ export default {
 			addressLine2: '',
 
 			debugMenu: false,
-			hasVars: false,
 		}
 	},
 
@@ -186,16 +186,14 @@ export default {
 
 			if(arr.length == 0){
 
-				this.hasVars = false;
 				this.the_order.variablesArr = [];
+				this.the_order.totalVariables = [];
 				return;
 			}
 
 			for(var i = 0; i < arr.length; i++){
 				this.the_order.variablesArr.push({name: arr[i].name, value: ""});
 			}
-
-			this.hasVars = true;
 		},
 
 		checkVariablesArray () {
@@ -205,13 +203,12 @@ export default {
 
 			if(arr1.length == 0){
 
-				this.hasVars = false;
 				this.the_order.variablesArr = [];
 				return;
 			}
 
 			if(arr1.length !== arr2.length){ 
-				
+
 				this.the_order.variablesArr = []
 				this.clearVarArray();
 				return;
@@ -260,7 +257,6 @@ export default {
 		let addy = this.the_order.address.split(/\r\n|\r|\n/);
 		this.addressLine1 = addy[0];
 		this.addressLine2 = addy[1];
-
 		this.checkVariablesArray();
 	},
 }

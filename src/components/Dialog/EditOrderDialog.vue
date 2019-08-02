@@ -167,18 +167,17 @@
 
 				<!-- THIS IS WHERE WE WILL POPULATE THE INPUTS FOR VARIABLES -->
 				<q-list
-					v-if="totalVariables.length !== 0"
-					class="q-gutter-xs" >
+					v-if="totalVariables.length !== 0 || the_order.totalVariables.length !== 0">
 
 					<vse-variable-input
-						v-for="(tv, key) in totalVariables"
+						v-for="(tv, key) in the_order.totalVariables"
 						:key="key"
 						v-model="the_order.variablesArr[key].value"
 						:varType="tv.type"
 						:varValue.sync="the_order.variablesArr[key].value"
 						:label="the_order.variablesArr[key].name"
 						:rules="[ val => !!val ]"
-						/>
+						class="q-pt-xs"/>
 
 				</q-list>
 
@@ -218,7 +217,7 @@
 
 		<!-- shows the 'orderToReturn' Object at the bottom of the form-->
 		<pre v-if="debugMenu">{{ the_order }}</pre>
-		<pre>{{ totalVariables }}</pre>
+		<pre v-if="debugMenu">{{ totalVariables }}</pre>
 
 		</q-form>
 	</q-card>
@@ -332,23 +331,26 @@ export default {
 		},
 
 		computed: {
-			 
-			 totalVariables: function () {
-					 let arr = this.$_.unionWith(this.variables, this.back_variables, this.$_.isEqual);
-					 this.the_order.variablesArr = [];
+			
+			totalVariables: function () {
 
-					 for(var i = 0; i < arr.length; i++){
-							this.the_order.variablesArr.push({name: arr[i].name, value: ""});
-					}
+				console.log('totalVariables');
+				let arr = this.$_.unionWith(this.variables, this.back_variables, this.$_.isEqual);
+				this.the_order.variablesArr = [];
+				this.the_order.totalVariables = arr;
 
-					return arr;
-				},
-
-				totalAddress: function () {
-						let addy = this.addressLine1 + '\r' + this.addressLine2;
-						this.the_order.address = (' ' + addy).slice(1);
-						return addy;
+				for(var i = 0; i < arr.length; i++){
+					this.the_order.variablesArr.push({name: arr[i].name, value: ""});
 				}
+
+				return arr;
+			},
+
+			totalAddress: function () {
+				let addy = this.addressLine1 + '\r' + this.addressLine2;
+				this.the_order.address = (' ' + addy).slice(1);
+				return addy;
+			}
 		},
 		
 		components: {
@@ -367,6 +369,8 @@ export default {
 				let addy = this.the_order.address.split(/\r\n|\r|\n/);
 				this.addressLine1 = addy[0];
 				this.addressLine2 = addy[1];
+				console.log('the order->');
+				console.log(this.the_order);
 		},
 }
 </script>

@@ -165,6 +165,7 @@ export default {
 			.then(success => {
 				if (success) {
 					this.the_order.address = this.totalAddress;
+					this.the_order.totalVariables = this.batch_shared.totalVariables;
 					this.addOrder(this.the_order);
 					this.$emit('close');
 				}})

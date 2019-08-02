@@ -8,7 +8,8 @@ module.exports = function (ctx) {
       'axios',
       'lodash',
       'notify-defaults',
-      'socket-io'
+      'socket-io',
+      'debug'
     ],
 
     css: [

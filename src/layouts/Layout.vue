@@ -115,10 +115,10 @@ export default {
     let foot = this.setFooter;
     //listeners for illustrator connections...
     this.$socket.on('illustrator.disconnected', () => {
-      foot('text-center bg-negative', 'this app is not connected to illustrator...')
+      foot('text-center bg-negative', 'this app is not connected to illustrator panel...')
     });
     this.$socket.on('illustrator.connected', () => {
-      foot('text-center bg-positive', 'connected to illustrator...')
+      foot('text-center bg-positive', 'connected to illustrator panel...')
     });
   },
 }
