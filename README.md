@@ -1,49 +1,20 @@
-# Quasar App
+# VSE FEED STORE
 
 > WIP
 
-//This is an example layout for the builder object to save to files
+This APP is developed to send Visionary Sales Environments 'Orders' to the corresponding Adobe CEP Panels.
 
-Builder{
-    name: 'Customer',
-    signTypes: [
-        { //sign
-            type: 'Available',
-            file: '~/Docs/Customer/Available.ai',
-            variables: [
-                phonenumber: '000.000.0000',
-            ],
-            previous: [111259, 113587],
-        },
-        {
-            type: 'Sold',
-            file: '~/Docs/Customer/Sold.ai',
-            variables: null
-            previous: [111260, 113586],
-        },
-    ],
-    locations: [
-        { //location
-            subdivision: 'Corporate',
-            address: '123 Street/rCity, TX',
-            phone: '000.000.0000',
-        },
-        {
-            subdivision: 'The Valley',
-            address: '456 Boulevard/rTown, TX',
-            phone: '123.456.7890',
-            specific: true,
-            signTypes: [
-                { //sign
-                    type: 'Available',
-                    file: '~Docs/Customer/TheValley/Available.ai',
-                    variables: [
-                        phonenumber: '000.000.0000',
-                        subCommunity: 'The Clavens',
-                    ],
-                    previous: [],
-                },
-            ],
-        },
-    ],
-}
+#SETUP
+
+Will need the 2 panels located at:
+github.com/vse-monty/vse-server
+github.com/vse-monty/vse-eatery
+
+Create a symbolic link to, or install directly in the [USER]/AppData/Roaming/Adobe/CEP/extentions/ folder
+
+clone this project and yarn or npm install.
+
+>quasar dev -m electron
+
+not all functions will work outside of electron mode
+illustrator and panels will need to be open for all functionality to work as intended.
