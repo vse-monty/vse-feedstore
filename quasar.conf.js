@@ -8,7 +8,8 @@ module.exports = function (ctx) {
       'axios',
       'lodash',
       'notify-defaults',
-      'socket-io'
+      'socket-io',
+      'debug'
     ],
 
     css: [
@@ -30,6 +31,7 @@ module.exports = function (ctx) {
       components: [
         'QLayout',
         'QHeader',
+        'QFooter',
         'QDrawer',
         'QPageContainer',
         'QPage',
@@ -51,6 +53,7 @@ module.exports = function (ctx) {
         'QSelect',
         'QCard',
         'QCardSection',
+        'QSeparator',
         'QCardActions',
         'QSpace',
         'QDate',
@@ -58,6 +61,13 @@ module.exports = function (ctx) {
         'QBtnToggle',
         'QBar',
         'QScrollArea',
+        'QTable',
+        'QTh',
+        'QTr',
+        'QTd',
+        'QPopupEdit',
+        'QTooltip',
+        'QBanner'
       ],
 
       directives: [

@@ -73,24 +73,19 @@ export default {
             let fileString = this.$q.electron.remote.dialog.showOpenDialog(null, options);
 
             if(fileString){
+
                 if(!this.load){
-                    console.log('just want a file name, not the variables');
+
                     this.$emit('input', fileString[0]);
                     return;
                 }
-                console.log('sending file name to server')
-                console.log(fileString[0])
 
                 //set up listener event
                 this.$socket.on('give.variables', (data) => {
-                    console.log('received ->')
+ 
                     let payload = JSON.parse(data);
-                    console.log(payload.type);
-                    console.log(payload.data);
 
-                    console.log('sending data to vars array');
-                    this.$emit('update:varsArr', payload.data); //put the data into -THIS- picker's load
-                    console.log('removing listener for \'give.variables\' for: ' + this.label);
+                    this.$emit('fill', payload.data); //put the data into -THIS- picker's load
                     this.$socket.removeListener('give.variables'); //stop listening for this event
                 });
 

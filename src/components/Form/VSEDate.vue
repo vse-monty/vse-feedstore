@@ -22,7 +22,7 @@
                     <q-date
                         ref="datepicker"
                         :value="date"
-                        mask="MM.DD.YY"
+                        mask="MM/DD/YY"
                         today-btn
                         minimal
                         dark

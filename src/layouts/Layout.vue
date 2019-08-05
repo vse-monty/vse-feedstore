@@ -1,19 +1,10 @@
 <template>
-  <q-layout view="hHh lpR fFf">
-  <!-- <q-layout view="hHr lpR fFr"> -->
-    <!-- <q-header>
-      <q-toolbar>
-
-        <q-toolbar-title absolute-center>
-         VSE Feed Store
-        </q-toolbar-title>
-
-      </q-toolbar>
-    </q-header> -->
+  <q-layout view="hHh LpR lFf">
     <tool-bar />
 
     <q-drawer
       v-model="leftDrawerOpen"
+      elevated
       :breakpoint=10
       :width=175
       content-class="bg-secondary">
@@ -45,27 +36,19 @@
         <div class="q-pa-sm">
             <q-btn
             style="width: 160px; height 10px"
-            color="grey-8"
-            label="illy"
+            color="blue-grey-7"
+            label="illustrator"
             @click="openILST()"/>
         </div>
     </q-drawer>
 
-    <q-drawer
-      v-model="orderDrawerOpen"
-      :breakpoint=10
-      :width=400
-      side="right"
-      elevated
-      content-class="bg-grey-9">
-      <add-order
-       @closeDrawer="orderDrawerOpen = false"/>
-    </q-drawer>
-
     <q-page-container>
-      <router-view 
-        @closeDrawer="orderDrawerOpen = true"/>
+      <router-view />
     </q-page-container>
+
+    <q-footer ref="MyFooter" :class="footer.footer_class" style="max-height: 30px">
+        <small>{{ footer.footer_message }}</small>
+    </q-footer>
   </q-layout>
 </template>
 
@@ -78,20 +61,23 @@ export default {
   data () {
     return {
       leftDrawerOpen: true,
-      orderDrawerOpen: true,
-      builderDrawerOpen: false,
+
+      footer: {
+          footer_class: "text-center bg-negative",
+          footer_message: 'this app is not connected to illustrator...'
+        },
       
       navs: [
         {
           to: '/',
-          label: 'feed',
-          icon: 'send',
+          label: 'order',
+          icon: 'insert_drive_file',
         },
-        // {
-        //   to: '/addbuilder',
-        //   label: 'add client',
-        //   icon: 'add_circle',
-        // },
+        {
+          to: '/batch',
+          label: 'batch orders',
+          icon: 'file_copy',
+        },
         {
           to: '/settings',
           label: 'settings',
@@ -101,6 +87,7 @@ export default {
     }
   },
   methods: {
+
     openURL,
 
     openILST () {
@@ -111,10 +98,28 @@ export default {
               console.log(data.toString());
       });
     },
+
+    setFooter (the_class, the_message) {
+
+      this.footer.footer_class = the_class;
+      this.footer.footer_message = the_message;
+    },
   },
+
   components: {
-    'add-order' : require('components/Drawers/AddOrder.vue').default,
     'tool-bar' : require('./Bar.vue').default
+  },
+
+  mounted(){
+
+    let foot = this.setFooter;
+    //listeners for illustrator connections...
+    this.$socket.on('illustrator.disconnected', () => {
+      foot('text-center bg-negative', 'this app is not connected to illustrator panel...')
+    });
+    this.$socket.on('illustrator.connected', () => {
+      foot('text-center bg-positive', 'connected to illustrator panel...')
+    });
   },
 }
 </script>

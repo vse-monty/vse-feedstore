@@ -7,7 +7,6 @@
         filled
         dense
         dark
-        clearable
         options-dense
         options-dark
         standout="bg-secondary text-white"
