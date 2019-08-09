@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import { cpus } from 'os';
 
 const state = {
 

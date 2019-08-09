@@ -67,7 +67,8 @@ module.exports = function (ctx) {
         'QTd',
         'QPopupEdit',
         'QTooltip',
-        'QBanner'
+        'QBanner',
+        'QField'
       ],
 
       directives: [
@@ -79,6 +80,7 @@ module.exports = function (ctx) {
       plugins: [
         'Notify',
         'Dialog',
+        'LocalStorage',
       ]
 
       // iconSet: 'ionicons-v4'

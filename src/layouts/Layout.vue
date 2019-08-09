@@ -53,13 +53,15 @@
 </template>
 
 <script>
-import { openURL } from 'quasar'
+import { Dialog } from 'quasar'
+import { mapGetters, mapActions } from 'vuex'
 const child = require('child_process').execFile;
 
 export default {
   name: 'MyLayout',
   data () {
     return {
+
       leftDrawerOpen: true,
 
       footer: {
@@ -86,17 +88,61 @@ export default {
       ]
     }
   },
+
   methods: {
 
-    openURL,
-
     openILST () {
-      child('C:\\Program Files\\Adobe\\Adobe Illustrator CC 2019\\Support Files\\Contents\\Windows\\Illustrator.exe',
-            ['C:\\Users\\dmontgomery\\Documents\\TEST\\VSE\\Templates\\Home.ai'],
-            function(err, data) {
-              console.log(err);
-              console.log(data.toString());
-      });
+      
+      if(this.settings.illustrator){
+
+        let path = process.cwd() + '\\src\\assets\\Home.ai';
+        let illy = this.settings.illustrator;
+        let q = this.$q;
+
+        try{
+
+          child(`${illy}\\Illustrator.exe`, [path], function (error, stdout, stderr) {
+          
+            if(error){
+              q.dialog({
+                title: 'cannot open illustrator',
+                message: 'Please check the illustrator path setting. The path should point to a folder containing \'Illustrator.exe\'',
+                position: 'standard',
+                dark: true,
+                persistent: false,
+                    ok: {
+                      push: true,
+                      color: 'negative',
+                      flat: true,
+                      to: '/settings'
+                    },
+              })
+            }
+          });
+
+          } catch (err) {
+
+            console.log(error);
+          }
+
+      } else {
+
+        q.dialog({
+          title: 'cannot open illustrator',
+          message: 'Please check the illustrator path setting. The path should point to a folder containing \'Illustrator.exe\'',
+          position: 'standard',
+          dark: true,
+          persistent: false,
+              ok: {
+                push: true,
+                color: 'negative',
+                flat: true,
+                to: '/settings'
+              },
+        })
+      }
+
+     
     },
 
     setFooter (the_class, the_message) {
@@ -107,19 +153,27 @@ export default {
   },
 
   components: {
+
     'tool-bar' : require('./Bar.vue').default
   },
 
   mounted(){
 
-    let foot = this.setFooter;
+    let foot = this.setFooter; //for scope reasons
+
     //listeners for illustrator connections...
     this.$socket.on('illustrator.disconnected', () => {
       foot('text-center bg-negative', 'this app is not connected to illustrator panel...')
     });
     this.$socket.on('illustrator.connected', () => {
-      foot('text-center bg-positive', 'connected to illustrator panel...')
+      foot('text-center bg-positive', 'connected to illustrator panel...');
+     // this.$socket.emit('illustrator.settings', this.settings)
     });
+  },
+
+  computed: {
+
+    ...mapGetters('settings', ['settings']),
   },
 }
 </script>

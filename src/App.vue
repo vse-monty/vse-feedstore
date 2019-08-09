@@ -5,10 +5,20 @@
 </template>
 
 <script>
-export default {
-  name: 'App'
-}
+import { mapActions } from 'vuex'
 
+  export default {
+
+    methods: {
+
+      ...mapActions('settings', ['loadSettings'])
+    },
+
+    mounted () {
+
+      this.loadSettings();
+    }
+  }
 </script>
 
 <style>
