@@ -1,16 +1,6 @@
 <template>
   <q-page padding>
-
-    <q-card
-			class="bg-grey-9 text-grey-4"
-			dark
-			flat>
-
-			<q-card-section>
-				<div class="text-h6">order feed</div>
-			</q-card-section>
-		</q-card>
-
+    <div class="bg-grey-9 text-grey-4 text-h6">order feed</div>
     <q-list
       padding
       class="q-mx-md">
