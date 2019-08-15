@@ -160,14 +160,16 @@ export default {
   mounted(){
 
     let foot = this.setFooter; //for scope reasons
+    let set = this.settings;
 
     //listeners for illustrator connections...
     this.$socket.on('illustrator.disconnected', () => {
       foot('text-center bg-negative', 'this app is not connected to illustrator panel...')
     });
+
     this.$socket.on('illustrator.connected', () => {
       foot('text-center bg-positive', 'connected to illustrator panel...');
-     // this.$socket.emit('illustrator.settings', this.settings)
+      this.$socket.emit('illustrator.settings', JSON.stringify(set));
     });
   },
 

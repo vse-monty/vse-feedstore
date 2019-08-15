@@ -6,6 +6,7 @@
         :rules="rules"
         :load="load"
         :vars="varsArr"
+        :defaultPath="defaultPath"
         filled
         dense
         dark
@@ -36,7 +37,7 @@
 import { QInput } from "quasar";
 
 export default {
-    props: ['file', 'label', 'rules', 'load', 'varsArr'],
+    props: ['file', 'label', 'rules', 'load', 'varsArr', 'defaultPath'],
     components: {
         QInput
     },
@@ -58,8 +59,11 @@ export default {
 
         getFile () {
             
+            console.log(this.defaultPath);
+
             let options = {
                 title: 'select art file',
+                defaultPath: this.defaultPath,
                 buttonLabel: 'use',
                 filters: [
                     {

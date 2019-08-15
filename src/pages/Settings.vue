@@ -25,8 +25,8 @@
       :file.sync="print"
       label="pdf proof output directory" />
 
-    <pre>{{ settings }}</pre>
-    <pre>{{ folders }}</pre>
+    <!-- <pre>{{ settings }}</pre> -->
+    <!-- <pre>{{ folders }}</pre> -->
     </div>
   </q-page>
 </template>

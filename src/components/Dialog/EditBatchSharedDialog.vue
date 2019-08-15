@@ -55,6 +55,7 @@
 					:load="true"
 					:varsArr.sync="v_"
 					:rules="[ val => !!val ]"
+					:defaultPath="settings.working ? settings.working : null"
 					label="art file"
 					@fill="$emit('update:variables', $event)"/>
 
@@ -97,6 +98,7 @@
 					:load="true"
 					:varsArr.sync="variables_back"
 					:rules="[ val => !!val ]"
+					:defaultPath="settings.working ? settings.working : null"
 					label="art file (back)"
 					@fill="$emit('update:variables_back', $event)" />
 
@@ -106,6 +108,7 @@
 					:file.sync="the_shared.file_proof"
 					:load="false"
 					:rules="[ val => !!val ]"
+					:defaultPath="settings.templates ? settings.templates : null"
 					label="proof file" />
 
 			</q-card-section>	
@@ -229,6 +232,7 @@ export default {
 	computed: {
 
 			...mapGetters('batches', ['batch_shared']),
+			...mapGetters('settings', ['settings']),
 
 			totalVariables: function () {
 

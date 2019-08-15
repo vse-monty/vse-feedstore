@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import { LocalStorage } from 'quasar'
 
 const state = {
@@ -6,7 +7,7 @@ const state = {
 
       working: null,
       print: null,
-      illustrator: null,
+      illustrator: 'C:\\Program Files\\Adobe\\Adobe Illustrator CC 2019\\Support Files\\Contents\\Windows',
       templates: null,
     }
   }
@@ -36,6 +37,7 @@ const mutations = {
     saveSettings (state) {
 
       LocalStorage.set('settings', state.settings);
+      this.$socket.emit('illustrator.settings', JSON.stringify(state.settings));
     },
 
     loadSettings (state, settings) {

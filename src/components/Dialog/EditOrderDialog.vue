@@ -120,6 +120,7 @@
 					:load="true"
 					:varsArr.sync="variables"
 					:rules="[ val => !!val ]"
+					:defaultPath="settings.working ? settings.working : null"
 					label="art file"
 					@fill="variables = $event" />
 
@@ -162,6 +163,7 @@
 					:load="true"
 					:varsArr.sync="back_variables"
 					:rules="[ val => !!val ]"
+					:defaultPath="settings.working ? settings.working : null"
 					label="art file (back)"
 					@fill="back_variables = $event" />
 
@@ -194,6 +196,7 @@
 					:file.sync="the_order.file_proof"
 					:load="false"
 					:rules="[ val => !!val ]"
+					:defaultPath="settings.templates ? settings.templates : null"
 					label="proof file" />
 
 			</q-card-section>	
@@ -332,6 +335,8 @@ export default {
 
 		computed: {
 			
+			...mapGetters('settings', ['settings']),
+
 			totalVariables: function () {
 
 				let arr = this.$_.unionWith(this.variables, this.back_variables, this.$_.isEqual);

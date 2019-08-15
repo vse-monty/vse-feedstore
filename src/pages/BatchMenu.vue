@@ -68,7 +68,7 @@
 			<q-btn 
 				icon="send"
 				color="secondary"
-        @click="sendAll()">
+        @click="sendBatches()">
           <q-tooltip>send all</q-tooltip>
 				</q-btn>
     </q-page-sticky>
@@ -139,7 +139,24 @@ export default {
     
     ...mapActions('batches', ['clearBatch', 'sendAll']),
 
-    updateOrder(payload){
+    sendBatches () {
+
+      if(Object.keys(this.batch_orders).length > 0){
+
+        this.sendAll();
+        return;
+      }
+
+      this.$q.dialog({
+        title: 'batches is empty',
+        message: 'There are no batch orders to send',
+        position: 'standard',
+        dark: true,
+        persistent: false,
+      });
+    },
+
+    updateOrder (payload) {
 
       let obj = {}
       Object.assign(obj, payload);
@@ -147,7 +164,7 @@ export default {
       this.showEditOrder = true;
     },
 
-    confirmDelete(id) {
+    confirmDelete (id) {
 
       this.$q.dialog({
         title: 'delete all orders from batch?',
