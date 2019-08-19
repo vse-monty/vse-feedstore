@@ -81,6 +81,11 @@ export default {
           icon: 'file_copy',
         },
         {
+          to: '/mp',
+          label: 'multi page',
+          icon: 'file_copy',
+        },
+        {
           to: '/settings',
           label: 'settings',
           icon: 'settings',

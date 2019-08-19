@@ -95,8 +95,8 @@ import { mapActions } from 'vuex'
     components: {
       
       'order' : require('components/Order.vue').default,
-      'add-order-form' : require('components/Dialog/AddOrderDialog.vue').default,
-      'edit-order-form' : require('components/Dialog/EditOrderDialog.vue').default,
+      'add-order-form' : require('components/Dialog/DialogAddOrder.vue').default,
+      'edit-order-form' : require('components/Dialog/DialogEditOrder.vue').default,
     }
    }
 

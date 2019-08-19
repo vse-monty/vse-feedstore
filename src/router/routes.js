@@ -16,6 +16,10 @@ const routes = [
         path: '/batch',
         component: () => import('pages/BatchMenu.vue')
       },
+      {
+        path: '/mp',
+        component: () => import('pages/MultiPages.vue')
+      },
     ]
   }
 ]
