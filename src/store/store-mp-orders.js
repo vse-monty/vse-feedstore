@@ -2,43 +2,75 @@ import Vue from 'vue'
 
 const state = {
 
-    shared: {
+  
+  orders: {
+    '123456': {
+      
+      shared: {
+        artist: 'DAVE',
+        orderNumber: '123456',
+        customer: 'Home Builder Homes',
+        subdivision: 'The Valley',
+      
+        orderDate: null,
+        artDate: null,
+      },
 
-      artist: 'DAVE',
-      artDate: null,
-      orderDate: null,
-      customer: null,
-      type: null,
+      pages: {
 
-      file_art: null,
-      file_art_back: null,
-      file_proof: null,
+        '1': {
+          address: '123 Street\\nPlace, TX',
+          quantity: 40,
+          type: 'Lot Signs',
+          
+          same_face: false,
+          double_face: true,
 
-      double_face: false,
-      same_face: true,
+          file_art: 'C:\\Art\\art_front.ai',
+          file_art_back: 'C:\\Art\\art_back.ai',
+          file_proof: 'C:\\Proofs\\the_proof.ai',
 
-      totalVariables: [],
+          total_vars: [{
+            name: 'phoneNumber',
+            type: 'text'
+          }],
+          vars_vals: [{
+            name: 'phoneNumber',
+            value: '000.000.0000'
+          }],
+        },
+
+        '2': {
+          address: 'NEC Street & Road\\nPlace, TX',
+          quantity: 1,
+          type: 'Development',
+          
+          same_face: true,
+          double_face: false,
+
+          file_art: 'C:\\Art\\4x8.ai',
+          file_art_back: null,
+          file_proof: 'C:\\Proofs\\4x8_proof.ai',
+
+          total_vars: [],
+          vars_vals: [],
+        },
+      }
     },
-
-    orders: {}
+  }
 
   }
  
 const mutations = {
-
-    updateBatch (state, payload) {
-
-      Object.assign(state.shared, payload);
-    },
 
     addOrder (state, payload) {
 
       Vue.set(state.orders, payload.id, payload.order);
     },
 
-    deleteOrder (state, order_number) {
+    deleteOrder (state, id) {
 
-      Vue.delete(state.orders, order_number);
+      Vue.delete(state.orders, id);
     },
 
     updateOrder (state, payload) {
@@ -55,51 +87,10 @@ const mutations = {
         Vue.delete(state.orders, orders[i]);
       }
     },
-
-    clearShared (state) {
-
-      let obj =  {
-        artist: 'DAVE',
-        artDate: null,
-        orderDate: null,
-        customer: null,
-        type: null,
-
-        file_art: null,
-        file_art_back: null,
-        file_proof: null,
-
-        double_face: false,
-        same_face: true,
-
-        totalVariables: [] };
-        
-        Object.assign(state.shared, obj);
-    },
-
-    sendAll (state) {
-
-      let orders = [];
-      let keys = Object.keys(state.orders);
-      let length = keys.length; 
-    
-      for(let i = 0; i < length; i++){
-
-        let current = {};
-        Object.assign(current, state.shared, state.orders[keys[i]]);
-        orders.push(current);
-      }
-
-      this.$socket.emit('batch', JSON.stringify(orders));
-    }
 }
 
 const actions = {
 
-    updateBatch ({ commit }, payload){
-
-      commit('updateBatch', payload);
-    },
 
     addOrder ({ commit }, order) {
 
@@ -113,9 +104,9 @@ const actions = {
       commit('addOrder', payload);
     },
 
-    deleteOrder ({ commit }, order_number) {
+    deleteOrder ({ commit }, id) {
       
-      commit('deleteOrder', order_number);
+      commit('deleteOrder', id);
     },
 
     updateOrder ({ commit }, payload) {
@@ -127,41 +118,22 @@ const actions = {
 
       commit('clearOrders');
     },
-
-    clearShared({ commit }) {
-
-      commit('clearShared');
-    },
-
-    clearBatch ({ commit }) {
-
-      commit('clearOrders');
-      commit('clearShared');
-    },
-
-    sendAll ({ commit }) {
-
-      commit('sendAll');
-    }
 }
 
 const getters = {
 
-    batch: (state) => {
-        return state
+    mp_orders: (state) => {
+        return state.orders
     },
 
-    batch_shared: (state) => {
-        return state.shared
-    },
-
-    batch_orders: (state) => {
-      return state.orders
-    },
-
-    batch_order: (state) => (id) => {
+    mp_order: (state) => (id) => {
 
       return state.orders[id]
+    },
+
+    pages: (state) => (id) => {
+
+      return state.orders[id].pages
     }
 
 }

@@ -1,32 +1,30 @@
 <template>
   <q-item
-    @click="$emit('update')"
+    @click.stop="$emit('update')"
     clickable
     v-ripple
-    class="bg-secondary">
+    class="bg-blue-grey-6">
 
-   <q-item-section class="col-2 gt-xs">
+    <q-item-section class="col-2 gt-auto">
       <q-item-label class="text-overline text-weight-bolder">
-        {{ order.orderNumber }}
+        pg {{ id }}
       </q-item-label>
     </q-item-section>
-
+   
     <q-item-section class="q-pl-sm">
-      <q-item-label lines="1">
-        <span class="text-weight-bold">{{ order.customer }}</span>
-        <span class="text-blue-grey-3"> - {{ order.subdivision }}</span>
-      </q-item-label>
       <q-item-label class="q-mt-xs text-uppercase text-grey-4">
-        <small><span class="q-pr-md">{{ order.type }}</span>
-        <span class="">QTY : {{ order.quantity }}</span></small>
+        <small><span class="q-pr-md">{{ order.type }}</span></small>
       </q-item-label>
     </q-item-section>
 
     <q-item-section class="q-pl-sm">
-      <q-item-label lines="1" v-for="(o, idx) in order.variablesArr" :key="idx">
+      <q-item-label class="q-mt-xs text-uppercase text-grey-4">
+        <small><span class="">QTY : {{ order.quantity }}</span></small>
+      </q-item-label>
+      <!-- <q-item-label lines="1" v-for="(o, idx) in order.vars_vals" :key="idx">
         <small><span class="text-cyan-3">{{ o.name }} - </span>
         <span class="text-blue-grey-2">{{ o.value }}</span></small>
-      </q-item-label>
+      </q-item-label> -->
     </q-item-section>
 
     <q-item-section side>
@@ -40,16 +38,6 @@
         dense
         round
         icon="delete" />
-        
-        <q-btn
-        @click.stop="sendOrder(id)"
-        class="gt-xs text-blue-grey-3"
-        size="11px"
-        flat
-        exact
-        dense
-        round
-        icon="send" />
       </div>
     </q-item-section>
   </q-item>
@@ -70,7 +58,7 @@ export default {
 
       confirmDelete(id) {
         this.$q.dialog({
-          title: 'delete this order?',
+          title: 'delete this page?',
           message: '',
           position: 'standard',
           ok: {
@@ -92,7 +80,7 @@ export default {
       
       removeOrder (id) {
         this.deleteOrder(id)
-        this.$q.notify('order effectively yeet\'d')
+        this.$q.notify('page effectively yeet\'d')
       },
 
       sendOrder(id) {

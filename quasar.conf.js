@@ -68,7 +68,9 @@ module.exports = function (ctx) {
         'QPopupEdit',
         'QTooltip',
         'QBanner',
-        'QField'
+        'QField',
+        'QPagination',
+        'QExpansionItem',
       ],
 
       directives: [

@@ -1,5 +1,17 @@
 <template>
-	<q-card class="bg-primary text-grey-4">
+<div>
+  <q-separator/>
+  <q-expansion-item
+    icon="description"
+    class="bg-secondary"
+    group="the-pages"
+    dense-toggle
+    switch-toggle-side
+    default-opened
+    dense
+    label="page 1">
+
+	<q-card class="bg-grey-9 text-grey-4">
 		<q-form
 			@submit="onSubmit"
 			@reset="onReset"
@@ -9,71 +21,11 @@
 
 			<q-card-section class="q-gutter-xs">
 
-				<!-- Art and Order Dates -->
-				<div class="row">
-					<div class="col q-pr-xs">
-						<vse-date
-							v-model="the_order.orderDate"
-							:date.sync="the_order.orderDate"
-							label="order date" />
-					</div>
-					
-					<div class="col q-pl-auto">
-						<vse-date
-							v-model="the_order.artDate"
-							:date.sync="the_order.artDate"
-							label="art date"
-							disable/>
-					</div>
-				</div>
-
-				<!-- Order Number -->
-				<q-input
-					v-model="the_order.orderNumber"
-					:autofocus="true"
-					filled
-					dense
-					dark
-					clearable
-					label="order number"
-					standout="bg-secondary text-white"
-					input-class="text-grey-4"
-					hide-bottom-space
-					lazy-rules
-					:rules="[ val => !!val && val.length == 6 ]"/>
-
-				<!-- Customer -->
-				<q-input
-					v-model="the_order.customer"
-					filled
-					dense
-					dark
-					clearable
-					label="customer"
-					standout="bg-secondary text-white"
-					input-class="text-grey-4"
-					hide-bottom-space
-					lazy-rules
-					:rules="[ val => !!val ]"/>
-
-				<!-- Subdivision -->
-				<q-input
-					v-model="the_order.subdivision"
-					label="subdivision"
-					filled
-					dense
-					dark
-					clearable
-					standout="bg-secondary text-white"
-					input-class="text-grey-4"
-					hide-bottom-space
-					lazy-rules
-					:rules="[ val => !!val ]"/>
-
 				<!-- Address Line 1 -->
 				<q-input
 					v-model="addressLine1"
 					label="address line 1"
+          autofocus
 					filled
 					dense
 					dark
@@ -191,7 +143,7 @@
 
 			</q-card-section>	
 
-			<q-card-actions align="around" class="q-pb-lg">
+			<q-card-actions align="around" class="q-pb-md">
 				<q-btn
 					dense
 					style="width: 200px"
@@ -214,6 +166,9 @@
 
 		</q-form>
 	</q-card>
+
+  </q-expansion-item>
+</div>
 </template>
 
 <script>
@@ -226,21 +181,17 @@ export default {
 				return {
 
 						the_order: {
-								artist:      'DAVE',
-								address:       '',
-								artDate:       null,
-								customer:      null,
-								file_art:      null,
-								file_art_back: null,
-								file_proof:    null,
-								orderDate:     null,
-								orderNumber:   null,
-								quantity:      null,
-								subdivision:   null,
-								type:          null,
-								double_face:   false,
-								same_face:     true,
-								variablesArr:  [],
+
+              file_art:      null,
+							file_art_back: null,
+              file_proof:    null,
+                
+							address:       '',
+							quantity:      null,
+							type:          null,
+							double_face:   false,
+							same_face:     true,
+							variablesArr:  [],
 						},
 						
 						variables: [],
@@ -269,13 +220,9 @@ export default {
 
 				clearFields () {
 
-						this.the_order.orderNumber = null;
 						this.the_order.address = '';
-						this.the_order.customer = null;
-						this.the_order.subdivision = null;
 						this.the_order.type = null;
 						this.the_order.quantity = null;
-						this.the_order.orderDate =  this.the_order.artDate;
 						this.the_order.file_art = null;
 						this.the_order.file_art_back = null;
 						this.the_order.file_proof = null;

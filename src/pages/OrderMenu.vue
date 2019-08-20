@@ -70,10 +70,7 @@ import { mapActions } from 'vuex'
 
     methods: {
 
-      ...mapActions('orders',
-                    ['updateOrder',
-                    'sendOrder'
-                    ]),
+      ...mapActions('orders', ['updateOrder', 'sendOrder']),
 
       sendOrder(payload){
 
