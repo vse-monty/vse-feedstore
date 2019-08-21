@@ -8,13 +8,13 @@
 
    <q-item-section class="col-1 gt-auto">
       <q-item-label class="text-overline text-weight-bolder">
-        {{ order.shared.orderNumber }}
+        {{ order.orderNumber }}
       </q-item-label>
     </q-item-section>
 
     <q-item-section class="col-4 q-pl-md">
       <q-item-label lines="1">
-        <span class="text-weight-medium text-grey-4">SUBDIVISION : </span><span class="text-weight-bold text-uppercase text-blue-grey-3">{{ order.shared.subdivision }}</span>
+        <span class="text-weight-medium text-grey-4">SUBDIVISION : </span><span class="text-weight-bold text-uppercase text-blue-grey-3">{{ order.subdivision }}</span>
       </q-item-label>
       <q-item-label class="q-mt-xs text-uppercase text-grey-4">
         <small><span>PAGES : {{ totalPages }}</span></small>
@@ -28,7 +28,7 @@
           v-for="(p, key) in order.pages"
           :key="key"
           :order="p"
-          :id="key"
+          :id="{id: order.orderNumber, pg: key}"
           class="q-ma-xs"/>
       </q-list>
     </q-item-section>
@@ -36,14 +36,14 @@
     <q-item-section side>
       <div class="text-grey-8 q-gutter-xs">
         <q-btn
-          @click.stop="confirmDelete(order.shared.orderNumber)"
+          @click.stop="ConfirmDelete(order.orderNumber)"
           class="gt-xs text-grey-4"
           size="11px"
           flat
           exact
           dense
           round
-        icon="delete" />
+          icon="delete" />
       </div>
     </q-item-section>
   </q-item>
@@ -72,11 +72,12 @@ export default {
   },
 
   methods: {
-    ...mapActions('mp_orders', ['deleteOrder']),
+    ...mapActions('mp_orders', ['DeleteOrder']),
 
-    confirmDelete(id) {
+    ConfirmDelete(id) {
+      let str = `delete order #${id}?`;
       this.$q.dialog({
-        title: 'delete this order?',
+        title: str,
         message: '',
         position: 'standard',
         ok: {
@@ -92,13 +93,14 @@ export default {
         dark: true,
         persistent: true,
       }).onOk(() => {
-        this.removeOrder(id)
+        this.RemoveOrder(id)
       })
     },
       
-    removeOrder (id) {
-      this.deleteOrder(id)
-      this.$q.notify('order yeet\'d from batch')
+    RemoveOrder (id) {
+
+      this.DeleteOrder(id);
+      this.$q.notify('order yeet\'d from batch');
     }
   }
 }

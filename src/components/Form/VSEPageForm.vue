@@ -5,11 +5,13 @@
     icon="description"
     class="bg-secondary"
     group="the-pages"
+    ref="PageForm"
     dense-toggle
     switch-toggle-side
     default-opened
     dense
-    label="page 1">
+    :label="ThePageNumber"
+		@hide="CheckCanHide">
 
 	<q-card class="bg-grey-9 text-grey-4">
 		<q-form
@@ -17,7 +19,7 @@
 			@reset="onReset"
 			no-error-focus
 			class="q-gutter-sm"
-			ref="addOrderForm">
+			ref="AddOrderForm">
 
 			<q-card-section class="q-gutter-xs">
 
@@ -25,7 +27,6 @@
 				<q-input
 					v-model="addressLine1"
 					label="address line 1"
-          autofocus
 					filled
 					dense
 					dark
@@ -113,9 +114,9 @@
 
 				<!-- THIS IS WHERE WE WILL POPULATE THE INPUTS FOR VARIABLES -->
 				<q-list
-					v-if="totalVariables.length !== 0">
+					v-if="TotalVariables.length !== 0">
 					<vse-variable-input
-						v-for="(tv, key) in totalVariables"
+						v-for="(tv, key) in TotalVariables"
 						:key="key"
 						v-model="the_order.variablesArr[key].value"
 						:varType="tv.type"
@@ -162,7 +163,7 @@
 
 		<!-- shows the 'orderToReturn' Object at the bottom of the form-->
 		<pre v-if="debugMenu">{{ the_order }}</pre>
-		<pre v-if="debugMenu">{{ totalVariables }}</pre>
+		<pre v-if="debugMenu">{{ TotalVariables }}</pre>
 
 		</q-form>
 	</q-card>
@@ -177,48 +178,60 @@ import { mapActions } from 'vuex';
 import { constants } from 'fs';
 
 export default {
-		data () {
-				return {
+  props: ['order', 'id'],
 
-						the_order: {
+  data () {
+    return {
 
-              file_art:      null,
-							file_art_back: null,
-              file_proof:    null,
-                
-							address:       '',
-							quantity:      null,
-							type:          null,
-							double_face:   false,
-							same_face:     true,
-							variablesArr:  [],
-						},
-						
-						variables: [],
-						back_variables: [],
+      the_order: {
 
-						addressLine1: '',
-						addressLine2: '',
+        file_art:      null,
+        file_art_back: null,
+        file_proof:    null,
+          
+        address:       '',
+        quantity:      null,
+        type:          null,
+        double_face:   false,
+        same_face:     true,
+        variablesArr:  [],
+      },
+      
+      variables: [],
+      back_variables: [],
 
-						debugMenu: false,
+      addressLine1: '',
+      addressLine2: '',
 
-						signOptions : [ 'Available - Sold',
-														'Construction',
-														'Development',
-														'Lot Signs',
-														'Main ID',
-														'Misc',
-														'Model Exteriors',
-														'Model Interiors',
-														],
+      debugMenu: false,
 
-				}
-		},
+      signOptions : [ 'Available - Sold',
+                      'Construction',
+                      'Development',
+                      'Lot Signs',
+                      'Main ID',
+                      'Misc',
+                      'Model Exteriors',
+                      'Model Interiors',
+                      ],
+
+    }
+  },
 		methods: {
 
-				...mapActions('orders', ['addOrder']),
+				onSubmit () {
 
-				clearFields () {
+						this.$refs.AddOrderForm.validate(true)
+						.then(success => {
+								if (success) {
+										this.the_order.address = this.TotalAddress;
+										this.the_order.totalVariables = this.TotalVariables;
+										this.$emit('fill', this.the_order);
+										this.$refs.PageForm.hide();
+								}});
+				},
+
+				onReset () {
 
 						this.the_order.address = '';
 						this.the_order.type = null;
@@ -234,45 +247,27 @@ export default {
 						this.addressLine1 = '';
 						this.addressLine2 = '';
 				},
-			 
-				onSubmit () {
-
-						this.$refs.addOrderForm.validate()
-						.then(success => {
-								if (success) {
-										this.the_order.address = this.totalAddress;
-										this.the_order.totalVariables = this.totalVariables;
-										this.addOrder(this.the_order);
-										this.$emit('close');
-								}})
-				},
-
-				onReset () {
-						this.clearFields();
-						this.$refs.addOrderForm.reset();
-				},
-
-				getSubOptions () {
-						return Object.keys(this.locations(this.the_order));
-				},
 				
-				addOption (obj) {
-						switch(obj.type){
-								case 'customer':
-										this.addBuilder(obj.value);
-										break;
-								default:
-										return;
-						}
-				},
-			 
+				CheckCanHide () {
+
+					this.$refs.AddOrderForm.validate(true)
+						.then(success => {
+							if (success) {
+								this.the_order.address = this.TotalAddress;
+								this.the_order.totalVariables = this.TotalVariables;
+								this.$emit('fill', this.the_order);
+								this.$refs.PageForm.hide();
+							}else{
+								this.$refs.PageForm.show();
+							}});
+				}
 		},
 
 		computed: {
 
 			...mapGetters('settings', ['settings']),
 			 
-			 totalVariables: function () {
+			 TotalVariables: function () {
 					 let arr = this.$_.unionWith(this.variables, this.back_variables, this.$_.isEqual);
 					 this.the_order.variablesArr = [];
 
@@ -283,14 +278,19 @@ export default {
 					return arr;
 				},
 
-				totalAddress: function () {
+				TotalAddress: function () {
 						let addy = this.addressLine1 + '\r' + this.addressLine2;
 						this.the_order.address = (' ' + addy).slice(1);
 						return addy;
-				}
+        },
+        
+        ThePageNumber: function () {
+          return `page ${this.id + 1}`
+        }
 		},
 		
 		components: {
+
 				'vse-select' : require('components/Form/VSESelect.vue').default,
 				'vse-date' : require('components/Form/VSEDate.vue').default,
 				'vse-file-picker' : require('components/Form/VSEFilePicker.vue').default,
@@ -298,7 +298,10 @@ export default {
 		},
 
 		mounted () {
-				
+
+      if(this.order !== null){
+        Object.assign(this.the_order, this.order);
+      }
 		},
 }
 </script>

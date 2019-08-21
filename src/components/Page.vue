@@ -1,13 +1,10 @@
 <template>
   <q-item
-    @click.stop="$emit('update')"
-    clickable
-    v-ripple
-    class="bg-blue-grey-6">
+    class="bg-page">
 
     <q-item-section class="col-2 gt-auto">
       <q-item-label class="text-overline text-weight-bolder">
-        pg {{ id }}
+        pg {{ id.pg + 1 }}
       </q-item-label>
     </q-item-section>
    
@@ -21,16 +18,12 @@
       <q-item-label class="q-mt-xs text-uppercase text-grey-4">
         <small><span class="">QTY : {{ order.quantity }}</span></small>
       </q-item-label>
-      <!-- <q-item-label lines="1" v-for="(o, idx) in order.vars_vals" :key="idx">
-        <small><span class="text-cyan-3">{{ o.name }} - </span>
-        <span class="text-blue-grey-2">{{ o.value }}</span></small>
-      </q-item-label> -->
     </q-item-section>
 
     <q-item-section side>
       <div class="text-grey-8 q-gutter-xs">
         <q-btn
-        @click.stop="confirmDelete(id)"
+        @click.prevent.stop="ConfirmDelete"
         class="gt-xs text-grey-4"
         size="11px"
         flat
@@ -54,11 +47,11 @@ export default {
 
     methods: {
       
-      ...mapActions('orders', ['updateOrder', 'deleteOrder', 'sendOrder']),
+      ...mapActions('mp_orders', ['DeletePage']),
 
-      confirmDelete(id) {
+      ConfirmDelete() {
         this.$q.dialog({
-          title: 'delete this page?',
+          title: `delete page ${this.id.pg + 1}?`,
           message: '',
           position: 'standard',
           ok: {
@@ -74,24 +67,23 @@ export default {
           dark: true,
           persistent: true,
         }).onOk(() => {
-          this.removeOrder(id)
+          this.RemovePage()
         })
       },
       
-      removeOrder (id) {
-        this.deleteOrder(id)
+      RemovePage () {
+        let clone = {};
+        Object.assign(clone, this.id);
+        this.DeletePage(clone);
         this.$q.notify('page effectively yeet\'d')
-      },
-
-      sendOrder(id) {
-
-        this.$emit('sendOrder', id);
-        this.$q.notify('order sent to illustrator panel')
       },
     }
 }
 </script>
 
 <style>
+.bg-page {
 
+	background: #69737d;
+}
 </style>

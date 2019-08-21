@@ -4,21 +4,21 @@ const state = {
 
   
   orders: {
+
     '123456': {
       
-      shared: {
-        artist: 'DAVE',
-        orderNumber: '123456',
-        customer: 'Home Builder Homes',
-        subdivision: 'The Valley',
-      
-        orderDate: null,
-        artDate: null,
-      },
+      artist: 'DAVE',
+      orderNumber: '123456',
+      customer: 'Home Builder Homes',
+      subdivision: 'The Valley',
+    
+      orderDate: null,
+      artDate: null,
+    
 
-      pages: {
+      pages: [
 
-        '1': {
+        {
           address: '123 Street\\nPlace, TX',
           quantity: 40,
           type: 'Lot Signs',
@@ -40,7 +40,7 @@ const state = {
           }],
         },
 
-        '2': {
+        {
           address: 'NEC Street & Road\\nPlace, TX',
           quantity: 1,
           type: 'Development',
@@ -55,30 +55,29 @@ const state = {
           total_vars: [],
           vars_vals: [],
         },
-      }
+      ]
     },
   }
-
-  }
+}
  
 const mutations = {
 
-    addOrder (state, payload) {
+    AddOrder (state, payload) {
 
       Vue.set(state.orders, payload.id, payload.order);
     },
 
-    deleteOrder (state, id) {
+    DeleteOrder (state, id) {
 
       Vue.delete(state.orders, id);
     },
 
-    updateOrder (state, payload) {
+    UpdateOrder (state, payload) {
 
       Object.assign(state.orders[payload.id], payload.updates);
     },
 
-    clearOrders (state) {
+    ClearOrders (state) {
 
       let orders = Object.keys(state.orders);
       
@@ -87,12 +86,26 @@ const mutations = {
         Vue.delete(state.orders, orders[i]);
       }
     },
+
+    DeletePage (state, payload) {
+
+      let order = state.orders[payload.id];
+      
+      if(order){
+        
+        let pages = order.pages;
+            pages.splice(payload.pg, 1);
+      }
+    }
 }
 
 const actions = {
 
 
-    addOrder ({ commit }, order) {
+    AddOrder ({ commit }, order) {
+
+      console.log('mp-orders store: addOrder()')
+      console.log(order);
 
       let id = order.orderNumber;
       let clone = Object.assign({}, order);
@@ -101,28 +114,34 @@ const actions = {
         order: clone
       }
 
-      commit('addOrder', payload);
+      commit('AddOrder', payload);
     },
 
-    deleteOrder ({ commit }, id) {
+    DeleteOrder ({ commit }, id) {
       
-      commit('deleteOrder', id);
+      commit('DeleteOrder', id);
     },
 
-    updateOrder ({ commit }, payload) {
+    UpdateOrder ({ commit }, payload) {
       
-      commit('updateOrder', payload);
+      commit('UpdateOrder', payload);
     },
 
-    clearOrders ({ commit }) {
+    ClearOrders ({ commit }) {
 
-      commit('clearOrders');
+      commit('ClearOrders');
+    },
+
+    DeletePage ({ commit }, payload) {
+
+      commit('DeletePage', payload);
     },
 }
 
 const getters = {
 
     mp_orders: (state) => {
+
         return state.orders
     },
 

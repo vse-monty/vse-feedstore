@@ -1,20 +1,14 @@
 <template>
   <q-page>
-    <q-item
-      dark
-      class="row bg-blue-grey-7 q-mx-auto"
-      style="max-width: 750px">
-    </q-item>
-
     <q-list
-      padding
-      class="q-mx-lg col">
+      class="q-mx-auto col">
 
         <book
           v-for="(book, key) in mp_orders"
           :key="key"
           :order="book"
           class="q-ma-xs"/>
+
     </q-list>
     
     <q-page-sticky
@@ -23,7 +17,7 @@
 				<q-btn
 					icon="clear"
 					color="secondary"
-          @click="true">
+          @click="ClearAllOrders">
           <q-tooltip>clear all orders</q-tooltip>
 				</q-btn>
     </q-page-sticky>
@@ -31,6 +25,17 @@
     <q-page-sticky
       position='bottom-left'
       :offset="[100,30]">
+				<q-btn
+					icon="autorenew"
+					color="secondary"
+          @click="showAddOrder = true">
+          <q-tooltip>duplicate last order</q-tooltip>
+				</q-btn>
+    </q-page-sticky>
+ 
+    <q-page-sticky
+      position='bottom-left'
+      :offset="[170,30]">
 				<q-btn
 					icon="add"
 					color="secondary"
@@ -45,7 +50,7 @@
 			<q-btn 
 				icon="send"
 				color="secondary"
-        @click="showAddOrder = true">
+        @click="true">
           <q-tooltip>send all</q-tooltip>
 				</q-btn>
     </q-page-sticky>
@@ -91,7 +96,30 @@ export default {
 
   methods: {
     
-    ...mapActions('mp_orders', ['clearOrders']),
+    ...mapActions('mp_orders', ['ClearOrders']),
+
+    ClearAllOrders () {
+
+      this.$q.dialog({
+          title: `delete all orders?`,
+          message: '',
+          position: 'standard',
+          ok: {
+            push: true,
+            color: 'negative',
+            flat: true,
+          },
+          cancel: {
+            push: true,
+            color: 'white',
+            flat: true,
+          },
+          dark: true,
+          persistent: true,
+        }).onOk(() => {
+          this.ClearOrders();
+        })
+    },
   },
 
   computed: {
@@ -103,7 +131,6 @@ export default {
 
     'book' : require('components/Book.vue').default,
     'add-mp-order' : require('components/Dialog/DialogAddMultiPage.vue').default,
-    'add-page' : require('components/Dialog/DialogAddPage.vue').default,
   },
 
   mounted () {

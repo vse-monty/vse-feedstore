@@ -73,22 +73,43 @@
 				<q-list
 					padding
 					dark >
-					<vse-page />
+					<vse-page 
+						v-for="(page, key) in the_order.pages"
+						:key="key"
+						:id="key"
+						:order="page"
+						@fill="FillPage($event, key)"/>
 				</q-list>
 			</q-card-section>
 
 			<q-card-actions align="center">
 				<q-btn
-					label="add page"
+					label="add"
 					outline
 					dense
-					color="grey-4"/>
+					color="grey-4"
+					@click="AddPage"/>
 
 				<q-btn
-					label="clear pages"
+					label="duplicate last"
 					outline
 					dense
-					color="grey-4"/>
+					color="grey-4"
+					@click="DuplicateLastPage"/>
+
+				<q-btn
+					label="remove last"
+					outline
+					dense
+					color="grey-4"
+					@click="DeleteLastPage"/>
+
+				<q-btn
+					label="clear"
+					outline
+					dense
+					color="grey-4"
+					@click="ClearPages"/>
 			</q-card-actions>
 
 			<q-card-actions align="around" class="q-py-lg">
@@ -146,14 +167,14 @@ export default {
 				artDate:     null,
 				orderDate:   null,
 				
-				pages:         [{}],
+				pages:     [null],
 			},
 
 		}
 	},
 	methods: {
 
-		...mapActions('mp_orders', ['addOrder']),
+		...mapActions('mp_orders', ['AddOrder']),
 
 		clearFields () {
 
@@ -162,15 +183,67 @@ export default {
 			this.the_order.orderNumber = null;
 			this.the_order.orderDate =  this.the_order.artDate;
 			this.the_order.numPages = 1;
-			this.the_order.pages = [];
+			this.the_order.pages = [null];
 		},
 		
 		onSubmit () {
 
+			console.log(this.$refs);
+			this.$refs.AddMultiPage.validate(true)
+				.then(success => {
+						if (success) {
+								this.AddOrder(this.the_order);
+								this.$emit('close');
+						}});
 		},
 
 		onReset () {
 			this.clearFields();
+		},
+
+		AddPage () {
+
+			this.the_order.pages.push(null);
+		},
+
+		ClearPages () {
+
+			this.the_order.pages = [null];
+		},
+
+		FillPage (data, key) {
+
+			console.log('fill page method')
+			let clone = {};
+			Object.assign(clone, data);
+
+			console.log(clone);
+			console.log(this.the_order.pages[key]);
+
+			if(this.the_order.pages[key] == null){
+
+				console.log('inside if...')
+				this.the_order.pages[key] = clone;
+				console.log(this.the_order.pages);
+				return;
+			}
+
+			Object.assign(this.the_order.pages[key], clone);
+		},
+
+		DeleteLastPage () {
+
+			//confirm here, then...
+
+			this.the_order.pages.pop();
+		},
+
+		DuplicateLastPage () {
+
+			let clone = {};
+			let idx = this.the_order.pages.length - 1;
+			Object.assign(clone, this.the_order.pages[idx]);
+			this.the_order.pages.push(clone);
 		},
 	},
 
@@ -194,7 +267,6 @@ export default {
 			'vse-date' : require('components/Form/VSEDate.vue').default,
 			'vse-file-picker' : require('components/Form/VSEFilePicker.vue').default,
 			'vse-variable-input' : require('components/Form/VSEVariableInput.vue').default,
-			'add-page' : require('components/Dialog/DialogAddPage.vue').default,
 	},
 
 	mounted () {
