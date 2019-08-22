@@ -146,7 +146,7 @@ export default {
 	data () {
 		return {
 
-			debugMenu: true,
+			debugMenu: false,
 
 			the_order: {
 
@@ -202,22 +202,7 @@ export default {
 
 		FillPage (data, key) {
 
-			console.log('fill page method')
-			let clone = {};
-			Object.assign(clone, data);
-
-			console.log(clone);
-			console.log(this.the_order.pages[key]);
-
-			if(this.the_order.pages[key] == null){
-
-				console.log('inside if...')
-				this.the_order.pages[key] = clone;
-				console.log(this.the_order.pages);
-				return;
-			}
-
-			Object.assign(this.the_order.pages[key], clone);
+				this.the_order.pages[key] = this.$_.cloneDeep(data);
 		},
 
 		DeleteLastPage () {
@@ -230,7 +215,7 @@ export default {
 		DuplicateLastPage () {
 
 			let idx = this.numPages - 1;
-			this.the_order.pages.push(Object.assign({}, this.the_order.pages[idx]));
+			this.the_order.pages.push(this.$_.cloneDeep(this.the_order.pages[idx]));
 		},
 	},
 
@@ -260,11 +245,7 @@ export default {
 
 		if(this.order){
 			
-			Object.assign(this.the_order, this.order);
-			
-			this.the_order.pages = [];
-			let arr = [...this.order.pages];
-			this.the_order.pages = arr;
+			this.the_order = this.$_.cloneDeep(this.order);
 			
 			this.the_order.orderNumber = null;
 		}

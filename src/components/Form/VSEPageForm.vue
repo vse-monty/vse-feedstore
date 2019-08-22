@@ -175,7 +175,6 @@
 <script>
 import { mapGetters } from 'vuex';
 import { mapActions } from 'vuex';
-import { constants } from 'fs';
 
 export default {
   props: ['order', 'id'],
@@ -258,6 +257,7 @@ export default {
 			...mapGetters('settings', ['settings']),
 			 
 			 TotalVariables: function () {
+
 					 let arr = this.$_.unionWith(this.variables, this.back_variables, this.$_.isEqual);
 					 this.the_order.variablesArr = [];
 
@@ -294,7 +294,7 @@ export default {
       if(this.order){ //if this is null or empty, then it's not an edit
 
 				//copy info in to form
-				this.the_order = Object.assign({}, this.order);
+				this.the_order = this.$_.cloneDeep(this.order);
 				
 
 				//split address back into multi-line

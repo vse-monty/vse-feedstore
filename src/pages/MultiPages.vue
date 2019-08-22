@@ -51,7 +51,7 @@
 			<q-btn 
 				icon="send"
 				color="secondary"
-        @click="true">
+        @click="SendAllOrders">
           <q-tooltip>send all</q-tooltip>
 				</q-btn>
     </q-page-sticky>
@@ -115,7 +115,7 @@ export default {
 
   methods: {
     
-    ...mapActions('mp_orders', ['ClearOrders', 'AddOrder']),
+    ...mapActions('mp_orders', ['ClearOrders', 'AddOrder', 'SendAll']),
 
     ClearAllOrders () {
 
@@ -137,6 +137,29 @@ export default {
           persistent: true,
         }).onOk(() => {
           this.ClearOrders();
+        })
+    },
+
+    SendAllOrders () {
+
+      this.$q.dialog({
+          title: `send all orders?`,
+          message: '',
+          position: 'standard',
+          ok: {
+            push: true,
+            color: 'positive',
+            flat: true,
+          },
+          cancel: {
+            push: true,
+            color: 'negative',
+            flat: true,
+          },
+          dark: true,
+          persistent: true,
+        }).onOk(() => {
+          this.SendAll();
         })
     },
 
