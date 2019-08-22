@@ -5,19 +5,11 @@ const routes = [
     component: () => import('layouts/Layout.vue'),
     children: [
       {
-        path: '',
-        component: () => import('pages/OrderMenu.vue')
-      },
-      {
         path: '/settings',
         component: () => import('pages/Settings.vue')
       },
       {
-        path: '/batch',
-        component: () => import('pages/BatchMenu.vue')
-      },
-      {
-        path: '/mp',
+        path: '/',
         component: () => import('pages/MultiPages.vue')
       },
     ]

@@ -5,7 +5,7 @@
 			@submit="onSubmit"
 			@reset="onReset"
 			no-error-focus
-			ref="AddMultiPage">
+			ref="EditMultiPage">
 
 			<q-card-section class="q-gutter-xs">
 
@@ -34,6 +34,7 @@
 					filled
 					dense
 					dark
+					disable
 					clearable
 					label="order number"
 					standout="bg-secondary text-white"
@@ -141,7 +142,8 @@ import { mapGetters } from 'vuex';
 import { mapActions } from 'vuex';
 
 export default {
-	props: ['order', 'isDupe'],
+
+	props: ['editPackage'],
 
 	data () {
 		return {
@@ -161,33 +163,27 @@ export default {
 
 		}
 	},
+
 	methods: {
 
-		...mapActions('mp_orders', ['AddOrder']),
-
-		clearFields () {
-
-			this.the_order.subdivision = null;
-			this.the_order.customer = null;
-			this.the_order.orderNumber = null;
-			this.the_order.orderDate =  this.the_order.artDate;
-			this.the_order.numPages = 1;
-			this.the_order.pages = [null];
-		},
+		...mapActions('mp_orders', ['UpdateOrder']),
 		
 		onSubmit () {
 
-			console.log(this.$refs);
-			this.$refs.AddMultiPage.validate(true)
+			this.$refs.EditMultiPage.validate(true)
 				.then(success => {
 						if (success) {
-								this.AddOrder(this.the_order);
+								this.UpdateOrder({id: this.the_order.orderNumber, updates: this.the_order});
 								this.$emit('close');
 						}});
 		},
 
 		onReset () {
-			this.clearFields();
+
+			this.the_order.subdivision = null;
+			this.the_order.customer = null;
+			this.the_order.orderDate =  this.the_order.artDate;
+			this.the_order.pages = [null];
 		},
 
 		AddPage () {
@@ -202,22 +198,8 @@ export default {
 
 		FillPage (data, key) {
 
-			console.log('fill page method')
-			let clone = {};
-			Object.assign(clone, data);
-
-			console.log(clone);
-			console.log(this.the_order.pages[key]);
-
-			if(this.the_order.pages[key] == null){
-
-				console.log('inside if...')
-				this.the_order.pages[key] = clone;
-				console.log(this.the_order.pages);
-				return;
-			}
-
-			Object.assign(this.the_order.pages[key], clone);
+			console.log('fill page method');
+			this.the_order.pages[key] = Object.assign({}, data);
 		},
 
 		DeleteLastPage () {
@@ -237,10 +219,6 @@ export default {
 	computed: {
 
 		...mapGetters('mp_orders', ['mp_order']),
-		
-		totalPages: function () {
-
-		},
 
 		numPages: function () {
 			
@@ -256,18 +234,13 @@ export default {
 			'vse-variable-input' : require('components/Form/VSEVariableInput.vue').default,
 	},
 
-	beforeMount () {
+	beforeMount () { //must be before to get in before 'pages' are loaded
 
-		if(this.order){
-			
-			Object.assign(this.the_order, this.order);
-			
-			this.the_order.pages = [];
-			let arr = [...this.order.pages];
-			this.the_order.pages = arr;
-			
-			this.the_order.orderNumber = null;
-		}
+		Object.assign(this.the_order, this.editPackage.order);
+		
+		this.the_order.pages = [];
+		let arr = [...this.editPackage.order.pages];
+		this.the_order.pages = arr;
 	},
 }
 </script>

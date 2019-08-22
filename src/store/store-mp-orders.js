@@ -5,69 +5,76 @@ const state = {
   
   orders: {
 
-    '123456': {
+    // '123456': {
       
-      artist: 'DAVE',
-      orderNumber: '123456',
-      customer: 'Home Builder Homes',
-      subdivision: 'The Valley',
+    //   artist: 'DAVE',
+    //   orderNumber: '123456',
+    //   customer: 'Home Builder Homes',
+    //   subdivision: 'The Valley',
     
-      orderDate: null,
-      artDate: null,
+    //   orderDate: null,
+    //   artDate: null,
     
 
-      pages: [
+    //   pages: [
 
-        {
-          address: '123 Street\\nPlace, TX',
-          quantity: 40,
-          type: 'Lot Signs',
+    //     {
+    //       address: '123 Street\rPlace, TX',
+    //       quantity: 40,
+    //       type: 'Lot Signs',
           
-          same_face: false,
-          double_face: true,
+    //       same_face: false,
+    //       double_face: true,
 
-          file_art: 'C:\\Art\\art_front.ai',
-          file_art_back: 'C:\\Art\\art_back.ai',
-          file_proof: 'C:\\Proofs\\the_proof.ai',
+    //       file_art: 'C:\\Art\\art_front.ai',
+    //       file_art_back: 'C:\\Art\\art_back.ai',
+    //       file_proof: 'C:\\Proofs\\the_proof.ai',
 
-          total_vars: [{
-            name: 'phoneNumber',
-            type: 'text'
-          }],
-          vars_vals: [{
-            name: 'phoneNumber',
-            value: '000.000.0000'
-          }],
-        },
+    //       total_vars: [{
+    //         name: 'phoneNumber',
+    //         type: 'text'
+    //       }],
+    //       vars_vals: [{
+    //         name: 'phoneNumber',
+    //         value: '000.000.0000'
+    //       }],
+    //     },
 
-        {
-          address: 'NEC Street & Road\\nPlace, TX',
-          quantity: 1,
-          type: 'Development',
+    //     {
+    //       address: 'NEC Street & Road\nPlace, TX',
+    //       quantity: 1,
+    //       type: 'Development',
           
-          same_face: true,
-          double_face: false,
+    //       same_face: true,
+    //       double_face: false,
 
-          file_art: 'C:\\Art\\4x8.ai',
-          file_art_back: null,
-          file_proof: 'C:\\Proofs\\4x8_proof.ai',
+    //       file_art: 'C:\\Art\\4x8.ai',
+    //       file_art_back: null,
+    //       file_proof: 'C:\\Proofs\\4x8_proof.ai',
 
-          total_vars: [],
-          vars_vals: [],
-        },
-      ]
-    },
-  }
+    //       total_vars: [],
+    //       vars_vals: [],
+    //     },
+    //   ]
+    // },
+  },
+
+  last_order: null,
 }
  
 const mutations = {
 
     AddOrder (state, payload) {
 
+      state.last_order = payload.id;
       Vue.set(state.orders, payload.id, payload.order);
     },
 
     DeleteOrder (state, id) {
+
+      if(state.last_order == id){
+        state.last_order = null;
+      }
 
       Vue.delete(state.orders, id);
     },
@@ -75,6 +82,7 @@ const mutations = {
     UpdateOrder (state, payload) {
 
       Object.assign(state.orders[payload.id], payload.updates);
+      state.orders[payload.id].pages = [...payload.updates.pages];
     },
 
     ClearOrders (state) {
@@ -85,6 +93,8 @@ const mutations = {
 
         Vue.delete(state.orders, orders[i]);
       }
+
+      state.last_order = null;
     },
 
     DeletePage (state, payload) {
@@ -153,8 +163,12 @@ const getters = {
     pages: (state) => (id) => {
 
       return state.orders[id].pages
-    }
+    },
 
+    last_order: (state) => {
+
+      return state.last_order ? state.orders[state.last_order] : null;
+    }
 }
 
 export default {

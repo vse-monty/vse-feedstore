@@ -14,6 +14,9 @@
 
     <q-item-section class="col-4 q-pl-md">
       <q-item-label lines="1">
+        <span class="text-weight-bolder text-grey-4">{{ order.customer }}</span>
+      </q-item-label>
+      <q-item-label lines="1">
         <span class="text-weight-medium text-grey-4">SUBDIVISION : </span><span class="text-weight-bold text-uppercase text-blue-grey-3">{{ order.subdivision }}</span>
       </q-item-label>
       <q-item-label class="q-mt-xs text-uppercase text-grey-4">

@@ -15,14 +15,14 @@
         hide-dropdown-icon
         @input="$emit('update:value', $event)">
 
-        <template v-slot:append>
+        <!-- <template v-slot:append>
             <q-btn
                 round
                 dense
                 flat
                 icon="add"
                 @click.stop="$emit('add-option')" />
-        </template>
+        </template> -->
 
     </q-select>
 </template>

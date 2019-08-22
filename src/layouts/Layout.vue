@@ -72,17 +72,7 @@ export default {
       navs: [
         {
           to: '/',
-          label: 'order',
-          icon: 'insert_drive_file',
-        },
-        {
-          to: '/batch',
-          label: 'batch orders',
-          icon: 'file_copy',
-        },
-        {
-          to: '/mp',
-          label: 'multi page',
+          label: 'orders',
           icon: 'file_copy',
         },
         {

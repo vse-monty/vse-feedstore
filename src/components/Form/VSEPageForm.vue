@@ -11,7 +11,7 @@
     default-opened
     dense
     :label="ThePageNumber"
-		@hide="CheckCanHide">
+		@hide="onSubmit">
 
 	<q-card class="bg-grey-9 text-grey-4">
 		<q-form
@@ -19,7 +19,7 @@
 			@reset="onReset"
 			no-error-focus
 			class="q-gutter-sm"
-			ref="AddOrderForm">
+			ref="EditPageForm">
 
 			<q-card-section class="q-gutter-xs">
 
@@ -219,48 +219,38 @@ export default {
   },
 		methods: {
 
-				onSubmit () {
+			onSubmit () {
 
-						this.$refs.AddOrderForm.validate(true)
-						.then(success => {
-								if (success) {
-										this.the_order.address = this.TotalAddress;
-										this.the_order.totalVariables = this.TotalVariables;
-										this.$emit('fill', this.the_order);
-										this.$refs.PageForm.hide();
-								}});
-				},
+				this.$refs.EditPageForm.validate(true) //true represents a 'should-focus' flag
+				.then(success => {
+					if (success) {
+						this.the_order.address = this.TotalAddress;
+						this.the_order.totalVariables = this.TotalVariables;
+						let pkg = Object.assign({}, this.the_order);
+						this.$emit('fill', pkg);
+						this.$refs.PageForm.hide();
+					} else {
+						this.$refs.PageForm.show();
+					}
+				})
+			},
 
-				onReset () {
+			onReset () {
 
-						this.the_order.address = '';
-						this.the_order.type = null;
-						this.the_order.quantity = null;
-						this.the_order.file_art = null;
-						this.the_order.file_art_back = null;
-						this.the_order.file_proof = null;
-						this.the_order.same_face = true;
-						this.the_order.double_face = false;
-						this.the_order.variablesArr = [];
-						this.variables = [];
-						this.back_variables = [];
-						this.addressLine1 = '';
-						this.addressLine2 = '';
-				},
-				
-				CheckCanHide () {
-
-					this.$refs.AddOrderForm.validate(true)
-						.then(success => {
-							if (success) {
-								this.the_order.address = this.TotalAddress;
-								this.the_order.totalVariables = this.TotalVariables;
-								this.$emit('fill', this.the_order);
-								this.$refs.PageForm.hide();
-							}else{
-								this.$refs.PageForm.show();
-							}});
-				}
+				this.the_order.address = '';
+				this.the_order.type = null;
+				this.the_order.quantity = null;
+				this.the_order.file_art = null;
+				this.the_order.file_art_back = null;
+				this.the_order.file_proof = null;
+				this.the_order.same_face = true;
+				this.the_order.double_face = false;
+				this.the_order.variablesArr = [];
+				this.variables = [];
+				this.back_variables = [];
+				this.addressLine1 = '';
+				this.addressLine2 = '';
+			},
 		},
 
 		computed: {
@@ -279,12 +269,14 @@ export default {
 				},
 
 				TotalAddress: function () {
+
 						let addy = this.addressLine1 + '\r' + this.addressLine2;
 						this.the_order.address = (' ' + addy).slice(1);
 						return addy;
         },
         
         ThePageNumber: function () {
+
           return `page ${this.id + 1}`
         }
 		},
@@ -299,9 +291,23 @@ export default {
 
 		mounted () {
 
-      if(this.order !== null){
-        Object.assign(this.the_order, this.order);
-      }
+      if(this.order){ //if this is null or empty, then it's not an edit
+
+				//copy info in to form
+				this.the_order = Object.assign({}, this.order);
+				
+
+				//split address back into multi-line
+				this.addressLine1 = this.addressLine2 = "";
+
+				let addy = this.the_order.address.split(/\r\n|\r|\n/);
+				this.addressLine1 = addy[0];
+				this.addressLine2 = addy[1];
+
+				//this.$refs.PageForm.hide();
+			} else {
+				this.onReset();
+			}
 		},
 }
 </script>

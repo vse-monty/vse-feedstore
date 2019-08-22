@@ -7,7 +7,8 @@
           v-for="(book, key) in mp_orders"
           :key="key"
           :order="book"
-          class="q-ma-xs"/>
+          class="q-ma-xs"
+          @update="UpdateOrder({id: key, order: book})"/>
 
     </q-list>
     
@@ -28,7 +29,7 @@
 				<q-btn
 					icon="autorenew"
 					color="secondary"
-          @click="showAddOrder = true">
+          @click="showDupeOrder = last_order ? true : false">
           <q-tooltip>duplicate last order</q-tooltip>
 				</q-btn>
     </q-page-sticky>
@@ -64,14 +65,26 @@
 				<add-mp-order
 					@close="showAddOrder = false"/>
 			</q-dialog>
-			
+
       <q-dialog
-				v-model="showAddPage"
+				v-model="showDupeOrder"
 				dark
 				class="bg-primary"
 				ref="AddOrder">
-				<add-page
-					@close="showAddPage = false"/>
+				<add-mp-order
+          :order="Object.assign({}, last_order)"
+          :isDupe="true"
+					@close="showDupeOrder = false"/>
+			</q-dialog>
+			
+      <q-dialog
+				v-model="showEditOrder"
+				dark
+				class="bg-primary"
+				ref="AddOrder">
+				<edit-mp-order
+          :editPackage="editPackage"
+					@close="showEditOrder = false"/>
 			</q-dialog>
 
 		</div>
@@ -89,14 +102,20 @@ export default {
   data () {
     return {
 
-      showAddOrder: true,
-      showAddPage: false,
+      showAddOrder:   true,
+      showEditOrder: false,
+      showDupeOrder: false,
+
+      editPackage: {
+        id: null,
+        order: {}
+      },
     }
   },
 
   methods: {
     
-    ...mapActions('mp_orders', ['ClearOrders']),
+    ...mapActions('mp_orders', ['ClearOrders', 'AddOrder']),
 
     ClearAllOrders () {
 
@@ -120,20 +139,32 @@ export default {
           this.ClearOrders();
         })
     },
+
+    UpdateOrder (payload) {
+
+        this.editPackage.id = payload.id;
+        Object.assign(this.editPackage.order, payload.order);
+
+        this.showEditOrder = true;      
+    },
   },
 
   computed: {
 
-    ...mapGetters('mp_orders', ['mp_orders', 'mp_order']),
+    ...mapGetters('mp_orders', ['mp_orders', 'mp_order', 'last_order']),
+
   },
 
   components: {
 
     'book' : require('components/Book.vue').default,
     'add-mp-order' : require('components/Dialog/DialogAddMultiPage.vue').default,
+    'edit-mp-order' : require('components/Dialog/DialogEditMultiPage.vue').default,
   },
 
   mounted () {
+
+
   },
 
   }
