@@ -72,9 +72,7 @@ const mutations = {
 
     DeleteOrder (state, id) {
 
-      if(state.last_order == id){
-        state.last_order = null;
-      }
+      if (state.last_order == id) { state.last_order = null }
 
       Vue.delete(state.orders, id);
     },
@@ -106,7 +104,7 @@ const mutations = {
         let pages = order.pages;
             pages.splice(payload.pg, 1);
       }
-    }
+    },
 }
 
 const actions = {

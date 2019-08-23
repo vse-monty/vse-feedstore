@@ -51,7 +51,7 @@
 			<q-btn 
 				icon="send"
 				color="secondary"
-        @click="SendAllOrders">
+        @click="CheckSendAllOrders">
           <q-tooltip>send all</q-tooltip>
 				</q-btn>
     </q-page-sticky>
@@ -91,7 +91,6 @@
   </q-page>
 </template>
 
-
 <script>
 
 import { mapGetters } from 'vuex'
@@ -102,7 +101,7 @@ export default {
   data () {
     return {
 
-      showAddOrder:   true,
+      showAddOrder:  false,
       showEditOrder: false,
       showDupeOrder: false,
 
@@ -113,69 +112,9 @@ export default {
     }
   },
 
-  methods: {
-    
-    ...mapActions('mp_orders', ['ClearOrders', 'AddOrder', 'SendAll']),
-
-    ClearAllOrders () {
-
-      this.$q.dialog({
-          title: `delete all orders?`,
-          message: '',
-          position: 'standard',
-          ok: {
-            push: true,
-            color: 'negative',
-            flat: true,
-          },
-          cancel: {
-            push: true,
-            color: 'white',
-            flat: true,
-          },
-          dark: true,
-          persistent: true,
-        }).onOk(() => {
-          this.ClearOrders();
-        })
-    },
-
-    SendAllOrders () {
-
-      this.$q.dialog({
-          title: `send all orders?`,
-          message: '',
-          position: 'standard',
-          ok: {
-            push: true,
-            color: 'positive',
-            flat: true,
-          },
-          cancel: {
-            push: true,
-            color: 'negative',
-            flat: true,
-          },
-          dark: true,
-          persistent: true,
-        }).onOk(() => {
-          this.SendAll();
-        })
-    },
-
-    UpdateOrder (payload) {
-
-        this.editPackage.id = payload.id;
-        Object.assign(this.editPackage.order, payload.order);
-
-        this.showEditOrder = true;      
-    },
-  },
-
   computed: {
 
     ...mapGetters('mp_orders', ['mp_orders', 'mp_order', 'last_order']),
-
   },
 
   components: {
@@ -187,12 +126,81 @@ export default {
 
   mounted () {
 
+    //check if order list is empty, if so - go ahead and display the add-order dialog
+    let keys = Object.keys(this.mp_orders);
+    if (keys.length < 1) { this.showAddOrder = true }
 
+    //set up listener(s) for order completed/(faileD?) events from server
+    this.$socket.on('order.completed', (data) => {
+
+      console.log(`order completed! ->${data.id}`);
+    });
   },
 
-  }
+  methods: {
+    
+    ...mapActions('mp_orders', ['ClearOrders', 'AddOrder', 'DeleteOrder']),
 
+    ClearAllOrders () {
+
+      this.$q.dialog({
+        title: `delete all orders?`,
+        message: '',
+        position: 'standard',
+        dark: true,
+        persistent: false,
+        ok: {
+          push: true,
+          color: 'negative',
+          flat: true,
+        },
+        cancel: {
+          push: true,
+          color: 'grey-4',
+          flat: true,
+        },
+      }).onOk(() => { this.ClearOrders() })
+    },
+
+    CheckSendAllOrders () {
+
+      this.$q.dialog({
+        title: `send all orders?`,
+        message: '',
+        position: 'standard',
+        color: 'grey-4',
+        dark: true,
+        persistent: false,
+        ok: {
+          push: true,
+          color: 'positive',
+          flat: true,
+        },
+        cancel: {
+          push: true,
+          color: 'grey-4',
+          flat: true,
+        },
+      }).onOk(() => { this.SendAll(); })
+    },
+
+    UpdateOrder (payload) {
+
+      //fill editPackage order, as it is used by the edit-order dialog
+      this.editPackage.id    = payload.id;
+      this.editPackage.order = this.$_.deepCopy(payload.order);
+
+      this.showEditOrder     = true;      
+    },
+
+    SendAll () {
+      
+      this.$socket.emit('give.orders', JSON.stringify(this.mp_orders));
+    },
+  },
+}
 </script>
 
 <style>
+
 </style>
