@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import orders from './store-orders.js'
-import batches from './store-batch.js'
+import mp_orders from './store-mp-orders.js'
 import settings from './store-settings.js'
 
 Vue.use(Vuex)
@@ -15,8 +14,7 @@ Vue.use(Vuex)
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
-      orders,
-      batches,
+      mp_orders,
       settings,
     },
 

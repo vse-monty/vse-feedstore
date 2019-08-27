@@ -1,74 +1,27 @@
 <template>
-	<q-card class="bg-primary text-grey-4">
+<div>
+  <q-separator/>
+  <q-expansion-item
+    icon="description"
+    class="bg-secondary"
+    group="the-pages"
+    ref="PageForm"
+    dense-toggle
+    switch-toggle-side
+    default-opened
+    dense
+    :label="ThePageNumber"
+		@hide="onSubmit">
+
+	<q-card class="bg-grey-9 text-grey-4">
 		<q-form
 			@submit="onSubmit"
 			@reset="onReset"
 			no-error-focus
 			class="q-gutter-sm"
-			ref="addOrderForm">
+			ref="EditPageForm">
 
 			<q-card-section class="q-gutter-xs">
-
-				<!-- Art and Order Dates -->
-				<div class="row">
-					<div class="col q-pr-xs">
-						<vse-date
-							v-model="the_order.orderDate"
-							:date.sync="the_order.orderDate"
-							label="order date" />
-					</div>
-					
-					<div class="col q-pl-auto">
-						<vse-date
-							v-model="the_order.artDate"
-							:date.sync="the_order.artDate"
-							label="art date"
-							disable/>
-					</div>
-				</div>
-
-				<!-- Order Number -->
-				<q-input
-					v-model="the_order.orderNumber"
-					:autofocus="true"
-					filled
-					dense
-					dark
-					clearable
-					label="order number"
-					standout="bg-secondary text-white"
-					input-class="text-grey-4"
-					hide-bottom-space
-					lazy-rules
-					:rules="[ val => !!val && val.length == 6 ]"/>
-
-				<!-- Customer -->
-				<q-input
-					v-model="the_order.customer"
-					filled
-					dense
-					dark
-					clearable
-					label="customer"
-					standout="bg-secondary text-white"
-					input-class="text-grey-4"
-					hide-bottom-space
-					lazy-rules
-					:rules="[ val => !!val ]"/>
-
-				<!-- Subdivision -->
-				<q-input
-					v-model="the_order.subdivision"
-					label="subdivision"
-					filled
-					dense
-					dark
-					clearable
-					standout="bg-secondary text-white"
-					input-class="text-grey-4"
-					hide-bottom-space
-					lazy-rules
-					:rules="[ val => !!val ]"/>
 
 				<!-- Address Line 1 -->
 				<q-input
@@ -132,7 +85,7 @@
 							{label: 'single face', value: false},
 							{label: 'double face', value: true}]" />
 
-					<!-- IF DOUBLE, IS IT SAME FACE ON BOTH SIDES-->
+					<!-- IF DOUBLE, IS IT SAME FACE ON BOTH SIDES -->
 					<q-btn-toggle
 						v-model="the_order.same_face"
 						v-if="the_order.double_face"
@@ -159,11 +112,37 @@
 					label="art file (back)"
 					@fill="back_variables = $event" />
 
+				<!-- Does Sign Have Riders? -->
+				<q-btn-toggle
+					v-model="the_order.has_riders"
+					spread
+					dense
+					no-caps
+					class="btn-toggle"
+					toggle-color="secondary"
+					color="primary"
+					text-color="grey-4"
+					:options="[
+						{label: 'no riders', value: false},
+						{label: 'riders', value: true}]" />
+						
+				<!-- Art File Filepicker-->
+				<vse-file-picker 
+					v-if="the_order.has_riders"
+					v-model="the_order.file_art_riders"
+					:file.sync="the_order.file_art_riders"
+					:load="true"
+					:varsArr.sync="riders_variables"
+					:rules="[ val => !!val ]"
+					:defaultPath="settings.working ? settings.working : 'C:\\'"
+					label="riders file"
+					@fill="riders_variables = $event" />
+
 				<!-- THIS IS WHERE WE WILL POPULATE THE INPUTS FOR VARIABLES -->
 				<q-list
-					v-if="totalVariables.length !== 0">
+					v-if="TotalVariables.length !== 0">
 					<vse-variable-input
-						v-for="(tv, key) in totalVariables"
+						v-for="(tv, key) in TotalVariables"
 						:key="key"
 						v-model="the_order.variablesArr[key].value"
 						:varType="tv.type"
@@ -191,7 +170,7 @@
 
 			</q-card-section>	
 
-			<q-card-actions align="around" class="q-pb-lg">
+			<q-card-actions align="around" class="q-pb-md">
 				<q-btn
 					dense
 					style="width: 200px"
@@ -210,122 +189,104 @@
 
 		<!-- shows the 'orderToReturn' Object at the bottom of the form-->
 		<pre v-if="debugMenu">{{ the_order }}</pre>
-		<pre v-if="debugMenu">{{ totalVariables }}</pre>
+		<pre v-if="debugMenu">{{ TotalVariables }}</pre>
 
 		</q-form>
 	</q-card>
+
+  </q-expansion-item>
+</div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import { mapActions } from 'vuex';
-import { constants } from 'fs';
 
 export default {
-		data () {
-				return {
+  props: ['order', 'id'],
 
-						the_order: {
-								artist:      'DAVE',
-								address:       '',
-								artDate:       null,
-								customer:      null,
-								file_art:      null,
-								file_art_back: null,
-								file_proof:    null,
-								orderDate:     null,
-								orderNumber:   null,
-								quantity:      null,
-								subdivision:   null,
-								type:          null,
-								double_face:   false,
-								same_face:     true,
-								variablesArr:  [],
-						},
-						
-						variables: [],
-						back_variables: [],
+  data () {
+    return {
 
-						addressLine1: '',
-						addressLine2: '',
+      the_order: {
 
-						debugMenu: false,
+        file_art:      null,
+        file_art_back: null,
+				file_proof:    null,
+				file_art_riders: null,
+          
+        address:       '',
+        quantity:      null,
+        type:          null,
+        double_face:   false,
+				same_face:     true,
+				has_riders:    false,
+        variablesArr:  [],
+      },
+      
+      variables: [],
+			back_variables: [],
+			riders_variables: [],
 
-						signOptions : [ 'Available - Sold',
-														'Construction',
-														'Development',
-														'Lot Signs',
-														'Main ID',
-														'Misc',
-														'Model Exteriors',
-														'Model Interiors',
-														],
+      addressLine1: '',
+      addressLine2: '',
 
-				}
-		},
+      debugMenu: false,
+
+      signOptions : [ 'Available - Sold',
+                      'Construction',
+                      'Development',
+                      'Lot Signs',
+                      'Main ID',
+                      'Misc',
+                      'Model Exteriors',
+                      'Model Interiors', ]
+    }
+  },
 		methods: {
 
-				...mapActions('orders', ['addOrder']),
+			onSubmit () {
 
-				clearFields () {
+				this.$refs.EditPageForm.validate(true) //true represents a 'should-focus' flag
+				.then(success => {
+					if (success) {
+						this.the_order.address = this.TotalAddress;
+						this.the_order.totalVariables = this.TotalVariables;
+						let pkg = Object.assign({}, this.the_order);
+						this.$emit('fill', pkg);
+						this.$refs.PageForm.hide();
+					} else {
+						this.$refs.PageForm.show();
+					}
+				})
+			},
 
-						this.the_order.orderNumber = null;
-						this.the_order.address = '';
-						this.the_order.customer = null;
-						this.the_order.subdivision = null;
-						this.the_order.type = null;
-						this.the_order.quantity = null;
-						this.the_order.orderDate =  this.the_order.artDate;
-						this.the_order.file_art = null;
-						this.the_order.file_art_back = null;
-						this.the_order.file_proof = null;
-						this.the_order.same_face = true;
-						this.the_order.double_face = false;
-						this.the_order.variablesArr = [];
-						this.variables = [];
-						this.back_variables = [];
-						this.addressLine1 = '';
-						this.addressLine2 = '';
-				},
-			 
-				onSubmit () {
+			onReset () {
 
-						this.$refs.addOrderForm.validate()
-						.then(success => {
-								if (success) {
-										this.the_order.address = this.totalAddress;
-										this.the_order.totalVariables = this.totalVariables;
-										this.addOrder(this.the_order);
-										this.$emit('close');
-								}})
-				},
-
-				onReset () {
-						this.clearFields();
-				},
-
-				getSubOptions () {
-						return Object.keys(this.locations(this.the_order));
-				},
-				
-				addOption (obj) {
-						switch(obj.type){
-								case 'customer':
-										this.addBuilder(obj.value);
-										break;
-								default:
-										return;
-						}
-				},
-			 
+				this.the_order.address = '';
+				this.the_order.type = null;
+				this.the_order.quantity = null;
+				this.the_order.file_art = null;
+				this.the_order.file_art_back = null;
+				this.the_order.file_proof = null;
+				this.the_order.same_face = true;
+				this.the_order.double_face = false;
+				this.the_order.variablesArr = [];
+				this.variables = [];
+				this.back_variables = [];
+				this.riders_variables = [];
+				this.addressLine1 = '';
+				this.addressLine2 = '';
+			}
 		},
 
 		computed: {
 
 			...mapGetters('settings', ['settings']),
 			 
-			 totalVariables: function () {
-					 let arr = this.$_.unionWith(this.variables, this.back_variables, this.$_.isEqual);
+			 TotalVariables: function () {
+
+					 let arr = this.$_.unionWith(this.variables, this.back_variables, this.riders_variables, this.$_.isEqual);
 					 this.the_order.variablesArr = [];
 
 					 for(var i = 0; i < arr.length; i++){
@@ -335,14 +296,21 @@ export default {
 					return arr;
 				},
 
-				totalAddress: function () {
+				TotalAddress: function () {
+
 						let addy = this.addressLine1 + '\r' + this.addressLine2;
 						this.the_order.address = (' ' + addy).slice(1);
 						return addy;
-				}
+        },
+        
+        ThePageNumber: function () {
+
+          return `page ${this.id + 1}`
+        }
 		},
 		
 		components: {
+
 				'vse-select' : require('components/Form/VSESelect.vue').default,
 				'vse-date' : require('components/Form/VSEDate.vue').default,
 				'vse-file-picker' : require('components/Form/VSEFilePicker.vue').default,
@@ -350,7 +318,26 @@ export default {
 		},
 
 		mounted () {
+
+      if(this.order){ //if this is null or empty, then it's not an edit
+
+				//copy info in to form
+				this.the_order = this.$_.cloneDeep(this.order);
 				
+				//let's see if this does what we need it to...
+				this.variables = this.the_order.variablesArr;
+
+				//split address back into multi-line
+				this.addressLine1 = this.addressLine2 = "";
+
+				let addy = this.the_order.address.split(/\r\n|\r|\n/);
+				this.addressLine1 = addy[0];
+				this.addressLine2 = addy[1];
+
+				//this.$refs.PageForm.hide();
+			} else {
+				this.onReset();
+			}
 		},
 }
 </script>

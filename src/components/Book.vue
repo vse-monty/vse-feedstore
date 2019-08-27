@@ -6,40 +6,47 @@
     class="bg-secondary q-mx-auto"
     style="min-width: 400px; max-width: 700px">
 
-   <q-item-section class="col-2 gt-auto">
+   <q-item-section class="col-1 gt-auto">
       <q-item-label class="text-overline text-weight-bolder">
         {{ order.orderNumber }}
       </q-item-label>
     </q-item-section>
 
-    <q-item-section class="q-pl-auto">
+    <q-item-section class="col-4 q-pl-md">
+      <q-item-label lines="1">
+        <span class="text-weight-bolder text-grey-4">{{ order.customer }}</span>
+      </q-item-label>
       <q-item-label lines="1">
         <span class="text-weight-medium text-grey-4">SUBDIVISION : </span><span class="text-weight-bold text-uppercase text-blue-grey-3">{{ order.subdivision }}</span>
       </q-item-label>
       <q-item-label class="q-mt-xs text-uppercase text-grey-4">
-        <small><span class="q-pr-md">{{ order.type }}</span>
-        <span class="">QTY : {{ order.quantity }}</span></small>
+        <small><span>PAGES : {{ totalPages }}</span></small>
       </q-item-label>
     </q-item-section>
 
-    <q-item-section class="q-pl-auto">
-      <q-item-label lines="1" v-for="(o, idx) in order.variablesArr" :key="idx">
-        <small><span class="text-cyan-3">{{ o.name }} - </span>
-        <span class="text-blue-grey-2">{{ o.value }}</span></small>
-      </q-item-label>
+    <q-item-section>
+      <q-list
+        class="q-mx-xs">
+        <page
+          v-for="(p, key) in order.pages"
+          :key="key"
+          :order="p"
+          :id="{id: order.orderNumber, pg: key}"
+          class="q-ma-xs"/>
+      </q-list>
     </q-item-section>
 
     <q-item-section side>
       <div class="text-grey-8 q-gutter-xs">
         <q-btn
-          @click.stop="confirmDelete(order.orderNumber)"
+          @click.stop="ConfirmDelete(order.orderNumber)"
           class="gt-xs text-grey-4"
           size="11px"
           flat
           exact
           dense
           round
-        icon="delete" />
+          icon="delete" />
       </div>
     </q-item-section>
   </q-item>
@@ -49,18 +56,31 @@
 <script>
 import { Dialog } from 'quasar'
 import { mapActions } from 'vuex';
-import { setTimeout } from 'timers';
 
 export default {
 
   props: ['order'],
+ 
+  components: {
+      
+      'page' : require('components/Page.vue').default,
+    },
+
+  computed: {
+
+    totalPages: function (){
+      let arr = Object.keys(this.order.pages);
+      return arr.length;
+    }
+  },
 
   methods: {
-    ...mapActions('batches', ['deleteOrder']),
+    ...mapActions('mp_orders', ['DeleteOrder']),
 
-    confirmDelete(id) {
+    ConfirmDelete(id) {
+      let str = `delete order #${id}?`;
       this.$q.dialog({
-        title: 'delete this order?',
+        title: str,
         message: '',
         position: 'standard',
         ok: {
@@ -76,13 +96,14 @@ export default {
         dark: true,
         persistent: true,
       }).onOk(() => {
-        this.removeOrder(id)
+        this.RemoveOrder(id)
       })
     },
       
-    removeOrder (id) {
-      this.deleteOrder(id)
-      this.$q.notify('order yeet\'d from batch')
+    RemoveOrder (id) {
+
+      this.DeleteOrder(id);
+      this.$q.notify('order yeet\'d from batch');
     }
   }
 }
