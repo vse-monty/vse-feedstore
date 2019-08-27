@@ -85,7 +85,7 @@
 							{label: 'single face', value: false},
 							{label: 'double face', value: true}]" />
 
-					<!-- IF DOUBLE, IS IT SAME FACE ON BOTH SIDES-->
+					<!-- IF DOUBLE, IS IT SAME FACE ON BOTH SIDES -->
 					<q-btn-toggle
 						v-model="the_order.same_face"
 						v-if="the_order.double_face"
@@ -111,6 +111,32 @@
 					:defaultPath="settings.working ? settings.working : 'C:\\'"
 					label="art file (back)"
 					@fill="back_variables = $event" />
+
+				<!-- Does Sign Have Riders? -->
+				<q-btn-toggle
+					v-model="the_order.has_riders"
+					spread
+					dense
+					no-caps
+					class="btn-toggle"
+					toggle-color="secondary"
+					color="primary"
+					text-color="grey-4"
+					:options="[
+						{label: 'no riders', value: false},
+						{label: 'riders', value: true}]" />
+						
+				<!-- Art File Filepicker-->
+				<vse-file-picker 
+					v-if="the_order.has_riders"
+					v-model="the_order.file_art_riders"
+					:file.sync="the_order.file_art_riders"
+					:load="true"
+					:varsArr.sync="riders_variables"
+					:rules="[ val => !!val ]"
+					:defaultPath="settings.working ? settings.working : 'C:\\'"
+					label="riders file"
+					@fill="riders_variables = $event" />
 
 				<!-- THIS IS WHERE WE WILL POPULATE THE INPUTS FOR VARIABLES -->
 				<q-list
@@ -186,18 +212,21 @@ export default {
 
         file_art:      null,
         file_art_back: null,
-        file_proof:    null,
+				file_proof:    null,
+				file_art_riders: null,
           
         address:       '',
         quantity:      null,
         type:          null,
         double_face:   false,
-        same_face:     true,
+				same_face:     true,
+				has_riders:    false,
         variablesArr:  [],
       },
       
       variables: [],
-      back_variables: [],
+			back_variables: [],
+			riders_variables: [],
 
       addressLine1: '',
       addressLine2: '',
@@ -211,9 +240,7 @@ export default {
                       'Main ID',
                       'Misc',
                       'Model Exteriors',
-                      'Model Interiors',
-                      ],
-
+                      'Model Interiors', ]
     }
   },
 		methods: {
@@ -247,9 +274,10 @@ export default {
 				this.the_order.variablesArr = [];
 				this.variables = [];
 				this.back_variables = [];
+				this.riders_variables = [];
 				this.addressLine1 = '';
 				this.addressLine2 = '';
-			},
+			}
 		},
 
 		computed: {
@@ -258,7 +286,7 @@ export default {
 			 
 			 TotalVariables: function () {
 
-					 let arr = this.$_.unionWith(this.variables, this.back_variables, this.$_.isEqual);
+					 let arr = this.$_.unionWith(this.variables, this.back_variables, this.riders_variables, this.$_.isEqual);
 					 this.the_order.variablesArr = [];
 
 					 for(var i = 0; i < arr.length; i++){
