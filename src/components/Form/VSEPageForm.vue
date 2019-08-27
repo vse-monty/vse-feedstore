@@ -296,6 +296,8 @@ export default {
 				//copy info in to form
 				this.the_order = this.$_.cloneDeep(this.order);
 				
+				//let's see if this does what we need it to...
+				this.variables = this.the_order.variablesArr;
 
 				//split address back into multi-line
 				this.addressLine1 = this.addressLine2 = "";

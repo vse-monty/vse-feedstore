@@ -95,6 +95,7 @@
 
 import { mapGetters } from 'vuex'
 import { mapActions } from 'vuex'
+const _ = require('lodash')
 
 export default {
 
@@ -125,11 +126,6 @@ export default {
   },
 
   mounted () {
-
-    //check if order list is empty, if so - go ahead and display the add-order dialog
-    let keys = Object.keys(this.mp_orders);
-    if (keys.length < 1) { this.showAddOrder = true }
-
     //set up listener(s) for order completed/(faileD?) events from server
     this.$socket.on('order.completed', (data) => {
 
@@ -188,7 +184,7 @@ export default {
 
       //fill editPackage order, as it is used by the edit-order dialog
       this.editPackage.id    = payload.id;
-      this.editPackage.order = this.$_.deepCopy(payload.order);
+      this.editPackage.order = this.$_.cloneDeep(payload.order);
 
       this.showEditOrder     = true;      
     },
