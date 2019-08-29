@@ -13,15 +13,15 @@
 				<div class="row">
 					<div class="col q-pr-xs">
 						<vse-date
-							v-model="the_order.orderDate"
-							:date.sync="the_order.orderDate"
+							v-model="the_order.order_date"
+							:date.sync="the_order.order_date"
 							label="order date" />
 					</div>
 					
 					<div class="col q-pl-auto">
 						<vse-date
-							v-model="the_order.artDate"
-							:date.sync="the_order.artDate"
+							v-model="the_order.art_date"
+							:date.sync="the_order.art_date"
 							label="art date"
 							disable/>
 					</div>
@@ -29,7 +29,7 @@
 
 				<!-- Order Number -->
 				<q-input
-					v-model="the_order.orderNumber"
+					v-model="the_order.order_number"
 					:autofocus="true"
 					filled
 					dense
@@ -173,7 +173,7 @@ export default {
 			this.$refs.EditMultiPage.validate(true)
 				.then(success => {
 						if (success) {
-								this.UpdateOrder({id: this.the_order.orderNumber, updates: this.the_order});
+								this.UpdateOrder({id: this.the_order.order_number, updates: this.the_order});
 								this.$emit('close');
 						}});
 		},
@@ -182,7 +182,7 @@ export default {
 
 			this.the_order.subdivision = null;
 			this.the_order.customer = null;
-			this.the_order.orderDate =  this.the_order.artDate;
+			this.the_order.order_date =  this.the_order.art_date;
 			this.the_order.pages = [null];
 		},
 

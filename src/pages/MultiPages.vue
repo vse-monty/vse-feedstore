@@ -11,6 +11,8 @@
           @update="UpdateOrder({id: key, order: book})"/>
 
     </q-list>
+
+    <div class="q-pb-xl"></div>
     
     <q-page-sticky
       position='bottom-left'

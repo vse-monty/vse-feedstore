@@ -115,7 +115,7 @@ const actions = {
       console.log('mp-orders store: addOrder()')
       console.log(order);
 
-      let id = order.orderNumber;
+      let id = order.order_number;
       let clone = Object.assign({}, order);
       let payload = {
         id: id,

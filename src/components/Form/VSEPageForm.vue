@@ -23,6 +23,49 @@
 
 			<q-card-section class="q-gutter-xs">
 
+					<!-- IS THIS SIGN SINGLE FACED OR DOUBLE-->
+					<q-btn-toggle
+						v-model="the_order.double_face"
+						spread
+						dense
+						no-caps
+						class="btn-toggle"
+						toggle-color="secondary"
+						color="primary"
+						text-color="grey-4"
+						:options="[
+							{label: 'single face', value: false},
+							{label: 'double face', value: true}]" />
+
+					<!-- IF DOUBLE, IS IT SAME FACE ON BOTH SIDES -->
+					<q-btn-toggle
+						v-model="the_order.same_face"
+						v-if="the_order.double_face"
+						spread
+						dense
+						no-caps
+						class="btn-toggle"
+						toggle-color="secondary"
+						color="primary"
+						text-color="grey-4"
+						:options="[
+							{label: 'same face', value: true},
+							{label: 'different face', value: false}]" />
+
+				<!-- Does Sign Have Riders? -->
+				<q-btn-toggle
+					v-model="the_order.has_riders"
+					spread
+					dense
+					no-caps
+					class="btn-toggle"
+					toggle-color="secondary"
+					color="primary"
+					text-color="grey-4"
+					:options="[
+						{label: 'no riders', value: false},
+						{label: 'riders', value: true}]" />
+						
 				<!-- Address Line 1 -->
 				<q-input
 					v-model="addressLine1"
@@ -70,35 +113,18 @@
 					:defaultPath="settings.working ? settings.working : null"
 					label="art file"
 					@fill="variables = $event" />
-
-					<!-- IS THIS SIGN SINGLE FACED OR DOUBLE-->
-					<q-btn-toggle
-						v-model="the_order.double_face"
-						spread
-						dense
-						no-caps
-						class="btn-toggle"
-						toggle-color="secondary"
-						color="primary"
-						text-color="grey-4"
-						:options="[
-							{label: 'single face', value: false},
-							{label: 'double face', value: true}]" />
-
-					<!-- IF DOUBLE, IS IT SAME FACE ON BOTH SIDES -->
-					<q-btn-toggle
-						v-model="the_order.same_face"
-						v-if="the_order.double_face"
-						spread
-						dense
-						no-caps
-						class="btn-toggle"
-						toggle-color="secondary"
-						color="primary"
-						text-color="grey-4"
-						:options="[
-							{label: 'same face', value: true},
-							{label: 'different face', value: false}]" />
+						
+				<!-- Rider Art File Filepicker -->
+				<vse-file-picker 
+					v-if="the_order.has_riders"
+					v-model="the_order.file_art_riders"
+					:file.sync="the_order.file_art_riders"
+					:load="true"
+					:varsArr.sync="riders_variables"
+					:rules="[ val => !!val ]"
+					:defaultPath="settings.working ? settings.working : 'C:\\'"
+					label="riders art file"
+					@fill="riders_variables = $event" />
 
 				<!-- Art File Filepicker-->
 				<vse-file-picker 
@@ -112,32 +138,25 @@
 					label="art file (back)"
 					@fill="back_variables = $event" />
 
-				<!-- Does Sign Have Riders? -->
-				<q-btn-toggle
-					v-model="the_order.has_riders"
-					spread
-					dense
-					no-caps
-					class="btn-toggle"
-					toggle-color="secondary"
-					color="primary"
-					text-color="grey-4"
-					:options="[
-						{label: 'no riders', value: false},
-						{label: 'riders', value: true}]" />
-						
-				<!-- Art File Filepicker-->
+				<!-- Proof File Filepicker-->
 				<vse-file-picker 
-					v-if="the_order.has_riders"
-					v-model="the_order.file_art_riders"
-					:file.sync="the_order.file_art_riders"
-					:load="true"
-					:varsArr.sync="riders_variables"
+					v-model="the_order.file_proof"
+					:file.sync="the_order.file_proof"
+					:load="false"
 					:rules="[ val => !!val ]"
-					:defaultPath="settings.working ? settings.working : 'C:\\'"
-					label="riders file"
-					@fill="riders_variables = $event" />
+					:defaultPath="settings.templates ? settings.templates : null"
+					label="proof file" />
 
+				<!-- Sign Type Dropdown -->
+				<vse-select
+					:value.sync="the_order.type"
+					label="sign type"
+					:options="signOptions"
+					:rules="[ val => !!val ]"/>
+				
+				
+				<q-separator spaced color="grey-9"/>
+				<q-separator dark spaced color="warning" inset/>
 				<!-- THIS IS WHERE WE WILL POPULATE THE INPUTS FOR VARIABLES -->
 				<q-list
 					v-if="TotalVariables.length !== 0">
@@ -151,22 +170,6 @@
 						:rules="[ val => !!val ]"
 						class="q-pt-xs"/>
 				</q-list>
-
-				<!-- Sign Type Dropdown -->
-				<vse-select
-					:value.sync="the_order.type"
-					label="sign type"
-					:options="signOptions"
-					:rules="[ val => !!val ]"/>
-
-				<!-- Proof File Filepicker-->
-				<vse-file-picker 
-					v-model="the_order.file_proof"
-					:file.sync="the_order.file_proof"
-					:load="false"
-					:rules="[ val => !!val ]"
-					:defaultPath="settings.templates ? settings.templates : null"
-					label="proof file" />
 
 			</q-card-section>	
 
@@ -240,7 +243,8 @@ export default {
                       'Main ID',
                       'Misc',
                       'Model Exteriors',
-                      'Model Interiors', ]
+											'Model Interiors',
+											'Phone Tabs' ]
     }
   },
 		methods: {
@@ -250,13 +254,13 @@ export default {
 				this.$refs.EditPageForm.validate(true) //true represents a 'should-focus' flag
 				.then(success => {
 					if (success) {
-						this.the_order.address = this.TotalAddress;
-						this.the_order.totalVariables = this.TotalVariables;
-						let pkg = Object.assign({}, this.the_order);
-						this.$emit('fill', pkg);
-						this.$refs.PageForm.hide();
+						this.the_order.address = this.TotalAddress
+						this.the_order.totalVariables = this.TotalVariables
+						let pkg = this.$_.cloneDeep(this.the_order)
+						this.$emit('fill', pkg)
+						this.$refs.PageForm.hide()
 					} else {
-						this.$refs.PageForm.show();
+						this.$refs.PageForm.show()
 					}
 				})
 			},

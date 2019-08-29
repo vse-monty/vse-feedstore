@@ -8,7 +8,7 @@
 
    <q-item-section class="col-1 gt-auto">
       <q-item-label class="text-overline text-weight-bolder">
-        {{ order.orderNumber }}
+        {{ order.order_number }}
       </q-item-label>
     </q-item-section>
 
@@ -31,7 +31,7 @@
           v-for="(p, key) in order.pages"
           :key="key"
           :order="p"
-          :id="{id: order.orderNumber, pg: key}"
+          :id="{id: order.order_number, pg: key}"
           class="q-ma-xs"/>
       </q-list>
     </q-item-section>
@@ -39,7 +39,7 @@
     <q-item-section side>
       <div class="text-grey-8 q-gutter-xs">
         <q-btn
-          @click.stop="ConfirmDelete(order.orderNumber)"
+          @click.stop="ConfirmDelete(order.order_number)"
           class="gt-xs text-grey-4"
           size="11px"
           flat
