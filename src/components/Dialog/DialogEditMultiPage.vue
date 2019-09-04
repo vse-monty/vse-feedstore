@@ -154,9 +154,9 @@ export default {
 
 				subdivision: null,
 				customer:    null,
-				orderNumber: null,
-				artDate:     null,
-				orderDate:   null,
+				order_number: null,
+				art_date:     null,
+				order_date:   null,
 				
 				pages:     [null],
 			},

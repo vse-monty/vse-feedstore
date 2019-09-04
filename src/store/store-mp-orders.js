@@ -4,59 +4,6 @@ const state = {
 
   
   orders: {
-
-    // '123456': {
-      
-    //   artist: 'DAVE',
-    //   orderNumber: '123456',
-    //   customer: 'Home Builder Homes',
-    //   subdivision: 'The Valley',
-    
-    //   orderDate: null,
-    //   artDate: null,
-    
-
-    //   pages: [
-
-    //     {
-    //       address: '123 Street\rPlace, TX',
-    //       quantity: 40,
-    //       type: 'Lot Signs',
-          
-    //       same_face: false,
-    //       double_face: true,
-
-    //       file_art: 'C:\\Art\\art_front.ai',
-    //       file_art_back: 'C:\\Art\\art_back.ai',
-    //       file_proof: 'C:\\Proofs\\the_proof.ai',
-
-    //       total_vars: [{
-    //         name: 'phoneNumber',
-    //         type: 'text'
-    //       }],
-    //       vars_vals: [{
-    //         name: 'phoneNumber',
-    //         value: '000.000.0000'
-    //       }],
-    //     },
-
-    //     {
-    //       address: 'NEC Street & Road\nPlace, TX',
-    //       quantity: 1,
-    //       type: 'Development',
-          
-    //       same_face: true,
-    //       double_face: false,
-
-    //       file_art: 'C:\\Art\\4x8.ai',
-    //       file_art_back: null,
-    //       file_proof: 'C:\\Proofs\\4x8_proof.ai',
-
-    //       total_vars: [],
-    //       vars_vals: [],
-    //     },
-    //   ]
-    // },
   },
 
   last_order: null,
