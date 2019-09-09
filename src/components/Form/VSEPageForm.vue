@@ -108,11 +108,11 @@
 					v-model="the_order.file_art"
 					:file.sync="the_order.file_art"
 					:load="true"
-					:varsArr.sync="variables"
+					:varsArr.sync="the_order.variables"
 					:rules="[ val => !!val ]"
 					:defaultPath="settings.working ? settings.working : null"
 					label="art file"
-					@fill="variables = $event" />
+					@fill="the_order.variables = $event"/>
 						
 				<!-- Rider Art File Filepicker -->
 				<vse-file-picker 
@@ -120,11 +120,11 @@
 					v-model="the_order.file_art_riders"
 					:file.sync="the_order.file_art_riders"
 					:load="true"
-					:varsArr.sync="riders_variables"
+					:varsArr.sync="the_order.riders_variables"
 					:rules="[ val => !!val ]"
 					:defaultPath="settings.working ? settings.working : 'C:\\'"
 					label="riders art file"
-					@fill="riders_variables = $event" />
+					@fill="the_order.riders_variables = $event"/>
 
 				<!-- Art File Filepicker-->
 				<vse-file-picker 
@@ -132,11 +132,11 @@
 					v-model="the_order.file_art_back"
 					:file.sync="the_order.file_art_back"
 					:load="true"
-					:varsArr.sync="back_variables"
+					:varsArr.sync="the_order.back_variables"
 					:rules="[ val => !!val ]"
 					:defaultPath="settings.working ? settings.working : 'C:\\'"
 					label="art file (back)"
-					@fill="back_variables = $event" />
+					@fill="the_order.back_variables = $event"/>
 
 				<!-- Proof File Filepicker-->
 				<vse-file-picker 
@@ -164,10 +164,9 @@
 						v-for="(tv, key) in TotalVariables"
 						:key="key"
 						v-model="the_order.variablesArr[key].value"
-						:varType="tv.type"
 						:varValue.sync="the_order.variablesArr[key].value"
-						:label="the_order.variablesArr[key].name"
-						:rules="[ val => !!val ]"
+						:varType="tv.type"
+						:label="tv.name"
 						class="q-pt-xs"/>
 				</q-list>
 
@@ -192,7 +191,7 @@
 
 		<!-- shows the 'orderToReturn' Object at the bottom of the form-->
 		<pre v-if="debugMenu">{{ the_order }}</pre>
-		<pre v-if="debugMenu">{{ TotalVariables }}</pre>
+		<!-- <pre v-if="debugMenu">{{ TotalVariables }}</pre> -->
 
 		</q-form>
 	</q-card>
@@ -224,17 +223,17 @@ export default {
         double_face:   false,
 				same_face:     true,
 				has_riders:    false,
-        variablesArr:  [],
+				
+				variablesArr:  		[],
+				variables: 				[],
+				back_variables: 	[],
+				riders_variables: [],
       },
-      
-      variables: [],
-			back_variables: [],
-			riders_variables: [],
 
       addressLine1: '',
       addressLine2: '',
 
-      debugMenu: false,
+      debugMenu: true,
 
       signOptions : [ 'Available - Sold',
                       'Construction',
@@ -267,20 +266,43 @@ export default {
 
 			onReset () {
 
-				this.the_order.address = '';
-				this.the_order.type = null;
-				this.the_order.quantity = null;
-				this.the_order.file_art = null;
-				this.the_order.file_art_back = null;
-				this.the_order.file_proof = null;
-				this.the_order.same_face = true;
-				this.the_order.double_face = false;
-				this.the_order.variablesArr = [];
-				this.variables = [];
-				this.back_variables = [];
-				this.riders_variables = [];
-				this.addressLine1 = '';
-				this.addressLine2 = '';
+				this.the_order.type								= null
+				this.the_order.quantity						= null
+				this.the_order.file_art						= null
+				this.the_order.file_art_back		  = null
+				this.the_order.file_proof 			  = null
+				
+				this.the_order.same_face 			 		= true
+				this.the_order.double_face 		  	= false
+				this.the_order.has_riders 			  = false
+				
+				this.the_order.variablesArr 		  = []
+				this.the_order.variables 				  = []
+				this.the_order.back_variables  		= []
+				this.the_order.riders_variables 	= []
+
+				this.the_order.address						= ''
+				this.addressLine1									= ''
+				this.addressLine2									= ''
+			},
+
+			UpdateVarArr(arr) {
+
+				let old 										= this.$_.cloneDeep(this.the_order.variablesArr)
+				this.the_order.variablesArr = []
+
+				for(let i = 0; i < arr.length; i++){
+
+					const result = old.find(function(o){
+						return arr[i].name === o.name
+					})
+
+					if(result){
+						this.the_order.variablesArr.push(result)
+					} else{
+						this.the_order.variablesArr.push({name: arr[i].name, value: ''})
+					}
+				}
 			}
 		},
 
@@ -288,29 +310,33 @@ export default {
 
 			...mapGetters('settings', ['settings']),
 			 
-			 TotalVariables: function () {
+			TotalVariables: function () {
 
-					 let arr = this.$_.unionWith(this.variables, this.back_variables, this.riders_variables, this.$_.isEqual);
-					 this.the_order.variablesArr = [];
+				let arr = this.$_.unionWith(this.the_order.variables, this.the_order.back_variables, this.the_order.riders_variables, this.$_.isEqual)
 
-					 for(var i = 0; i < arr.length; i++){
-							this.the_order.variablesArr.push({name: arr[i].name, value: ""});
-					}
+				return arr;
+			},
 
-					return arr;
-				},
+			TotalAddress: function () {
 
-				TotalAddress: function () {
-
-						let addy = this.addressLine1 + '\r' + this.addressLine2;
-						this.the_order.address = (' ' + addy).slice(1);
-						return addy;
-        },
+				let addy = this.addressLine1 + '\r' + this.addressLine2
+				this.the_order.address = (' ' + addy).slice(1)
+						
+				return addy
+      },
         
-        ThePageNumber: function () {
+			ThePageNumber: function () {
 
-          return `page ${this.id + 1}`
-        }
+				return `page ${this.id + 1}`
+			}
+		},
+
+		watch: {
+
+			TotalVariables: function (arr) {
+
+				this.UpdateVarArr(arr)
+			}
 		},
 		
 		components: {
@@ -323,26 +349,54 @@ export default {
 
 		mounted () {
 
-      if(this.order){ //if this is null or empty, then it's not an edit
+			if(this.order !== null){ //if this is null or empty, then it's not an edit
 
 				//copy info in to form
-				this.the_order = this.$_.cloneDeep(this.order);
+				this.the_order = this.$_.cloneDeep(this.order)
 				
-				//let's see if this does what we need it to...
-				this.variables = this.the_order.variablesArr;
+				// //let's see if this does what we need it to...
+				this.the_order.variablesArr = this.order.variablesArr;
 
 				//split address back into multi-line
-				this.addressLine1 = this.addressLine2 = "";
+				this.addressLine1 = this.addressLine2 = ""
 
-				let addy = this.the_order.address.split(/\r\n|\r|\n/);
-				this.addressLine1 = addy[0];
-				this.addressLine2 = addy[1];
+				let addy = this.the_order.address.split(/\r\n|\r|\n/)
+				this.addressLine1 = addy[0]
+				this.addressLine2 = addy[1]
 
 				//this.$refs.PageForm.hide();
 			} else {
-				this.onReset();
+
+				this.onReset()
 			}
+
+			//set up listener event
+			this.$socket.on('give.variables', (data) => {
+
+				let payload = JSON.parse(data)
+				console.log('on give.variables->')
+				console.log(payload)
+				//this.$emit('fill', payload.data)
+				let fn = decodeURI(payload.file)
+
+				if(fn == this.the_order.file_art){
+					this.the_order.variables = JSON.parse(payload.arr)
+				}
+
+				if(fn == this.the_order.file_art_back){
+					this.the_order.back_variables = JSON.parse(payload.arr)
+				}
+
+				if(fn == this.the_order.file_art_riders){
+					this.the_order.riders_variables = JSON.parse(payload.arr)
+				}
+			});
 		},
+
+		beforeDestroy() {
+
+			this.$socket.removeListener('give.variables') //stop listening for this event
+		}
 }
 </script>
 

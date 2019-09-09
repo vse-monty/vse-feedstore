@@ -235,7 +235,7 @@ export default {
 	},
 
 	beforeMount () { //must be before to get in before 'pages' are loaded
-
+		
 		this.the_order = this.$_.cloneDeep(this.editPackage.order);
 	},
 }

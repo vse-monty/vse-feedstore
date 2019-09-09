@@ -86,7 +86,7 @@
 				ref="AddOrder">
 				<edit-mp-order
           :editPackage="editPackage"
-					@close="showEditOrder = false"/>
+          @close="showEditOrder = false"/>
 			</q-dialog>
 
 		</div>

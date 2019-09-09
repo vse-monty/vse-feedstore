@@ -146,7 +146,7 @@ export default {
 	data () {
 		return {
 
-			debugMenu: false,
+			debugMenu: true,
 
 			the_order: {
 
@@ -165,7 +165,7 @@ export default {
 
 		...mapActions('mp_orders', ['AddOrder']),
 
-		clearFields () {
+		onReset () {
 
 			this.the_order.subdivision = null;
 			this.the_order.customer = null;
@@ -184,10 +184,6 @@ export default {
 								this.AddOrder(this.the_order);
 								this.$emit('close');
 						}});
-		},
-
-		onReset () {
-			this.clearFields();
 		},
 
 		AddPage () {
@@ -222,10 +218,6 @@ export default {
 	computed: {
 
 		...mapGetters('mp_orders', ['mp_order']),
-		
-		totalPages: function () {
-
-		},
 
 		numPages: function () {
 			
@@ -247,7 +239,10 @@ export default {
 			
 			this.the_order = this.$_.cloneDeep(this.order);
 			
-			this.the_order.order_number = null;
+			if(this.isDupe){
+
+				this.the_order.order_number = null;
+			}
 		}
 	},
 }

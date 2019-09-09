@@ -5,7 +5,7 @@
         :label="label"
         :rules="rules"
         :load="load"
-        :vars="varsArr"
+        :vars.sync="varsArr"
         :defaultPath="defaultPath"
         filled
         dense
@@ -13,7 +13,8 @@
         standout="bg-secondary text-white"
         input-class="text-grey-4"
         hide-bottom-space
-        @input="$emit('update:file', $event)">
+        @input="$emit('update:file', $event)"
+        @fill="$emit('update:vars', $event)">
 
         <template v-slot:append>
             <q-btn
@@ -44,8 +45,9 @@ export default {
     methods: {
 
         clear () {
-            this.$emit('input', '')
+
             this.$emit('fill', [])
+            this.$emit('input', '')
         },
 
         checkValid () {
@@ -84,14 +86,14 @@ export default {
                     return;
                 }
 
-                //set up listener event
-                this.$socket.on('give.variables', (data) => {
+                // //set up listener event
+                // this.$socket.on('give.variables', (data) => {
  
-                    let payload = JSON.parse(data);
+                //     let payload = JSON.parse(data);
 
-                    this.$emit('fill', payload.data); //put the data into -THIS- picker's load
-                    this.$socket.removeListener('give.variables'); //stop listening for this event
-                });
+                //     this.$emit('fill', payload.data); //put the data into -THIS- picker's load
+                //     this.$socket.removeListener('give.variables'); //stop listening for this event
+                // });
 
                this.$socket.emit('get.variables', encodeURI(fileString[0]));
                this.$emit('input', fileString[0]);
