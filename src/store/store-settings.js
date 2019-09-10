@@ -9,6 +9,9 @@ const state = {
       print: null,
       illustrator: 'C:\\Program Files\\Adobe\\Adobe Illustrator CC 2019\\Support Files\\Contents\\Windows',
       templates: null,
+      art_templates: null,
+      show_pdf: true,
+      launch_illy: false,
     }
   }
  
@@ -29,9 +32,24 @@ const mutations = {
       state.settings.templates = path
     },
 
+    setArtTemplates (state, path) {
+
+      state.settings.art_templates = path
+    },
+
     setPrint (state, path) {
 
       state.settings.print = path
+    },
+
+    setShowPDF (state, val) {
+
+      state.settings.show_pdf = val
+    },
+
+    setLaunchIllustrator (state, val) {
+
+      state.settings.launch_illy = val
     },
 
     saveSettings (state) {
@@ -66,9 +84,27 @@ const actions = {
       dispatch('saveSettings')
     },
 
+    setArtTemplates ({ commit, dispatch }, path) {
+
+      commit('setArtTemplates', path)
+      dispatch('saveSettings')
+    },
+
     setPrint ({ commit, dispatch }, path) {
 
       commit('setPrint', path)
+      dispatch('saveSettings')
+    },
+
+    setShowPDF ({ commit, dispatch }, val) {
+
+      commit('setShowPDF', val)
+      dispatch('saveSettings')
+    },
+
+    setLaunchIllustrator ({ commit, dispatch }, val) {
+
+      commit('setLaunchIllustrator', val)
       dispatch('saveSettings')
     },
 

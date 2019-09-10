@@ -1,6 +1,20 @@
 <template>
   <q-page padding>
     <div class="q-gutter-sm q-mx-auto">
+      <div class="q-gutter-sm q-mx-auto">
+      <q-toggle
+        v-model="show_pdf"
+        label="show proof pdf after order completion"
+        dark
+        keep-color
+        color="info"/>
+      </div>
+      <q-toggle
+        v-model="launch_illy"
+        label="launch illustrator on app launch"
+        dark
+        keep-color
+        color="info"/>
     <!-- illustrator folder picker-->
     <vse-folder-picker 
       v-model="illustrator"
@@ -17,7 +31,13 @@
     <vse-folder-picker 
       v-model="templates"
       :file.sync="templates"
-      label="template directory" />
+      label="proof templates directory" />
+    
+    <!-- art template dir picker-->
+    <vse-folder-picker 
+      v-model="art_templates"
+      :file.sync="art_templates"
+      label="art templates directory" />
     
     <!-- WIP (proofs) folder picker-->
     <vse-folder-picker 
@@ -45,7 +65,7 @@ export default {
   },
 
   methods: {
-    ...mapActions('settings', ['setIllustrator', 'setWorking', 'setTemplates', 'setPrint'])
+    ...mapActions('settings', ['setIllustrator', 'setWorking', 'setTemplates', 'setArtTemplates', 'setPrint', 'setShowPDF', 'setLaunchIllustrator'])
   },
 
   mounted () {
@@ -56,51 +76,66 @@ export default {
 
     ...mapGetters('settings', ['settings']),
 
-    illustrator: {
-      
+    illustrator: {    
       get () {
-
         return this.settings.illustrator;
       },
-      
       set (path) {
         this.setIllustrator(path);
       }
     },
 
     working: {
-      
       get () {
-
         return this.settings.working;
       },
-      
       set (path) {
         this.setWorking(path);
       }
     },
 
     templates: {
-      
       get () {
-
         return this.settings.templates;
       },
-      
       set (path) {
         this.setTemplates(path);
       }
     },
 
-    print: {
-      
+    art_templates: {
       get () {
+        return this.settings.art_templates;
+      },
+      set (path) {
+        this.setArtTemplates(path);
+      }
+    },
 
+    print: {
+      get () {
         return this.settings.print;
       },
-      
       set (path) {
         this.setPrint(path);
+      }
+    },
+
+    show_pdf: {
+      get () {
+        return this.settings.show_pdf
+      },
+      set (val) {
+        this.setShowPDF(val)
+      }
+    },
+
+    launch_illy: {
+      get () {
+        return this.settings.launch_illy
+      },
+      set (val) {
+        this.setLaunchIllustrator(val)
       }
     },
 
