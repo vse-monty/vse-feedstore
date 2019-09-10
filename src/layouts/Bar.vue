@@ -14,8 +14,12 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
     methods: {
+        ...mapActions('mp_orders', ['SaveOrders']),
+
         minimize () {
             if (process.env.MODE === 'electron') {
                 this.$q.electron.remote.BrowserWindow.getFocusedWindow().minimize()
@@ -24,6 +28,7 @@ export default {
 
         closeApp () {
             if (process.env.MODE === 'electron') {
+                this.SaveOrders()
                 this.$q.electron.remote.BrowserWindow.getFocusedWindow().close()
             }
         },

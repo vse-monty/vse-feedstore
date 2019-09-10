@@ -12,6 +12,10 @@ const routes = [
         path: '/',
         component: () => import('pages/MultiPages.vue')
       },
+      {
+        path: '/old',
+        component: () => import('pages/CompletedOrders.vue')
+      },
     ]
   }
 ]

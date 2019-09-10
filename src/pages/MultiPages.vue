@@ -57,6 +57,17 @@
           <q-tooltip>send all</q-tooltip>
 				</q-btn>
     </q-page-sticky>
+    
+    <q-page-sticky
+      position='bottom-right'
+      :offset="[100,30]">
+			<q-btn 
+				icon="close"
+				color="secondary"
+        @click="DBCheck">
+          <q-tooltip>db check</q-tooltip>
+				</q-btn>
+    </q-page-sticky>
 
     <div class="q-pa-md q-gutter-sm">
       <q-dialog
@@ -128,11 +139,6 @@ export default {
   },
 
   mounted () {
-    //set up listener(s) for order completed/(faileD?) events from server
-    this.$socket.on('order.completed', (data) => {
-
-      console.log(`order completed! ->${data.id}`);
-    });
   },
 
   methods: {
@@ -195,6 +201,19 @@ export default {
       
       this.$socket.emit('give.orders', JSON.stringify(this.mp_orders));
     },
+
+    DBCheck () {
+      
+      this.$db.find({order_number: /11/ }, function (error, docs){
+        if(error){
+          console.log('error')
+          console.log(error)
+        } else {
+          console.log('docs')
+          console.log(docs)
+        }
+      })
+    }
   },
 }
 </script>

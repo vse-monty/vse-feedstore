@@ -11,13 +11,15 @@ import { mapActions } from 'vuex'
 
     methods: {
 
-      ...mapActions('settings', ['loadSettings'])
+      ...mapActions('settings', ['loadSettings']),
+      ...mapActions('mp_orders', ['LoadOrders'])
     },
 
     mounted () {
 
-      this.loadSettings();
-    }
+      this.loadSettings()
+      this.LoadOrders()
+    },
   }
 </script>
 

@@ -76,6 +76,11 @@ export default {
           icon: 'file_copy',
         },
         {
+          to: '/old',
+          label: 'archive',
+          icon: 'archive',
+        },
+        {
           to: '/settings',
           label: 'settings',
           icon: 'settings',
@@ -84,7 +89,67 @@ export default {
     }
   },
 
-  methods: {
+  components: {
+
+    'tool-bar' : require('./Bar.vue').default
+  },
+
+  mounted(){
+
+    let foot = this.setFooter; //for scope reasons
+    let set = this.settings;
+
+    //listeners for illustrator connections...
+    this.$socket.on('illustrator.disconnected', () => {
+      foot('text-center bg-negative', 'this app is not connected to illustrator panel...')
+    });
+
+    this.$socket.on('illustrator.connected', () => {
+      foot('text-center bg-positive', 'connected to illustrator panel...');
+      this.$socket.emit('illustrator.settings', JSON.stringify(set));
+    });
+
+    //set up listener(s) for order completed/(faileD?) events from server
+    this.$socket.on('completed', (data) => {
+
+      let obj = JSON.parse(data)
+      let that = this
+
+      console.log(`order completed! -> ${obj.order_number}`)
+      this.RemoveOrderFromStore(obj.order_number) //remove the copy from our vuex store
+
+      that.$db.persistence.compactDatafile() //see if this fixes stuff
+      //check if the order is already in the database
+      that.$db.findOne({order_number: obj.order_number}, function(err, doc){
+        if(doc === null){
+          //order not found in db, add the order
+          that.$db.insert(obj, function(err, doc){
+            console.log(`document inserted-> ${doc.order_number} | ${doc._id}`)
+          })
+        } else{
+          //order is found, update existing order
+          that.$db.update({order_number: obj.order_number}, obj, {}, function(err, numReplaced){
+
+            console.log(`order updated: ${doc.order_number}`)
+          })
+        }
+      })
+    })
+  },
+
+  computed: {
+
+    ...mapGetters('settings', ['settings']),
+  },
+
+   methods: {
+
+    ...mapActions('mp_orders', ['DeleteOrder']),
+
+    RemoveOrderFromStore (id) {
+
+      this.DeleteOrder(id)
+    },
 
     openILST () {
       
@@ -145,32 +210,6 @@ export default {
       this.footer.footer_class = the_class;
       this.footer.footer_message = the_message;
     },
-  },
-
-  components: {
-
-    'tool-bar' : require('./Bar.vue').default
-  },
-
-  mounted(){
-
-    let foot = this.setFooter; //for scope reasons
-    let set = this.settings;
-
-    //listeners for illustrator connections...
-    this.$socket.on('illustrator.disconnected', () => {
-      foot('text-center bg-negative', 'this app is not connected to illustrator panel...')
-    });
-
-    this.$socket.on('illustrator.connected', () => {
-      foot('text-center bg-positive', 'connected to illustrator panel...');
-      this.$socket.emit('illustrator.settings', JSON.stringify(set));
-    });
-  },
-
-  computed: {
-
-    ...mapGetters('settings', ['settings']),
   },
 }
 </script>

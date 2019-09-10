@@ -5,9 +5,9 @@ module.exports = function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     boot: [
-      'axios',
       'lodash',
       'notify-defaults',
+      'nedb',
       'socket-io',
       'debug'
     ],
@@ -60,17 +60,18 @@ module.exports = function (ctx) {
         'QPopupProxy',
         'QBtnToggle',
         'QBar',
-        'QScrollArea',
         'QTable',
         'QTh',
         'QTr',
         'QTd',
-        'QPopupEdit',
         'QTooltip',
         'QBanner',
         'QField',
         'QPagination',
         'QExpansionItem',
+        'QCheckbox',
+        'QOptionGroup',
+        'QToggle'
       ],
 
       directives: [

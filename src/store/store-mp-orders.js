@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { LocalStorage } from 'quasar'
 
 const state = {
 
@@ -13,30 +14,30 @@ const mutations = {
 
     AddOrder (state, payload) {
 
-      state.last_order = payload.id;
-      Vue.set(state.orders, payload.id, payload.order);
+      state.last_order = payload.id
+      Vue.set(state.orders, payload.id, payload.order)
     },
 
     DeleteOrder (state, id) {
 
       if (state.last_order == id) { state.last_order = null }
 
-      Vue.delete(state.orders, id);
+      Vue.delete(state.orders, id)
     },
 
     UpdateOrder (state, payload) {
 
-      Object.assign(state.orders[payload.id], payload.updates);
-      state.orders[payload.id].pages = [...payload.updates.pages];
+      Object.assign(state.orders[payload.id], payload.updates)
+      state.orders[payload.id].pages = [...payload.updates.pages]
     },
 
     ClearOrders (state) {
 
-      let orders = Object.keys(state.orders);
+      let orders = Object.keys(state.orders)
       
       for(let i = 0; i < orders.length; i++){
 
-        Vue.delete(state.orders, orders[i]);
+        Vue.delete(state.orders, orders[i])
       }
 
       state.last_order = null;
@@ -44,14 +45,24 @@ const mutations = {
 
     DeletePage (state, payload) {
 
-      let order = state.orders[payload.id];
+      let order = state.orders[payload.id]
       
       if(order){
         
         let pages = order.pages;
-            pages.splice(payload.pg, 1);
+            pages.splice(payload.pg, 1)
       }
     },
+
+    SaveOrders (state) {
+
+      LocalStorage.set('orders', state.orders)
+    },
+
+    LoadOrders (state, orders) {
+
+      state.orders = this.$_.cloneDeep(orders)
+    }
 }
 
 const actions = {
@@ -59,38 +70,48 @@ const actions = {
 
     AddOrder ({ commit }, order) {
 
-      console.log('mp-orders store: addOrder()')
-      console.log(order);
-
-      let id = order.order_number;
-      let clone = Object.assign({}, order);
+      let id = order.order_number
+      let clone = Object.assign({}, order)
       let payload = {
         id: id,
         order: clone
       }
 
-      commit('AddOrder', payload);
+      commit('AddOrder', payload)
     },
 
     DeleteOrder ({ commit }, id) {
       
-      commit('DeleteOrder', id);
+      commit('DeleteOrder', id)
     },
 
     UpdateOrder ({ commit }, payload) {
       
-      commit('UpdateOrder', payload);
+      commit('UpdateOrder', payload)
     },
 
     ClearOrders ({ commit }) {
 
-      commit('ClearOrders');
+      commit('ClearOrders')
     },
 
     DeletePage ({ commit }, payload) {
 
-      commit('DeletePage', payload);
+      commit('DeletePage', payload)
     },
+
+    SaveOrders ({ commit }) {
+
+      commit('SaveOrders')
+    },
+
+    LoadOrders ({ commit }) {
+
+      let orders = LocalStorage.getItem('orders')
+      if(orders){
+        commit('LoadOrders', orders)
+      }
+    }
 }
 
 const getters = {
