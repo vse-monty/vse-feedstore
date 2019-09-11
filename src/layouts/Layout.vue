@@ -40,6 +40,22 @@
             label="illustrator"
             @click="openILST()"/>
         </div>
+
+        <div class="q-pa-sm">
+            <q-btn
+            style="width: 160px; height 10px"
+            color="blue-grey-7"
+            label="close illy"
+            @click="closeILST()"/>
+        </div>
+
+        <div class="q-pa-sm">
+            <q-btn
+            style="width: 160px; height 10px"
+            color="blue-grey-7"
+            label="restart illy"
+            @click="restartILST()"/>
+        </div>
     </q-drawer>
 
     <q-page-container>
@@ -55,6 +71,7 @@
 <script>
 import { Dialog } from 'quasar'
 import { mapGetters, mapActions } from 'vuex'
+import { setTimeout } from 'timers';
 const child = require('child_process').execFile;
 
 export default {
@@ -96,8 +113,13 @@ export default {
 
   mounted(){
 
-    let foot = this.setFooter; //for scope reasons
-    let set = this.settings;
+    let foot   = this.setFooter //for scope reasons
+    let reboot = this.restartILST
+    let set    = this.settings
+    
+    if(set.launch_illy){
+      this.openILST()
+    }
 
     //listeners for illustrator connections...
     this.$socket.on('illustrator.disconnected', () => {
@@ -107,6 +129,10 @@ export default {
     this.$socket.on('illustrator.connected', () => {
       foot('text-center bg-positive', 'connected to illustrator panel...');
       this.$socket.emit('illustrator.settings', JSON.stringify(set));
+    });
+
+    this.$socket.on('illustrator.reboot', () => {
+      reboot();
     });
 
     //set up listener(s) for order completed/(faileD?) events from server
@@ -151,8 +177,20 @@ export default {
       this.DeleteOrder(id)
     },
 
+    closeILST () {
+      console.log('closing illustrator')
+      this.$socket.emit('illustrator.close')
+      this.setFooter('text-center bg-negative', 'this app is not connected to illustrator panel...')
+    },
+
+    restartILST () {
+      this.closeILST()
+      let ILST = this.openILST;
+      setTimeout(ILST, 5000)
+    },
+
     openILST () {
-      
+      console.log('opening illustrator')
       if(this.settings.illustrator){
 
         let path = process.cwd() + '\\src\\assets\\Home.ai';

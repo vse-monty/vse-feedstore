@@ -1,6 +1,6 @@
 <template>
   <q-item
-    class="fit col bg-grey-9">
+    class="bg-grey-8">
 
     <q-item-section class="col-1 gt-auto">
       <q-item-label class="text-overline text-weight-bold">
@@ -12,11 +12,14 @@
       <q-item-label class="q-mt-xs text-uppercase text-grey-2">
         {{ order.type }}
       </q-item-label>
+      <q-item-label class="q-mt-xs text-grey-2">
+        QTY : {{ order.quantity }}
+      </q-item-label>
     </q-item-section>
    
-    <q-item-section class="col-2">
+    <q-item-section class="col-3">
        <q-item-label class="q-mt-xs text-grey-2">
-        QTY : {{ order.quantity }}
+        {{ order.substrate }}
       </q-item-label>
     </q-item-section>
 

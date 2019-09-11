@@ -110,7 +110,7 @@
 					:load="true"
 					:varsArr.sync="the_order.variables"
 					:rules="[ val => !!val ]"
-					:defaultPath="settings.working ? settings.working : null"
+					:defaultPath="settings.art_templates ? settings.art_templates : null"
 					label="art file"
 					@fill="the_order.variables = $event"/>
 						
@@ -122,7 +122,7 @@
 					:load="true"
 					:varsArr.sync="the_order.riders_variables"
 					:rules="[ val => !!val ]"
-					:defaultPath="settings.working ? settings.working : 'C:\\'"
+					:defaultPath="settings.art_templates ? settings.art_templates : 'C:\\'"
 					label="riders art file"
 					@fill="the_order.riders_variables = $event"/>
 
@@ -134,7 +134,7 @@
 					:load="true"
 					:varsArr.sync="the_order.back_variables"
 					:rules="[ val => !!val ]"
-					:defaultPath="settings.working ? settings.working : 'C:\\'"
+					:defaultPath="settings.art_templates ? settings.art_templates : 'C:\\'"
 					label="art file (back)"
 					@fill="the_order.back_variables = $event"/>
 
@@ -152,6 +152,13 @@
 					:value.sync="the_order.type"
 					label="sign type"
 					:options="signOptions"
+					:rules="[ val => !!val ]"/>
+
+				<!-- Substrate Type Dropdown -->
+				<vse-select
+					:value.sync="the_order.substrate"
+					label="substrate type"
+					:options="substrateOpt"
 					:rules="[ val => !!val ]"/>
 				
 				
@@ -218,8 +225,10 @@ export default {
 				file_art_riders: null,
           
         address:       '',
-        quantity:      null,
-        type:          null,
+        type:          'Lot Signs',
+        substrate:     'Corrugated Plastic',
+				quantity:      null,
+				
         double_face:   false,
 				same_face:     true,
 				has_riders:    false,
@@ -243,7 +252,11 @@ export default {
                       'Misc',
                       'Model Exteriors',
 											'Model Interiors',
-											'Phone Tabs' ]
+											'Phone Tabs' ],
+
+			substrateOpt : [  'Max Metal',
+												'Corrugated Plastic',
+												'Aluminum' ],
     }
   },
 		methods: {
@@ -266,14 +279,14 @@ export default {
 
 			onReset () {
 
-				this.the_order.type								= null
+				//this.the_order.type								= null
 				this.the_order.quantity						= null
 				this.the_order.file_art						= null
 				this.the_order.file_art_back		  = null
 				this.the_order.file_proof 			  = null
 				
-				this.the_order.same_face 			 		= true
 				this.the_order.double_face 		  	= false
+				this.the_order.same_face 			 		= true
 				this.the_order.has_riders 			  = false
 				
 				this.the_order.variablesArr 		  = []

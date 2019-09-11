@@ -57,17 +57,6 @@
           <q-tooltip>send all</q-tooltip>
 				</q-btn>
     </q-page-sticky>
-    
-    <q-page-sticky
-      position='bottom-right'
-      :offset="[100,30]">
-			<q-btn 
-				icon="close"
-				color="secondary"
-        @click="DBCheck">
-          <q-tooltip>db check</q-tooltip>
-				</q-btn>
-    </q-page-sticky>
 
     <div class="q-pa-md q-gutter-sm">
       <q-dialog

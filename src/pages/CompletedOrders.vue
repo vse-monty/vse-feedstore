@@ -9,6 +9,8 @@
       :selected.sync="selected"
       :filter="filter"
       :loading="loading"
+      binary-state-sort
+      :pagination.sync="pagination"
       flat
       dark
       dense
@@ -81,6 +83,17 @@
 				color="secondary"
         @click="Refresh">
           <q-tooltip>refresh the table</q-tooltip>
+			</q-btn>
+    </q-page-sticky>
+
+    <q-page-sticky
+      position='top-left'
+      :offset="[100,10]">
+			<q-btn 
+				icon="delete"
+				color="secondary"
+        @click="RemoveAll">
+          <q-tooltip>remove all from table</q-tooltip>
 			</q-btn>
     </q-page-sticky>
 

@@ -1,6 +1,6 @@
 # VSE FEED STORE
 
-> WIP
+> WIP 
 
 This APP is developed to send Visionary Sales Environments 'Orders' to the corresponding Adobe CEP Panels.
 

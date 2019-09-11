@@ -11,7 +11,7 @@
       </div>
       <q-toggle
         v-model="launch_illy"
-        label="launch illustrator on app launch"
+        label="open illustrator on launch"
         dark
         keep-color
         color="info"/>
