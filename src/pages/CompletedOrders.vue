@@ -30,19 +30,19 @@
           <q-td>
             <q-checkbox dense dark color="info" v-model="props.selected" />
           </q-td>
-          <q-td auto-width key="order_number" :props="props">
+          <q-td key="order_number" :props="props">
             {{ props.row.order_number }}
             <q-btn dense round flat dark :icon="props.expand ? 'arrow_drop_up' : 'arrow_drop_down'" @click.stop="props.expand = !props.expand" />
           </q-td>
           <!-- <q-td key="order_number" :props="props">{{ props.row.order_number }}</q-td> -->
-          <q-td auto-width key="customer" :props="props" >{{ props.row.customer }}</q-td>
-          <q-td auto-width key="subdivision" :props="props" >{{ props.row.subdivision }}</q-td>
-          <q-td auto-width key="order_date" :props="props" >{{ props.row.order_date }}</q-td>
-          <q-td auto-width key="art_date" :props="props" >{{ props.row.art_date }}</q-td>
+          <q-td key="customer" :props="props" >{{ props.row.customer }}</q-td>
+          <q-td key="subdivision" :props="props" >{{ props.row.subdivision }}</q-td>
+          <q-td key="order_date" :props="props" >{{ props.row.order_date }}</q-td>
+          <q-td key="art_date" :props="props" >{{ props.row.art_date }}</q-td>
         </q-tr>
 
         <q-tr v-show="props.expand" :props="props">
-          <q-td colspan="100%">
+          <q-td colspan="50%">
             <div class="text-left">
               <q-list
                 class="q-mx-xs">

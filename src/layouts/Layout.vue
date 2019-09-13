@@ -56,6 +56,14 @@
             label="restart illy"
             @click="restartILST()"/>
         </div>
+
+        <div class="q-pa-sm">
+            <q-btn
+            style="width: 160px; height 10px"
+            color="blue-grey-7"
+            label="server"
+            @click="Spin()"/>
+        </div>
     </q-drawer>
 
     <q-page-container>
@@ -72,7 +80,8 @@
 import { Dialog } from 'quasar'
 import { mapGetters, mapActions } from 'vuex'
 import { setTimeout } from 'timers';
-const child = require('child_process').execFile;
+const child     = require('child_process').execFile;
+const { spawn } = require('child_process')
 
 export default {
   name: 'MyLayout',
@@ -193,7 +202,7 @@ export default {
       console.log('opening illustrator')
       if(this.settings.illustrator){
 
-        let path = process.cwd() + '\\src\\assets\\Home.ai';
+        let path = process.cwd() + '\\assets\\Home.ai';
         let illy = this.settings.illustrator;
         let q = this.$q;
 
@@ -241,6 +250,23 @@ export default {
       }
 
      
+    },
+
+    Spin () {
+
+      const bat = spawn('nodemon',[``])
+
+      bat.stdout.on('data', (data) => {
+        console.log(`stdout: ${data}`)
+      })
+
+      bat.stderr.on('data', (data) => {
+        console.log(`stdout: ${data}`)
+      })
+
+      bat.on('error', (err) => {
+        console.log(`error: ${err}`)
+      })
     },
 
     setFooter (the_class, the_message) {
