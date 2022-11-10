@@ -22,7 +22,7 @@
   "devDependencies": {
     "@quasar/app": "^1.0.4",
     "devtron": "^1.4.0",
-    "electron": "^4.0.5",
+    "electron": "^18.3.7",
     "electron-debug": "^2.1.0",
     "electron-devtools-installer": "^2.2.4"
   },
